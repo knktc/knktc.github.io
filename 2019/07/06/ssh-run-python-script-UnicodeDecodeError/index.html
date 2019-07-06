@@ -102,7 +102,7 @@
 <meta property="og:site_name" content="knktc的杂乱空间">
 <meta property="og:description" content="最近在服务器上写了个python脚本来跑一些任务，本地(macos 10.14)通过ssh来远程运行这个脚本: 1ssh knktc@cloud.knktc.com /home/knktc/test.py  结果却出现了类似下面的错误： 1UnicodeDecodeError: &amp;apos;ascii&amp;apos; codec can&amp;apos;t decode byte 0xe9 in posit">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-07-06T10:50:26.402Z">
+<meta property="og:updated_time" content="2019-07-06T15:15:54.069Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ssh远程运行python脚本报UnicodeDecodeError错误">
 <meta name="twitter:description" content="最近在服务器上写了个python脚本来跑一些任务，本地(macos 10.14)通过ssh来远程运行这个脚本: 1ssh knktc@cloud.knktc.com /home/knktc/test.py  结果却出现了类似下面的错误： 1UnicodeDecodeError: &amp;apos;ascii&amp;apos; codec can&amp;apos;t decode byte 0xe9 in posit">
@@ -359,7 +359,7 @@
                 
               
 
-              <time title="创建时间：2019-07-06 18:20:06 / 修改时间：18:50:26" itemprop="dateCreated datePublished" datetime="2019-07-06T18:20:06+08:00">2019-07-06</time>
+              <time title="创建时间：2019-07-06 18:20:06 / 修改时间：23:15:54" itemprop="dateCreated datePublished" datetime="2019-07-06T18:20:06+08:00">2019-07-06</time>
             </span>
           
 
@@ -411,10 +411,10 @@
 
 <p>因为现在已经全部改用python3，又出现这样的错误感觉有点奇怪。</p>
 <p>用locale命令检查了下本地的LC_CTYPE，是”zh_CN.UTF-8”，再用”locale -a”命令检查下远程服务器的输出，发现并不支持”zh_CN.UTF-8”，估计是这个原因导致了远程脚本执行的时候没用UTF8而是用ASCII作为了LC_CTYPE的值。</p>
-<p>于是，要解决这个问题，可以修改下本地的ssh客户端配置，编辑本地的/etc/ssh/ssh_config配置文件(可能需要sudo)，注释掉如下配置：</p>
+<p>于是，要解决这个问题，可以修改下本地的ssh客户端配置，编辑本地的<strong>/etc/ssh/ssh_config</strong>配置文件(可能需要sudo)，注释掉如下配置：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SendEnv LANG LC_*</span><br></pre></td></tr></table></figure>
 
-<p>或是编辑服务器上的/etc/ssh/sshd_config配置文件，注释掉如下的配置(修改完成后需要重启sshd服务):</p>
+<p>或是编辑服务器上的<strong>/etc/ssh/sshd_config</strong>配置文件，注释掉如下的配置(修改完成后需要重启sshd服务):</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">AcceptEnv LANG LC_*</span><br></pre></td></tr></table></figure>
 
 <p>重试一次，完全正常了。</p>
@@ -611,8 +611,6 @@
                 <div class="site-state-item site-state-tags">
                   
                     
-                    
-                      
                     
                       
                     
