@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+<link rel="stylesheet" href="/css/main.css?v=7.2.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.2.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.2.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.2.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="一般情况下，我们在虚拟机中安装安卓的ARM版模拟器，虽然兼容性好，但速度较慢，很影响用户体验，有的时候打开模拟器往往需要三分钟的等待，如果使用x86模拟器，并开启加速功能，将会达到提升用户体验的效果。 但是安装X86模拟器需要CPU开启虚拟化功能，而KVM虚拟机已经是虚拟机了，虚拟机中的CPU默认情况下不带有虚拟化功能，这就需要nested kvm功能了。">
+<meta name="keywords" content="nested,kvm,x86,android,模拟器,虚拟机,命令行,安卓">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在KVM虚拟机中安装安卓X86模拟器">
+<meta property="og:url" content="http://knktc.com/2018/06/07/install-android-x86-emulator-in-kvm/index.html">
+<meta property="og:site_name" content="knktc的杂乱空间">
+<meta property="og:description" content="一般情况下，我们在虚拟机中安装安卓的ARM版模拟器，虽然兼容性好，但速度较慢，很影响用户体验，有的时候打开模拟器往往需要三分钟的等待，如果使用x86模拟器，并开启加速功能，将会达到提升用户体验的效果。 但是安装X86模拟器需要CPU开启虚拟化功能，而KVM虚拟机已经是虚拟机了，虚拟机中的CPU默认情况下不带有虚拟化功能，这就需要nested kvm功能了。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://knktc.com/2018/06/07/install-android-x86-emulator-in-kvm/android_x86_02.png">
+<meta property="og:image" content="http://knktc.com/2018/06/07/install-android-x86-emulator-in-kvm/android_x86_03.png">
+<meta property="og:image" content="http://knktc.com/2018/06/07/install-android-x86-emulator-in-kvm/android_x86_01.png">
+<meta property="og:updated_time" content="2019-05-26T05:17:12.678Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="在KVM虚拟机中安装安卓X86模拟器">
+<meta name="twitter:description" content="一般情况下，我们在虚拟机中安装安卓的ARM版模拟器，虽然兼容性好，但速度较慢，很影响用户体验，有的时候打开模拟器往往需要三分钟的等待，如果使用x86模拟器，并开启加速功能，将会达到提升用户体验的效果。 但是安装X86模拟器需要CPU开启虚拟化功能，而KVM虚拟机已经是虚拟机了，虚拟机中的CPU默认情况下不带有虚拟化功能，这就需要nested kvm功能了。">
+<meta name="twitter:image" content="http://knktc.com/2018/06/07/install-android-x86-emulator-in-kvm/android_x86_02.png">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="http://knktc.com/2018/06/07/install-android-x86-emulator-in-kvm/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>在KVM虚拟机中安装安卓X86模拟器 | knktc的杂乱空间</title>
+  
+
+
+
+
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a23b2d1c6159a3a6c798edbc7f9211f9";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">knktc的杂乱空间</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">python,cloud,linux...</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://knktc.com/2018/06/07/install-android-x86-emulator-in-kvm/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="knktc">
+      <meta itemprop="description" content="关注linux,云计算,python，杂乱之地...">
+      <meta itemprop="image" content="/images/sonic_avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="knktc的杂乱空间">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">在KVM虚拟机中安装安卓X86模拟器
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-06-07 22:03:38" itemprop="dateCreated datePublished" datetime="2018-06-07T22:03:38+08:00">2018-06-07</time>
+            </span>
+          
+
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-05-26 13:17:12" itemprop="dateModified" datetime="2019-05-26T13:17:12+08:00">2019-05-26</time>
+              </span>
+            
+          
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>一般情况下，我们在虚拟机中安装安卓的ARM版模拟器，虽然兼容性好，但速度较慢，很影响用户体验，有的时候打开模拟器往往需要三分钟的等待，如果使用x86模拟器，并开启加速功能，将会达到提升用户体验的效果。</p>
+<p>但是安装X86模拟器需要CPU开启虚拟化功能，而KVM虚拟机已经是虚拟机了，虚拟机中的CPU默认情况下不带有虚拟化功能，这就需要nested kvm功能了。</p>
+<a id="more"></a>
+
+<blockquote>
+<p>需要注意的是安卓x86模拟器的兼容性较差，对于部分应用可能产生崩溃的效果，使用时需要特别注意。</p>
+</blockquote>
+<h1 id="开启nested-kvm功能"><a href="#开启nested-kvm功能" class="headerlink" title="开启nested kvm功能"></a>开启nested kvm功能</h1><p>nested kvm是指kvm支持的一种功能:在虚拟机中再开虚拟机，将host的cpu passthrough到guest上面去，以实现这个效果。</p>
+<p>在服务器实体机中使用以下命令查看nested kvm功能是否开启:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat /sys/module/kvm_intel/parameters/nested</span><br></pre></td></tr></table></figure>
+
+<p>如果返回是“Y”则表明功能已开启，如果返回为“N”，则按照以下的步骤配置开启该功能：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># 向/etc/modprobe.d/kvm-nested.conf中写入配置</span><br><span class="line"></span><br><span class="line">echo &quot;options kvm_intel nested=1&quot; &gt;&gt; /etc/modprobe.d/kvm-nested.conf</span><br></pre></td></tr></table></figure>
+
+<p>此时可以重启服务器，重启后再检查按上面的步骤检查nested kvm功能是否已开始。</p>
+<p>确认功能开启后，可继续进行下面的步骤。</p>
+<h1 id="配置虚拟机"><a href="#配置虚拟机" class="headerlink" title="配置虚拟机"></a>配置虚拟机</h1><p>要让虚拟机使用nested kvm功能，还需要对虚拟机进行一些配置，如果使用libvirt来管理kvm虚拟机，可以在虚拟机的配置xml中添加以下的内容：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;cpu mode=&apos;host-passthrough&apos; check=&apos;none&apos;/&gt;</span><br></pre></td></tr></table></figure>
+
+<p>配置完成后重启虚拟机即可。</p>
+<p>可以对比下配置前后虚拟机中cpu参数的差别。</p>
+<p>修改配置前的cpu参数：</p>
+<p><img src="android_x86_02.png" alt="修改配置前"></p>
+<p>修改配置后的cpu参数：</p>
+<p><img src="android_x86_03.png" alt="修改配置后"></p>
+<p>可以看出配置之后虚拟机中的cpu的flag增加了不少，也支持虚拟化了。</p>
+<h1 id="安装模拟器"><a href="#安装模拟器" class="headerlink" title="安装模拟器"></a>安装模拟器</h1><p>此时直接在虚拟机中安装X86的模拟器即可。我平时习惯直接用命令行版的工具进行安装，直接前往google开发者网站下载命令行工具，地址为：<a href="https://developer.android.com/studio/" target="_blank" rel="noopener">https://developer.android.com/studio/</a>，在该网站上寻找“Command line tools only”的部分，然后下载自己系统对应的版本即可。</p>
+<p><img src="android_x86_01.png" alt="命令行工具下载地址"></p>
+<p>将下载后的工具放置到虚拟机中，解压后即可开始安装，以下是一个简略的安装过程，安装了android4.4的模拟器，其他版本的模拟器可修改对应参数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"># 进入命令行工具目录</span><br><span class="line">cd tools/bin</span><br><span class="line"></span><br><span class="line"># 先更新一次</span><br><span class="line">./sdkmanager &quot;tools&quot;</span><br><span class="line"></span><br><span class="line"># 再次进入命令行工具目录，因为更新后目录其实被删除重建了一次</span><br><span class="line">cd ..</span><br><span class="line">cd bin</span><br><span class="line"></span><br><span class="line"># 安装模拟器</span><br><span class="line">./sdkmanager emulator</span><br><span class="line"></span><br><span class="line"># 安装镜像</span><br><span class="line">./sdkmanager &quot;system-images;android-19;default;x86&quot;</span><br><span class="line"></span><br><span class="line"># 安装sdk</span><br><span class="line">./sdkmanager &quot;platforms;android-19&quot;</span><br><span class="line"></span><br><span class="line"># 创建一个名为android4.4的avd</span><br><span class="line">./avdmanager create avd -k &quot;system-images;android-19;default;x86&quot; -n android4.4</span><br></pre></td></tr></table></figure>
+
+<p>到了这里模拟器下载结束，同时也创建好了AVD，准备启动吧。</p>
+<h1 id="启动模拟器"><a href="#启动模拟器" class="headerlink" title="启动模拟器"></a>启动模拟器</h1><p>在模拟器中，因为没有硬件的gpu，可使用如下的命令进行gpu加速：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./emulator -avd android4.4 -gpu swiftshader_indirect</span><br></pre></td></tr></table></figure>
+
+<h1 id="享受嗖嗖的速度"><a href="#享受嗖嗖的速度" class="headerlink" title="享受嗖嗖的速度"></a>享受嗖嗖的速度</h1><p>使用x86模拟器，操作是非常流畅的，同时由于支持quick boot，模拟器可保存上次关闭时的状态，开机即可直接恢复关机时的状态，也可以使用这个特性，结合kvm虚拟机快照功能，实现更多的玩法。</p>
+<p>转载请注明出处:<a href="https://knktc.com/2018/06/07/install-android-x86-emulator-in-kvm/">https://knktc.com/2018/06/07/install-android-x86-emulator-in-kvm/</a></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        
+          
+        
+        <div class="post-tags">
+          
+            <a href="/tags/nested/" rel="tag"># nested</a>
+          
+            <a href="/tags/kvm/" rel="tag"># kvm</a>
+          
+            <a href="/tags/x86/" rel="tag"># x86</a>
+          
+            <a href="/tags/android/" rel="tag"># android</a>
+          
+            <a href="/tags/模拟器/" rel="tag"># 模拟器</a>
+          
+            <a href="/tags/虚拟机/" rel="tag"># 虚拟机</a>
+          
+            <a href="/tags/命令行/" rel="tag"># 命令行</a>
+          
+            <a href="/tags/安卓/" rel="tag"># 安卓</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/05/django-rest-framework-dynamic-fields/" rel="next" title="Django Rest Framework 动态获取字段">
+                <i class="fa fa-chevron-left"></i> Django Rest Framework 动态获取字段
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/06/10/python3-uwsgi-no-python-application-found/" rel="prev" title="uwsgi no python application found错误的解决(python3+centos7)">
+                uwsgi no python application found错误的解决(python3+centos7) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/sonic_avatar.png" alt="knktc">
+            
+              <p class="site-author-name" itemprop="name">knktc</p>
+              <div class="site-description motion-element" itemprop="description">关注linux,云计算,python，杂乱之地...</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">36</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">107</span>
+                    <span class="site-state-item-name">标签</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/knktc" title="GitHub &rarr; https://github.com/knktc" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://twitter.com/knktc" title="Twitter &rarr; https://twitter.com/knktc" rel="noopener" target="_blank"><i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#开启nested-kvm功能"><span class="nav-number">1.</span> <span class="nav-text">开启nested kvm功能</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#配置虚拟机"><span class="nav-number">2.</span> <span class="nav-text">配置虚拟机</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装模拟器"><span class="nav-number">3.</span> <span class="nav-text">安装模拟器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#启动模拟器"><span class="nav-number">4.</span> <span class="nav-text">启动模拟器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#享受嗖嗖的速度"><span class="nav-number">5.</span> <span class="nav-text">享受嗖嗖的速度</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">knktc</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.2.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.2.0"></script>
+
+  <script src="/js/motion.js?v=7.2.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/affix.js?v=7.2.0"></script>
+
+  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.2.0"></script>
+<script src="/js/post-details.js?v=7.2.0"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.2.0"></script>
+
+
+  
+
+  
+
+  
+
+  
+  
+
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://knktc.com/2018/06/07/install-android-x86-emulator-in-kvm/";
+    this.page.identifier = "2018/06/07/install-android-x86-emulator-in-kvm/";
+    this.page.title = '在KVM虚拟机中安装安卓X86模拟器';
+    };
+  function loadComments() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://knktc.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', '' + +new Date());
+    (d.head || d.body).appendChild(s);
+  }
+  
+    window.addEventListener('load', loadComments, false);
+  
+</script>
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
