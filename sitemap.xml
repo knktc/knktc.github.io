@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://knktc.com/2020/05/05/django-celery-get-task-count/</loc>
+    
+    <lastmod>2020-05-05T14:04:47.032Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://knktc.com/2020/05/02/django-dynamic-choices/</loc>
     
     <lastmod>2020-05-02T07:51:06.463Z</lastmod>
@@ -261,14 +268,14 @@
   </url>
   
   <url>
-    <loc>http://knktc.com/2014/05/25/rabbitmq-guest-cannot-login/</loc>
+    <loc>http://knktc.com/2018/06/10/python3-uwsgi-no-python-application-found/</loc>
     
     <lastmod>2019-05-26T05:17:12.681Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://knktc.com/2018/06/10/python3-uwsgi-no-python-application-found/</loc>
+    <loc>http://knktc.com/2014/05/25/rabbitmq-guest-cannot-login/</loc>
     
     <lastmod>2019-05-26T05:17:12.681Z</lastmod>
     
