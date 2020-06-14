@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://knktc.com/2020/06/14/audit-log-daily-rotate-and-compress/</loc>
+    
+    <lastmod>2020-06-14T09:54:01.553Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://knktc.com/2020/05/05/django-celery-get-task-count/</loc>
     
     <lastmod>2020-05-05T14:04:47.032Z</lastmod>
