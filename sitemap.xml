@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://knktc.com/2021/04/04/python-trust-self-signed-ssl-certicates/</loc>
+    
+    <lastmod>2021-04-04T09:55:19.423Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://knktc.com/2021/02/16/bulk-disable-confluence-users/</loc>
     
     <lastmod>2021-02-16T10:36:59.308Z</lastmod>
@@ -296,14 +303,14 @@
   </url>
   
   <url>
-    <loc>http://knktc.com/2014/05/25/rabbitmq-guest-cannot-login/</loc>
+    <loc>http://knktc.com/2018/06/10/python3-uwsgi-no-python-application-found/</loc>
     
     <lastmod>2019-05-26T05:17:12.681Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://knktc.com/2018/06/10/python3-uwsgi-no-python-application-found/</loc>
+    <loc>http://knktc.com/2014/05/25/rabbitmq-guest-cannot-login/</loc>
     
     <lastmod>2019-05-26T05:17:12.681Z</lastmod>
     
