@@ -28,7 +28,7 @@
 <meta property="og:description" content="最近看着Django 3.2 LTS发布了，就想着啥时候把当前项目用的Django 2.2版本给升级下。结果一升级，发现项目直接无法启动了，界面上在报类似下面的错误：  django.core.exceptions.ImproperlyConfigured: Cannot import ‘myapp’. Check that ‘apps.myapp.apps.MyappConfig.name’ i">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-05-05T00:48:11.000Z">
-<meta property="article:modified_time" content="2021-05-05T01:32:45.163Z">
+<meta property="article:modified_time" content="2021-05-05T03:19:26.676Z">
 <meta property="article:author" content="knktc">
 <meta property="article:tag" content="django">
 <meta property="article:tag" content="3.2">
@@ -193,7 +193,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2021-05-05 08:48:11 / 修改时间：09:32:45" itemprop="dateCreated datePublished" datetime="2021-05-05T08:48:11+08:00">2021-05-05</time>
+              <time title="创建时间：2021-05-05 08:48:11 / 修改时间：11:19:26" itemprop="dateCreated datePublished" datetime="2021-05-05T08:48:11+08:00">2021-05-05</time>
             </span>
 
           
@@ -223,10 +223,10 @@
 <p>这种写法对第三方专门用来复用的app倒是无所谓，如果是给一个项目下写的特定的app那就不太友好了，需要挨个改掉这个name，而且后期如果apps目录改个名字，这里的修改又要重新进行一次。</p>
 <h2 id="Hacky-way"><a href="#Hacky-way" class="headerlink" title="Hacky way"></a>Hacky way</h2><p>从源码的逻辑来看，恢复原来AppConfig discovery的方法其实还有，就是直接在配置子类中指定default类变量是False，这样代码的逻辑会和2.2版本时候差不多。</p>
 <p>一种改法：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">class MyappConfig(AppConfig):</span><br><span class="line">    default_auto_field &#x3D; &#39;django.db.models.BigAutoField&#39;</span><br><span class="line">    name &#x3D; &#39;myapp&#39;</span><br><span class="line">    default &#x3D; False  # 这里加了这么一个类变量</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyappConfig</span>(<span class="params">AppConfig</span>):</span></span><br><span class="line">    default_auto_field = <span class="string">&#x27;django.db.models.BigAutoField&#x27;</span></span><br><span class="line">    name = <span class="string">&#x27;myapp&#x27;</span></span><br><span class="line">    default = <span class="literal">False</span>  <span class="comment"># 这里加了这么一个类变量</span></span><br></pre></td></tr></table></figure>
 
 <p>还有一种改法更简单，但是需要慎用，因为我也没测试这个变更对Django内置的一些app会有什么影响：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 修改项目的settings.py加入以下的配置</span><br><span class="line"></span><br><span class="line">from django.apps import AppConfig</span><br><span class="line">AppConfig.default &#x3D; False</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 修改项目的settings.py加入以下的配置</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> django.apps <span class="keyword">import</span> AppConfig</span><br><span class="line">AppConfig.default = <span class="literal">False</span></span><br></pre></td></tr></table></figure>
 
 <p>观察下后续官方有啥变更吧。</p>
 
