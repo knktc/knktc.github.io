@@ -1,134 +1,58 @@
 <!DOCTYPE html>
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-
-<html class="theme-next pisces use-motion" lang="zh-CN">
-<head><meta name="generator" content="Hexo 3.9.0">
+<html lang="zh-CN">
+<head>
   <meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
 
 
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
 
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"knktc.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
-
-<link rel="stylesheet" href="/css/main.css?v=7.2.0">
-
-
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.2.0">
-
-
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.2.0">
-
-
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.2.0">
-
-
-  <link rel="mask-icon" href="/images/logo.svg?v=7.2.0" color="#222">
-
-
-
-
-
-
-
-<script id="hexo.configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    root: '/',
-    scheme: 'Pisces',
-    version: '7.2.0',
-    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
-    back2top: true,
-    back2top_sidebar: false,
-    fancybox: false,
-    fastclick: false,
-    lazyload: false,
-    tabs: true,
-    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
-    algolia: {
-      applicationID: '',
-      apiKey: '',
-      indexName: '',
-      hits: {"per_page":10},
-      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
-    }
-  };
-</script>
-
-
-  
-
-
-
-
-  <meta name="description" content="KVM虚拟机的快照(snapshot)功能可以保存虚拟机运行时的内存状态，恢复快照后虚拟机即可恢复到创建快照时的运行时状态，所有的软件运行状态依旧，类似于游戏中的SL(save/load)大法。我们可以使用快照功能实现很多业务，例如快速恢复沙箱的运行状态，而不用清理环境或是重启虚拟机等待服务一一启动。 但是KVM虚拟机的快照功能却不是很好利用，当需要大规模使用快照时就会发现似乎快照没那么好复制，复">
-<meta name="keywords" content="kvm,虚拟机,快照,libvirt,snapshot,qcow2">
+  <meta name="description" content="KVM虚拟机的快照(snapshot)功能可以保存虚拟机运行时的内存状态，恢复快照后虚拟机即可恢复到创建快照时的运行时状态，所有的软件运行状态依旧，类似于游戏中的SL(save&#x2F;load)大法。我们可以使用快照功能实现很多业务，例如快速恢复沙箱的运行状态，而不用清理环境或是重启虚拟机等待服务一一启动。 但是KVM虚拟机的快照功能却不是很好利用，当需要大规模使用快照时就会发现似乎快照没那么好复制，复">
 <meta property="og:type" content="article">
 <meta property="og:title" content="如何复制KVM虚拟机的快照">
 <meta property="og:url" content="http://knktc.com/2018/06/12/how-to-duplicate-kvm-snapshot/index.html">
 <meta property="og:site_name" content="knktc的杂乱空间">
-<meta property="og:description" content="KVM虚拟机的快照(snapshot)功能可以保存虚拟机运行时的内存状态，恢复快照后虚拟机即可恢复到创建快照时的运行时状态，所有的软件运行状态依旧，类似于游戏中的SL(save/load)大法。我们可以使用快照功能实现很多业务，例如快速恢复沙箱的运行状态，而不用清理环境或是重启虚拟机等待服务一一启动。 但是KVM虚拟机的快照功能却不是很好利用，当需要大规模使用快照时就会发现似乎快照没那么好复制，复">
-<meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-05-26T05:17:12.716Z">
+<meta property="og:description" content="KVM虚拟机的快照(snapshot)功能可以保存虚拟机运行时的内存状态，恢复快照后虚拟机即可恢复到创建快照时的运行时状态，所有的软件运行状态依旧，类似于游戏中的SL(save&#x2F;load)大法。我们可以使用快照功能实现很多业务，例如快速恢复沙箱的运行状态，而不用清理环境或是重启虚拟机等待服务一一启动。 但是KVM虚拟机的快照功能却不是很好利用，当需要大规模使用快照时就会发现似乎快照没那么好复制，复">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2018-06-12T14:46:00.000Z">
+<meta property="article:modified_time" content="2019-05-26T05:17:12.716Z">
+<meta property="article:author" content="knktc">
+<meta property="article:tag" content="kvm">
+<meta property="article:tag" content="快照">
+<meta property="article:tag" content="libvirt">
+<meta property="article:tag" content="snapshot">
+<meta property="article:tag" content="虚拟机">
+<meta property="article:tag" content="qcow2">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="如何复制KVM虚拟机的快照">
-<meta name="twitter:description" content="KVM虚拟机的快照(snapshot)功能可以保存虚拟机运行时的内存状态，恢复快照后虚拟机即可恢复到创建快照时的运行时状态，所有的软件运行状态依旧，类似于游戏中的SL(save/load)大法。我们可以使用快照功能实现很多业务，例如快速恢复沙箱的运行状态，而不用清理环境或是重启虚拟机等待服务一一启动。 但是KVM虚拟机的快照功能却不是很好利用，当需要大规模使用快照时就会发现似乎快照没那么好复制，复">
+
+<link rel="canonical" href="http://knktc.com/2018/06/12/how-to-duplicate-kvm-snapshot/">
 
 
-
-
-
-  
-  
-  <link rel="canonical" href="http://knktc.com/2018/06/12/how-to-duplicate-kvm-snapshot/">
-
-
-
-<script id="page.configurations">
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
   };
 </script>
 
   <title>如何复制KVM虚拟机的快照 | knktc的杂乱空间</title>
   
-
-
-
-
 
 
   <script>
@@ -144,12 +68,8 @@
 
 
 
-
-
-
   <noscript>
   <style>
-  .use-motion .motion-element,
   .use-motion .brand,
   .use-motion .menu-item,
   .sidebar-inner,
@@ -158,9 +78,8 @@
   .use-motion .comments,
   .use-motion .post-header,
   .use-motion .post-body,
-  .use-motion .collection-title { opacity: initial; }
+  .use-motion .collection-header { opacity: initial; }
 
-  .use-motion .logo,
   .use-motion .site-title,
   .use-motion .site-subtitle {
     opacity: initial;
@@ -174,113 +93,59 @@
 
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
-
-  
-  
-    
-  
-
-  <div class="container sidebar-position-left page-post-detail">
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
     <div class="headband"></div>
 
-    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-brand-wrapper">
-  <div class="site-meta">
-    
-
-    <div class="custom-logo-site-title">
-      <a href="/" class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">knktc的杂乱空间</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
     </div>
-    
-      
-        <p class="site-subtitle">python,cloud,linux...</p>
-      
-    
-    
   </div>
 
-  <div class="site-nav-toggle">
-    <button aria-label="切换导航栏">
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-    </button>
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">knktc的杂乱空间</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">python,cloud,linux...</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
   </div>
 </div>
 
 
 
+
 <nav class="site-nav">
-  
-    <ul id="menu" class="menu">
-      
-        
-        
-        
-          
-          <li class="menu-item menu-item-home">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
 
-    
-    
-      
-    
-
-    
-
-    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
 
   </li>
-        
-        
-        
-          
-          <li class="menu-item menu-item-about">
+        <li class="menu-item menu-item-about">
 
-    
-    
-      
-    
-
-    
-
-    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
 
   </li>
-        
-        
-        
-          
-          <li class="menu-item menu-item-archives">
+        <li class="menu-item menu-item-archives">
 
-    
-    
-      
-    
-
-    
-
-    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
 
   </li>
-
-      
-      
-    </ul>
-  
-
-  
-
-  
+  </ul>
 </nav>
 
-
-
-  
 
 
 
@@ -288,119 +153,61 @@
     </header>
 
     
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
 
 
-    <main id="main" class="main">
+    <main class="main">
       <div class="main-inner">
         <div class="content-wrap">
           
+
+          <div class="content post posts-expand">
             
 
-          
-          <div id="content" class="content">
-            
-
-  <div id="posts" class="posts-expand">
     
-
-  
-
   
   
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://knktc.com/2018/06/12/how-to-duplicate-kvm-snapshot/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/sonic_avatar.png">
       <meta itemprop="name" content="knktc">
       <meta itemprop="description" content="关注linux,云计算,python，杂乱之地...">
-      <meta itemprop="image" content="/images/sonic_avatar.png">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="knktc的杂乱空间">
     </span>
-
-    
       <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">如何复制KVM虚拟机的快照
-
-              
-            
-          </h1>
-        
+        <h1 class="post-title" itemprop="name headline">
+          如何复制KVM虚拟机的快照
+        </h1>
 
         <div class="post-meta">
-
-          
-          
-          
-
-          
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
+                <i class="far fa-calendar"></i>
               </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
+              <span class="post-meta-item-text">发表于</span>
 
               <time title="创建时间：2018-06-12 22:46:00" itemprop="dateCreated datePublished" datetime="2018-06-12T22:46:00+08:00">2018-06-12</time>
             </span>
-          
-
-          
-            
-
-            
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
+                  <i class="far fa-calendar-check"></i>
                 </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
+                <span class="post-meta-item-text">更新于</span>
                 <time title="修改时间：2019-05-26 13:17:12" itemprop="dateModified" datetime="2019-05-26T13:17:12+08:00">2019-05-26</time>
               </span>
-            
-          
-
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          <br>
-          
-
-          
 
           
 
         </div>
       </header>
-    
 
     
     
@@ -408,12 +215,9 @@
     <div class="post-body" itemprop="articleBody">
 
       
-      
-
-      
         <p>KVM虚拟机的快照(snapshot)功能可以保存虚拟机运行时的内存状态，恢复快照后虚拟机即可恢复到创建快照时的运行时状态，所有的软件运行状态依旧，类似于游戏中的SL(save/load)大法。我们可以使用快照功能实现很多业务，例如快速恢复沙箱的运行状态，而不用清理环境或是重启虚拟机等待服务一一启动。</p>
 <p>但是KVM虚拟机的快照功能却不是很好利用，当需要大规模使用快照时就会发现似乎快照没那么好复制，复制出来的快照往往启动后也会失效，无法恢复，让批量化部署变得很困难。本文介绍了复制KVM虚拟机快照方法，用较低的成本将一个虚拟机的快照复制出来，方便批量部署。</p>
-<a id="more"></a>
+<span id="more"></span>
 
 <h1 id="快照命令"><a href="#快照命令" class="headerlink" title="快照命令"></a>快照命令</h1><p>快照功能实际上是qemu的功能，这个功能保存了虚拟机的运行时状态，要使用这个功能，要求虚拟机的镜像为qcow2格式，raw格式等格式不支持这个功能。</p>
 <p>libvirt作为我们常用的虚拟机管理工具，提供了快捷的方式来创建及恢复快照，这些命令如下:</p>
@@ -424,8 +228,7 @@
 <p>openstack上的快照功能没有保存内存运行时的状态，仅仅保存了磁盘的状态，因此在恢复快照后虚拟机还是会重启，无法恢复到运行时的状态。</p>
 </blockquote>
 <h1 id="快照存储在哪儿？"><a href="#快照存储在哪儿？" class="headerlink" title="快照存储在哪儿？"></a>快照存储在哪儿？</h1><p>快照的信息实际上是存到了镜像文件本身的，我们可以使用“qemu-img info”命令来获取到镜像的信息，我们对一个做了快照的镜像执行该命令，此时就可以看到快照的信息:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[root@knktc snapshot]# qemu-img info source.img </span><br><span class="line">image: source.img</span><br><span class="line">file format: qcow2</span><br><span class="line">virtual size: 20G (21474836480 bytes)</span><br><span class="line">disk size: 3.1G</span><br><span class="line">cluster_size: 65536</span><br><span class="line">backing file: /opt/snapshot/base.img</span><br><span class="line">Snapshot list:</span><br><span class="line">ID        TAG                 VM SIZE                DATE       VM CLOCK</span><br><span class="line">1         1519990436             2.6G 2018-03-02 19:33:56   00:08:27.846</span><br><span class="line">Format specific information:</span><br><span class="line">    compat: 1.1</span><br><span class="line">    lazy refcounts: false</span><br></pre></td></tr></table></figure>
-
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[root@knktc snapshot]# qemu-img info source.img </span><br><span class="line">image: source.img</span><br><span class="line">file format: qcow2</span><br><span class="line">virtual size: 20G (21474836480 bytes)</span><br><span class="line">disk size: 3.1G</span><br><span class="line">cluster_size: 65536</span><br><span class="line">backing file: &#x2F;opt&#x2F;snapshot&#x2F;base.img</span><br><span class="line">Snapshot list:</span><br><span class="line">ID        TAG                 VM SIZE                DATE       VM CLOCK</span><br><span class="line">1         1519990436             2.6G 2018-03-02 19:33:56   00:08:27.846</span><br><span class="line">Format specific information:</span><br><span class="line">    compat: 1.1</span><br><span class="line">    lazy refcounts: false</span><br></pre></td></tr></table></figure>
 <p>在上面的镜像信息中，“Snapshot list”的部分就标示出了当前这个镜像有一个快照。</p>
 <p>看来，我们要复制快照，就只能把做了快照的镜像也给复制一份了。一般虚拟机的镜像都有几G到几十G之大，复制起来比较浪费空间，但qcow2格式的镜像支持backing file功能，即使用一个基础镜像来创建一个镜像，创建出来的镜像仅保存增量信息，这样就大幅度地降低了要复制的文件的体积了。</p>
 <p>于是我们就有了这么一个思路：</p>
@@ -457,7 +260,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">virsh snapshot-dumpxml --domain source --snapshotname 1519990436 &gt; snapshot.xml</span><br></pre></td></tr></table></figure>
 
 <p>打开我们导出的快照配置文件，我们可以看到以下的内容：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line">&lt;domainsnapshot&gt;</span><br><span class="line">  &lt;name&gt;1519990436&lt;/name&gt;</span><br><span class="line">  &lt;state&gt;running&lt;/state&gt;</span><br><span class="line">  &lt;creationTime&gt;1519990436&lt;/creationTime&gt;</span><br><span class="line">  &lt;memory snapshot=&apos;internal&apos;/&gt;</span><br><span class="line">  &lt;disks&gt;</span><br><span class="line">    &lt;disk name=&apos;vda&apos; snapshot=&apos;internal&apos;/&gt;</span><br><span class="line">  &lt;/disks&gt;</span><br><span class="line">  &lt;domain type=&apos;kvm&apos;&gt;</span><br><span class="line">    &lt;name&gt;source&lt;/name&gt;</span><br><span class="line">    &lt;uuid&gt;12d3271a-c683-44b2-8244-dd4b53818035&lt;/uuid&gt;</span><br><span class="line">    &lt;memory unit=&apos;KiB&apos;&gt;4194304&lt;/memory&gt;</span><br><span class="line">    &lt;currentMemory unit=&apos;KiB&apos;&gt;4194304&lt;/currentMemory&gt;</span><br><span class="line">    &lt;vcpu placement=&apos;static&apos;&gt;2&lt;/vcpu&gt;</span><br><span class="line">    &lt;resource&gt;</span><br><span class="line">      &lt;partition&gt;/machine&lt;/partition&gt;</span><br><span class="line">    &lt;/resource&gt;</span><br><span class="line">    &lt;os&gt;</span><br><span class="line">      &lt;type arch=&apos;x86_64&apos; machine=&apos;rhel6.6.0&apos;&gt;hvm&lt;/type&gt;</span><br><span class="line">      &lt;boot dev=&apos;hd&apos;/&gt;</span><br><span class="line">    &lt;/os&gt;</span><br><span class="line">    &lt;features&gt;</span><br><span class="line">      &lt;acpi/&gt;</span><br><span class="line">      &lt;apic/&gt;</span><br><span class="line">      &lt;pae/&gt;</span><br><span class="line">    &lt;/features&gt;</span><br><span class="line">    &lt;clock offset=&apos;utc&apos;/&gt;</span><br><span class="line">    &lt;on_poweroff&gt;destroy&lt;/on_poweroff&gt;</span><br><span class="line">    &lt;on_reboot&gt;restart&lt;/on_reboot&gt;</span><br><span class="line">    &lt;on_crash&gt;restart&lt;/on_crash&gt;</span><br><span class="line">    &lt;devices&gt;</span><br><span class="line">      &lt;emulator&gt;/usr/libexec/qemu-kvm&lt;/emulator&gt;</span><br><span class="line">      &lt;disk type=&apos;file&apos; device=&apos;disk&apos;&gt;</span><br><span class="line">        &lt;driver name=&apos;qemu&apos; type=&apos;qcow2&apos; cache=&apos;writeback&apos;/&gt;</span><br><span class="line">        &lt;source file=&apos;/opt/snapshot/source.img&apos;/&gt;</span><br><span class="line">        &lt;target dev=&apos;vda&apos; bus=&apos;virtio&apos;/&gt;</span><br><span class="line">        &lt;address type=&apos;pci&apos; domain=&apos;0x0000&apos; bus=&apos;0x00&apos; slot=&apos;0x04&apos; function=&apos;0x0&apos;/&gt;</span><br><span class="line">      &lt;/disk&gt;</span><br><span class="line">      &lt;controller type=&apos;usb&apos; index=&apos;0&apos; model=&apos;piix3-uhci&apos;&gt;</span><br><span class="line">        &lt;address type=&apos;pci&apos; domain=&apos;0x0000&apos; bus=&apos;0x00&apos; slot=&apos;0x01&apos; function=&apos;0x2&apos;/&gt;</span><br><span class="line">      &lt;/controller&gt;</span><br><span class="line">      &lt;controller type=&apos;pci&apos; index=&apos;0&apos; model=&apos;pci-root&apos;/&gt;</span><br><span class="line">      &lt;interface type=&apos;network&apos;&gt;</span><br><span class="line">        &lt;mac address=&apos;52:54:00:15:ec:5b&apos;/&gt;</span><br><span class="line">        &lt;source network=&apos;default&apos;/&gt;</span><br><span class="line">        &lt;model type=&apos;virtio&apos;/&gt;</span><br><span class="line">        &lt;address type=&apos;pci&apos; domain=&apos;0x0000&apos; bus=&apos;0x00&apos; slot=&apos;0x03&apos; function=&apos;0x0&apos;/&gt;</span><br><span class="line">      &lt;/interface&gt;</span><br><span class="line">      &lt;input type=&apos;tablet&apos; bus=&apos;usb&apos;&gt;</span><br><span class="line">        &lt;address type=&apos;usb&apos; bus=&apos;0&apos; port=&apos;1&apos;/&gt;</span><br><span class="line">      &lt;/input&gt;</span><br><span class="line">      &lt;input type=&apos;mouse&apos; bus=&apos;ps2&apos;/&gt;</span><br><span class="line">      &lt;input type=&apos;keyboard&apos; bus=&apos;ps2&apos;/&gt;</span><br><span class="line">      &lt;graphics type=&apos;vnc&apos; port=&apos;19000&apos; autoport=&apos;no&apos; listen=&apos;0.0.0.0&apos;&gt;</span><br><span class="line">        &lt;listen type=&apos;address&apos; address=&apos;0.0.0.0&apos;/&gt;</span><br><span class="line">      &lt;/graphics&gt;</span><br><span class="line">      &lt;video&gt;</span><br><span class="line">        &lt;model type=&apos;cirrus&apos; vram=&apos;16384&apos; heads=&apos;1&apos; primary=&apos;yes&apos;/&gt;</span><br><span class="line">        &lt;address type=&apos;pci&apos; domain=&apos;0x0000&apos; bus=&apos;0x00&apos; slot=&apos;0x02&apos; function=&apos;0x0&apos;/&gt;</span><br><span class="line">      &lt;/video&gt;</span><br><span class="line">      &lt;memballoon model=&apos;virtio&apos;&gt;</span><br><span class="line">        &lt;address type=&apos;pci&apos; domain=&apos;0x0000&apos; bus=&apos;0x00&apos; slot=&apos;0x05&apos; function=&apos;0x0&apos;/&gt;</span><br><span class="line">      &lt;/memballoon&gt;</span><br><span class="line">    &lt;/devices&gt;</span><br><span class="line">  &lt;/domain&gt;</span><br><span class="line">  &lt;cookie&gt;</span><br><span class="line">  &lt;/cookie&gt;</span><br><span class="line">&lt;/domainsnapshot&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line">&lt;domainsnapshot&gt;</span><br><span class="line">  &lt;name&gt;1519990436&lt;&#x2F;name&gt;</span><br><span class="line">  &lt;state&gt;running&lt;&#x2F;state&gt;</span><br><span class="line">  &lt;creationTime&gt;1519990436&lt;&#x2F;creationTime&gt;</span><br><span class="line">  &lt;memory snapshot&#x3D;&#39;internal&#39;&#x2F;&gt;</span><br><span class="line">  &lt;disks&gt;</span><br><span class="line">    &lt;disk name&#x3D;&#39;vda&#39; snapshot&#x3D;&#39;internal&#39;&#x2F;&gt;</span><br><span class="line">  &lt;&#x2F;disks&gt;</span><br><span class="line">  &lt;domain type&#x3D;&#39;kvm&#39;&gt;</span><br><span class="line">    &lt;name&gt;source&lt;&#x2F;name&gt;</span><br><span class="line">    &lt;uuid&gt;12d3271a-c683-44b2-8244-dd4b53818035&lt;&#x2F;uuid&gt;</span><br><span class="line">    &lt;memory unit&#x3D;&#39;KiB&#39;&gt;4194304&lt;&#x2F;memory&gt;</span><br><span class="line">    &lt;currentMemory unit&#x3D;&#39;KiB&#39;&gt;4194304&lt;&#x2F;currentMemory&gt;</span><br><span class="line">    &lt;vcpu placement&#x3D;&#39;static&#39;&gt;2&lt;&#x2F;vcpu&gt;</span><br><span class="line">    &lt;resource&gt;</span><br><span class="line">      &lt;partition&gt;&#x2F;machine&lt;&#x2F;partition&gt;</span><br><span class="line">    &lt;&#x2F;resource&gt;</span><br><span class="line">    &lt;os&gt;</span><br><span class="line">      &lt;type arch&#x3D;&#39;x86_64&#39; machine&#x3D;&#39;rhel6.6.0&#39;&gt;hvm&lt;&#x2F;type&gt;</span><br><span class="line">      &lt;boot dev&#x3D;&#39;hd&#39;&#x2F;&gt;</span><br><span class="line">    &lt;&#x2F;os&gt;</span><br><span class="line">    &lt;features&gt;</span><br><span class="line">      &lt;acpi&#x2F;&gt;</span><br><span class="line">      &lt;apic&#x2F;&gt;</span><br><span class="line">      &lt;pae&#x2F;&gt;</span><br><span class="line">    &lt;&#x2F;features&gt;</span><br><span class="line">    &lt;clock offset&#x3D;&#39;utc&#39;&#x2F;&gt;</span><br><span class="line">    &lt;on_poweroff&gt;destroy&lt;&#x2F;on_poweroff&gt;</span><br><span class="line">    &lt;on_reboot&gt;restart&lt;&#x2F;on_reboot&gt;</span><br><span class="line">    &lt;on_crash&gt;restart&lt;&#x2F;on_crash&gt;</span><br><span class="line">    &lt;devices&gt;</span><br><span class="line">      &lt;emulator&gt;&#x2F;usr&#x2F;libexec&#x2F;qemu-kvm&lt;&#x2F;emulator&gt;</span><br><span class="line">      &lt;disk type&#x3D;&#39;file&#39; device&#x3D;&#39;disk&#39;&gt;</span><br><span class="line">        &lt;driver name&#x3D;&#39;qemu&#39; type&#x3D;&#39;qcow2&#39; cache&#x3D;&#39;writeback&#39;&#x2F;&gt;</span><br><span class="line">        &lt;source file&#x3D;&#39;&#x2F;opt&#x2F;snapshot&#x2F;source.img&#39;&#x2F;&gt;</span><br><span class="line">        &lt;target dev&#x3D;&#39;vda&#39; bus&#x3D;&#39;virtio&#39;&#x2F;&gt;</span><br><span class="line">        &lt;address type&#x3D;&#39;pci&#39; domain&#x3D;&#39;0x0000&#39; bus&#x3D;&#39;0x00&#39; slot&#x3D;&#39;0x04&#39; function&#x3D;&#39;0x0&#39;&#x2F;&gt;</span><br><span class="line">      &lt;&#x2F;disk&gt;</span><br><span class="line">      &lt;controller type&#x3D;&#39;usb&#39; index&#x3D;&#39;0&#39; model&#x3D;&#39;piix3-uhci&#39;&gt;</span><br><span class="line">        &lt;address type&#x3D;&#39;pci&#39; domain&#x3D;&#39;0x0000&#39; bus&#x3D;&#39;0x00&#39; slot&#x3D;&#39;0x01&#39; function&#x3D;&#39;0x2&#39;&#x2F;&gt;</span><br><span class="line">      &lt;&#x2F;controller&gt;</span><br><span class="line">      &lt;controller type&#x3D;&#39;pci&#39; index&#x3D;&#39;0&#39; model&#x3D;&#39;pci-root&#39;&#x2F;&gt;</span><br><span class="line">      &lt;interface type&#x3D;&#39;network&#39;&gt;</span><br><span class="line">        &lt;mac address&#x3D;&#39;52:54:00:15:ec:5b&#39;&#x2F;&gt;</span><br><span class="line">        &lt;source network&#x3D;&#39;default&#39;&#x2F;&gt;</span><br><span class="line">        &lt;model type&#x3D;&#39;virtio&#39;&#x2F;&gt;</span><br><span class="line">        &lt;address type&#x3D;&#39;pci&#39; domain&#x3D;&#39;0x0000&#39; bus&#x3D;&#39;0x00&#39; slot&#x3D;&#39;0x03&#39; function&#x3D;&#39;0x0&#39;&#x2F;&gt;</span><br><span class="line">      &lt;&#x2F;interface&gt;</span><br><span class="line">      &lt;input type&#x3D;&#39;tablet&#39; bus&#x3D;&#39;usb&#39;&gt;</span><br><span class="line">        &lt;address type&#x3D;&#39;usb&#39; bus&#x3D;&#39;0&#39; port&#x3D;&#39;1&#39;&#x2F;&gt;</span><br><span class="line">      &lt;&#x2F;input&gt;</span><br><span class="line">      &lt;input type&#x3D;&#39;mouse&#39; bus&#x3D;&#39;ps2&#39;&#x2F;&gt;</span><br><span class="line">      &lt;input type&#x3D;&#39;keyboard&#39; bus&#x3D;&#39;ps2&#39;&#x2F;&gt;</span><br><span class="line">      &lt;graphics type&#x3D;&#39;vnc&#39; port&#x3D;&#39;19000&#39; autoport&#x3D;&#39;no&#39; listen&#x3D;&#39;0.0.0.0&#39;&gt;</span><br><span class="line">        &lt;listen type&#x3D;&#39;address&#39; address&#x3D;&#39;0.0.0.0&#39;&#x2F;&gt;</span><br><span class="line">      &lt;&#x2F;graphics&gt;</span><br><span class="line">      &lt;video&gt;</span><br><span class="line">        &lt;model type&#x3D;&#39;cirrus&#39; vram&#x3D;&#39;16384&#39; heads&#x3D;&#39;1&#39; primary&#x3D;&#39;yes&#39;&#x2F;&gt;</span><br><span class="line">        &lt;address type&#x3D;&#39;pci&#39; domain&#x3D;&#39;0x0000&#39; bus&#x3D;&#39;0x00&#39; slot&#x3D;&#39;0x02&#39; function&#x3D;&#39;0x0&#39;&#x2F;&gt;</span><br><span class="line">      &lt;&#x2F;video&gt;</span><br><span class="line">      &lt;memballoon model&#x3D;&#39;virtio&#39;&gt;</span><br><span class="line">        &lt;address type&#x3D;&#39;pci&#39; domain&#x3D;&#39;0x0000&#39; bus&#x3D;&#39;0x00&#39; slot&#x3D;&#39;0x05&#39; function&#x3D;&#39;0x0&#39;&#x2F;&gt;</span><br><span class="line">      &lt;&#x2F;memballoon&gt;</span><br><span class="line">    &lt;&#x2F;devices&gt;</span><br><span class="line">  &lt;&#x2F;domain&gt;</span><br><span class="line">  &lt;cookie&gt;</span><br><span class="line">  &lt;&#x2F;cookie&gt;</span><br><span class="line">&lt;&#x2F;domainsnapshot&gt;</span><br></pre></td></tr></table></figure>
 
 <p>看着有点眼熟啊对不对？似乎就是在虚拟机的配置文件上面加了点东西嘛。</p>
 <p>可以看到，这个配置文件中包含了快照的信息(名称、运行状态)和虚拟机的配置信息(几乎就是虚拟机的配置xml)。有了这个信息，我们可以考虑修 改这个配置文件，应用于我们复制出来的镜像中。</p>
@@ -479,7 +282,7 @@
 <p>注意！注意！注意！如果以上的几个信息填写得和test01虚拟机的信息不符，将无法使用快照功能！</p>
 </blockquote>
 <p>修改完成后，我们将这个修改完成的快照配置文件为test01虚拟机导入：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 执行以下命令，让test01虚拟机也能感知到自己体内有个快照</span><br><span class="line">virsh snapshot-create test01 snapshot.xml --redefine</span><br><span class="line"></span><br><span class="line"># 执行命令后将会返回以下的信息</span><br><span class="line">Domain snapshot 1519990436 created from &apos;snapshot.xml&apos;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 执行以下命令，让test01虚拟机也能感知到自己体内有个快照</span><br><span class="line">virsh snapshot-create test01 snapshot.xml --redefine</span><br><span class="line"></span><br><span class="line"># 执行命令后将会返回以下的信息</span><br><span class="line">Domain snapshot 1519990436 created from &#39;snapshot.xml&#39;</span><br></pre></td></tr></table></figure>
 
 <p>导入完成！</p>
 <h1 id="测试快照"><a href="#测试快照" class="headerlink" title="测试快照"></a>测试快照</h1><p>我们可以直接使用snapshot-list命令来列出test01虚拟机的快照信息，可以看到：</p>
@@ -490,654 +293,220 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">virsh snapshot-revert --domain test01 --snapshotname 1519990436</span><br></pre></td></tr></table></figure>
 
 <p>此时连接到虚拟机上看看，刚才保存的运行时状态也都在跑着，成功！</p>
-<h1 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h1><p>近期在pyajs上写一个libvirt的http wrapper，叫closestack，用于小型化的项目，但是各种事情太多，进度很慢，希望能慢慢搞完吧：<a href="https://github.com/pyajs/closestack" target="_blank" rel="noopener">https://github.com/pyajs/closestack</a></p>
+<h1 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h1><p>近期在pyajs上写一个libvirt的http wrapper，叫closestack，用于小型化的项目，但是各种事情太多，进度很慢，希望能慢慢搞完吧：<a target="_blank" rel="noopener" href="https://github.com/pyajs/closestack">https://github.com/pyajs/closestack</a></p>
 <p>转载请注明出处：<a href="https://knktc.com/2018/06/12/how-to-duplicate-kvm-snapshot/">https://knktc.com/2018/06/12/how-to-duplicate-kvm-snapshot/</a></p>
 
-      
     </div>
 
     
-
     
     
-    
-
-    
-
-    
-      
-    
-    
-      <div>
-        <div id="reward-container">
-  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
-  <button id="reward-button" disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+        <div class="reward-container">
+  <div>如果我的文字帮到了您，那么可不可以请我喝罐可乐？</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
     打赏
   </button>
   <div id="qr" style="display: none;">
-
-    
       
-      
-        
-      
-      <div style="display: inline-block">
+      <div style="display: inline-block;">
         <img src="/images/wechat.png" alt="knktc 微信支付">
         <p>微信支付</p>
       </div>
-    
       
-      
-        
-      
-      <div style="display: inline-block">
+      <div style="display: inline-block;">
         <img src="/images/alipay.jpg" alt="knktc 支付宝">
         <p>支付宝</p>
       </div>
-    
 
   </div>
 </div>
 
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-6959365962327411" data-ad-slot="4588493450"></ins>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-6959365962327411"
+     data-ad-slot="4588493450"></ins>
 <script>
      (adsbygoogle = window.adsbygoogle || []).push({});
 </script>
 
-      </div>
-    
-
-    
-      <div>
         
 
-
-
-
-  
-
-
-
+<div>
 <ul class="post-copyright">
   <li class="post-copyright-author">
-    <strong>本文作者： </strong>knktc</li>
+    <strong>本文作者： </strong>knktc
+  </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    
     <a href="http://knktc.com/2018/06/12/how-to-duplicate-kvm-snapshot/" title="如何复制KVM虚拟机的快照">http://knktc.com/2018/06/12/how-to-duplicate-kvm-snapshot/</a>
   </li>
   <li class="post-copyright-license">
-    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！</li>
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
 </ul>
-
-      </div>
-    
-
-    <footer class="post-footer">
-      
-        
-          
-        
-        <div class="post-tags">
-          
-            <a href="/tags/kvm/" rel="tag"># kvm</a>
-          
-            <a href="/tags/虚拟机/" rel="tag"># 虚拟机</a>
-          
-            <a href="/tags/快照/" rel="tag"># 快照</a>
-          
-            <a href="/tags/libvirt/" rel="tag"># libvirt</a>
-          
-            <a href="/tags/snapshot/" rel="tag"># snapshot</a>
-          
-            <a href="/tags/qcow2/" rel="tag"># qcow2</a>
-          
-        </div>
-      
-      
-      
-      
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2018/06/10/python3-uwsgi-no-python-application-found/" rel="next" title="uwsgi no python application found错误的解决(python3+centos7)">
-                <i class="fa fa-chevron-left"></i> uwsgi no python application found错误的解决(python3+centos7)
-              </a>
-            
-          </div>
-
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/06/22/docker-layer-doest-not-exist/" rel="prev" title="docker服务无法启动的解决方案(layer does not exist)">
-                docker服务无法启动的解决方案(layer does not exist) <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
-
-      
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-  </div>
-
-
-          </div>
-          
-
-  
-    <div class="comments" id="comments">
-      <div id="disqus_thread">
-        <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
-      </div>
-    </div>
-
-  
-
-
-
-        </div>
-        
-          
-  
-  <div class="sidebar-toggle">
-    <div class="sidebar-toggle-line-wrap">
-      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
-    </div>
-  </div>
-
-  <aside id="sidebar" class="sidebar">
-    <div class="sidebar-inner">
-
-      
-
-      
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
-
-      <div class="site-overview-wrap sidebar-panel">
-        <div class="site-overview">
-          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-            
-              <img class="site-author-image" itemprop="image" src="/images/sonic_avatar.png" alt="knktc">
-            
-              <p class="site-author-name" itemprop="name">knktc</p>
-              <div class="site-description motion-element" itemprop="description">关注linux,云计算,python，杂乱之地...</div>
-          </div>
-
-          
-            <nav class="site-state motion-element">
-              
-                <div class="site-state-item site-state-posts">
-                
-                  <a href="/archives/">
-                
-                    <span class="site-state-item-count">47</span>
-                    <span class="site-state-item-name">日志</span>
-                  </a>
-                </div>
-              
-
-              
-
-              
-                
-                
-                <div class="site-state-item site-state-tags">
-                  
-                    
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                    <span class="site-state-item-count">137</span>
-                    <span class="site-state-item-name">标签</span>
-                  
-                </div>
-              
-            </nav>
-          
-
-          
-
-          
-
-          
-            <div class="links-of-author motion-element">
-              
-                <span class="links-of-author-item">
-                  
-                  
-                    
-                  
-                  
-                    
-                  
-                  <a href="https://github.com/knktc" title="GitHub &rarr; https://github.com/knktc" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
-                </span>
-              
-                <span class="links-of-author-item">
-                  
-                  
-                    
-                  
-                  
-                    
-                  
-                  <a href="https://twitter.com/knktc" title="Twitter &rarr; https://twitter.com/knktc" rel="noopener" target="_blank"><i class="fa fa-fw fa-twitter"></i>Twitter</a>
-                </span>
-              
-            </div>
-          
-
-          
-             <div class="cc-license motion-element" itemprop="license">
-              
-              
-                
-              
-              
-              
-              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
-             </div>
-          
-
-          
-          
-
-          
-            
-          
-          
-
-        </div>
-      </div>
-
-      
-      <!--noindex-->
-        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-            
-            
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#快照命令"><span class="nav-number">1.</span> <span class="nav-text">快照命令</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#快照存储在哪儿？"><span class="nav-number">2.</span> <span class="nav-text">快照存储在哪儿？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#创建基础虚拟机镜像"><span class="nav-number">3.</span> <span class="nav-text">创建基础虚拟机镜像</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#创建新的虚拟机和快照"><span class="nav-number">4.</span> <span class="nav-text">创建新的虚拟机和快照</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#导出快照配置文件"><span class="nav-number">5.</span> <span class="nav-text">导出快照配置文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#复制快照"><span class="nav-number">6.</span> <span class="nav-text">复制快照</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#测试快照"><span class="nav-number">7.</span> <span class="nav-text">测试快照</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#其他"><span class="nav-number">8.</span> <span class="nav-text">其他</span></a></li></ol></div>
-            
-
-          </div>
-        </div>
-      <!--/noindex-->
-      
-
-      
-
-    </div>
-  </aside>
-  
-
-
-        
-      </div>
-    </main>
-
-    <footer id="footer" class="footer">
-      <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
-  <span class="with-love" id="animate">
-    <i class="fa fa-user"></i>
-  </span>
-  <span class="author" itemprop="copyrightHolder">knktc</span>
-
-  
-
-  
 </div>
 
 
-  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
-
-
-
-  <span class="post-meta-divider">|</span>
-
-
-
-  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.2.0</div>
-
-
-
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/kvm/" rel="tag"># kvm</a>
+              <a href="/tags/%E5%BF%AB%E7%85%A7/" rel="tag"># 快照</a>
+              <a href="/tags/libvirt/" rel="tag"># libvirt</a>
+              <a href="/tags/snapshot/" rel="tag"># snapshot</a>
+              <a href="/tags/%E8%99%9A%E6%8B%9F%E6%9C%BA/" rel="tag"># 虚拟机</a>
+              <a href="/tags/qcow2/" rel="tag"># qcow2</a>
+          </div>
 
         
 
 
-
-
-
-
-
-
         
-      </div>
-    </footer>
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/06/10/python3-uwsgi-no-python-application-found/" rel="prev" title="uwsgi no python application found错误的解决(python3+centos7)">
+      <i class="fa fa-chevron-left"></i> uwsgi no python application found错误的解决(python3+centos7)
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2018/06/22/docker-layer-doest-not-exist/" rel="next" title="docker服务无法启动的解决方案(layer does not exist)">
+      docker服务无法启动的解决方案(layer does not exist) <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
 
-    
-      <div class="back-to-top">
-        <i class="fa fa-arrow-up"></i>
-        
-      </div>
-    
 
-    
 
+          </div>
+          
     
-
-    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
   </div>
-
   
 
 <script>
-  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
-    window.Promise = null;
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
   }
 </script>
 
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BF%AB%E7%85%A7%E5%91%BD%E4%BB%A4"><span class="nav-number">1.</span> <span class="nav-text">快照命令</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BF%AB%E7%85%A7%E5%AD%98%E5%82%A8%E5%9C%A8%E5%93%AA%E5%84%BF%EF%BC%9F"><span class="nav-number">2.</span> <span class="nav-text">快照存储在哪儿？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E5%9F%BA%E7%A1%80%E8%99%9A%E6%8B%9F%E6%9C%BA%E9%95%9C%E5%83%8F"><span class="nav-number">3.</span> <span class="nav-text">创建基础虚拟机镜像</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E6%96%B0%E7%9A%84%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%92%8C%E5%BF%AB%E7%85%A7"><span class="nav-number">4.</span> <span class="nav-text">创建新的虚拟机和快照</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AF%BC%E5%87%BA%E5%BF%AB%E7%85%A7%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">5.</span> <span class="nav-text">导出快照配置文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A4%8D%E5%88%B6%E5%BF%AB%E7%85%A7"><span class="nav-number">6.</span> <span class="nav-text">复制快照</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E5%BF%AB%E7%85%A7"><span class="nav-number">7.</span> <span class="nav-text">测试快照</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B6%E4%BB%96"><span class="nav-number">8.</span> <span class="nav-text">其他</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="knktc"
+      src="/images/sonic_avatar.png">
+  <p class="site-author-name" itemprop="name">knktc</p>
+  <div class="site-description" itemprop="description">关注linux,云计算,python，杂乱之地...</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">48</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">140</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/knktc" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;knktc" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/knktc" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;knktc" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">knktc</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
 
 
 
@@ -1146,8 +515,29 @@
 
 
 
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
 
 
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
 
 
 
@@ -1164,111 +554,29 @@
 
 
   
-  <script src="/lib/jquery/index.js?v=3.4.1"></script>
 
-  
-  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
-
-  
-  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
-
-
-  
-
-
-  <script src="/js/utils.js?v=7.2.0"></script>
-
-  <script src="/js/motion.js?v=7.2.0"></script>
-
-
-
-  
-  
-
-
-  <script src="/js/affix.js?v=7.2.0"></script>
-
-  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
-
-
-
-  
-  <script src="/js/scrollspy.js?v=7.2.0"></script>
-<script src="/js/post-details.js?v=7.2.0"></script>
-
-
-
-  
-
-
-  <script src="/js/next-boot.js?v=7.2.0"></script>
-
-
-  
-
-  
-
-  
-
-  
   
 
 <script>
   var disqus_config = function() {
     this.page.url = "http://knktc.com/2018/06/12/how-to-duplicate-kvm-snapshot/";
     this.page.identifier = "2018/06/12/how-to-duplicate-kvm-snapshot/";
-    this.page.title = '如何复制KVM虚拟机的快照';
+    this.page.title = "如何复制KVM虚拟机的快照";
     };
-  function loadComments() {
-    var d = document, s = d.createElement('script');
-    s.src = 'https://knktc.disqus.com/embed.js';
-    s.setAttribute('data-timestamp', '' + +new Date());
-    (d.head || d.body).appendChild(s);
-  }
-  
-    window.addEventListener('load', loadComments, false);
-  
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://knktc.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
 </script>
-
-
-
-
-
-  
-
-
-  
-
-
-
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
 
 </body>
 </html>

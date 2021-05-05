@@ -1,133 +1,51 @@
 <!DOCTYPE html>
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-
-<html class="theme-next pisces use-motion" lang="zh-CN">
-<head><meta name="generator" content="Hexo 3.9.0">
+<html lang="zh-CN">
+<head>
   <meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
 
 
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
-
-<link rel="stylesheet" href="/css/main.css?v=7.2.0">
-
-
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.2.0">
-
-
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.2.0">
-
-
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.2.0">
-
-
-  <link rel="mask-icon" href="/images/logo.svg?v=7.2.0" color="#222">
-
-
-
-
-
-
-
-<script id="hexo.configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    root: '/',
-    scheme: 'Pisces',
-    version: '7.2.0',
-    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
-    back2top: true,
-    back2top_sidebar: false,
-    fancybox: false,
-    fastclick: false,
-    lazyload: false,
-    tabs: true,
-    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
-    algolia: {
-      applicationID: '',
-      apiKey: '',
-      indexName: '',
-      hits: {"per_page":10},
-      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
-    }
-  };
-</script>
-
-
-  
-
-
-
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"knktc.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
 
   <meta name="description" content="关注linux,云计算,python，杂乱之地...">
-<meta name="keywords" content="python,linux">
 <meta property="og:type" content="website">
 <meta property="og:title" content="knktc的杂乱空间">
 <meta property="og:url" content="http://knktc.com/page/3/index.html">
 <meta property="og:site_name" content="knktc的杂乱空间">
 <meta property="og:description" content="关注linux,云计算,python，杂乱之地...">
-<meta property="og:locale" content="zh-CN">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="knktc">
+<meta property="article:tag" content="python,linux">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="knktc的杂乱空间">
-<meta name="twitter:description" content="关注linux,云计算,python，杂乱之地...">
+
+<link rel="canonical" href="http://knktc.com/page/3/">
 
 
-
-
-
-  
-  
-  <link rel="canonical" href="http://knktc.com/page/3/">
-
-
-
-<script id="page.configurations">
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
+    isHome : true,
+    isPost : false,
+    lang   : 'zh-CN'
   };
 </script>
 
   <title>knktc的杂乱空间</title>
   
-
-
-
-
 
 
   <script>
@@ -143,12 +61,8 @@
 
 
 
-
-
-
   <noscript>
   <style>
-  .use-motion .motion-element,
   .use-motion .brand,
   .use-motion .menu-item,
   .sidebar-inner,
@@ -157,9 +71,8 @@
   .use-motion .comments,
   .use-motion .post-header,
   .use-motion .post-body,
-  .use-motion .collection-title { opacity: initial; }
+  .use-motion .collection-header { opacity: initial; }
 
-  .use-motion .logo,
   .use-motion .site-title,
   .use-motion .site-subtitle {
     opacity: initial;
@@ -173,114 +86,59 @@
 
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
-
-  
-  
-    
-  
-
-  <div class="container sidebar-position-left 
-  page-home">
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
     <div class="headband"></div>
 
-    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-brand-wrapper">
-  <div class="site-meta">
-    
-
-    <div class="custom-logo-site-title">
-      <a href="/" class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">knktc的杂乱空间</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
     </div>
-    
-      
-        <p class="site-subtitle">python,cloud,linux...</p>
-      
-    
-    
   </div>
 
-  <div class="site-nav-toggle">
-    <button aria-label="切换导航栏">
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-    </button>
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">knktc的杂乱空间</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">python,cloud,linux...</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
   </div>
 </div>
 
 
 
+
 <nav class="site-nav">
-  
-    <ul id="menu" class="menu">
-      
-        
-        
-        
-          
-          <li class="menu-item menu-item-home">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
 
-    
-    
-      
-    
-
-    
-
-    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
 
   </li>
-        
-        
-        
-          
-          <li class="menu-item menu-item-about">
+        <li class="menu-item menu-item-about">
 
-    
-    
-      
-    
-
-    
-
-    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
 
   </li>
-        
-        
-        
-          
-          <li class="menu-item menu-item-archives">
+        <li class="menu-item menu-item-archives">
 
-    
-    
-      
-    
-
-    
-
-    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
 
   </li>
-
-      
-      
-    </ul>
-  
-
-  
-
-  
+  </ul>
 </nav>
 
-
-
-  
 
 
 
@@ -288,121 +146,61 @@
     </header>
 
     
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
 
 
-    <main id="main" class="main">
+    <main class="main">
       <div class="main-inner">
         <div class="content-wrap">
           
-            
 
-          
-          <div id="content" class="content">
+          <div class="content index posts-expand">
             
-  <section id="posts" class="posts-expand">
-    
       
-
-  
-
   
   
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://knktc.com/2017/11/13/celery-python-bad-password/">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://knktc.com/2018/05/26/pyajs/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/sonic_avatar.png">
       <meta itemprop="name" content="knktc">
       <meta itemprop="description" content="关注linux,云计算,python，杂乱之地...">
-      <meta itemprop="image" content="/images/sonic_avatar.png">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="knktc的杂乱空间">
     </span>
-
-    
       <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2017/11/13/celery-python-bad-password/" class="post-title-link" itemprop="url">解决celery中用户密码带有特殊字符的问题</a>
-              
-            
-          </h1>
-        
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2018/05/26/pyajs/" class="post-title-link" itemprop="url">新成立的业余兴趣小组</a>
+        </h2>
 
         <div class="post-meta">
-
-          
-          
-          
-
-          
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
+                <i class="far fa-calendar"></i>
               </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
+              <span class="post-meta-item-text">发表于</span>
 
-              
-                
-              
-
-              <time title="创建时间：2017-11-13 16:43:49" itemprop="dateCreated datePublished" datetime="2017-11-13T16:43:49+08:00">2017-11-13</time>
+              <time title="创建时间：2018-05-26 00:11:46" itemprop="dateCreated datePublished" datetime="2018-05-26T00:11:46+08:00">2018-05-26</time>
             </span>
-          
-
-          
-            
-
-            
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
+                  <i class="far fa-calendar-check"></i>
                 </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
+                <span class="post-meta-item-text">更新于</span>
                 <time title="修改时间：2019-05-26 13:17:12" itemprop="dateModified" datetime="2019-05-26T13:17:12+08:00">2019-05-26</time>
               </span>
-            
-          
-
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          <br>
-          
-
-          
 
           
 
         </div>
       </header>
-    
 
     
     
@@ -410,161 +208,139 @@
     <div class="post-body" itemprop="articleBody">
 
       
-      
+          <p>我是个后端，这么多年也没好好学过前端，又想有空了鼓捣点带前端的东西，思来想去，搞个业余兴趣小组吧。于是在github上搞了一个organization，叫PYAJS，是PYthon And JavaScript的简称，意为这个小组前端后端都会做。先拉了几个同事，有前端的，也有后端的，作为这个业余兴趣小组的初始成员吧。</p>
+<p>organization的地址为：<a target="_blank" rel="noopener" href="https://github.com/pyajs">https://github.com/pyajs</a></p>
+<p>我们还弄了一个口号: Beyond Python And JavaScript，意思就是，大家随便发挥，不限于这两们我们最熟悉的语言~</p>
+<p>欢迎大家的加入！</p>
 
       
-        
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://knktc.com/2017/11/13/celery-python-bad-password/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/sonic_avatar.png">
+      <meta itemprop="name" content="knktc">
+      <meta itemprop="description" content="关注linux,云计算,python，杂乱之地...">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="knktc的杂乱空间">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2017/11/13/celery-python-bad-password/" class="post-title-link" itemprop="url">解决celery中用户密码带有特殊字符的问题</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-11-13 16:43:49" itemprop="dateCreated datePublished" datetime="2017-11-13T16:43:49+08:00">2017-11-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-05-26 13:17:12" itemprop="dateModified" datetime="2019-05-26T13:17:12+08:00">2019-05-26</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
           <p>由于某些原因，我们会在密码中加入一些特殊字符，如标点符号等，来加强密码的强度，当在rabbitmq中使用这类包含问号等特殊字符的密码时，celery却遇到了处理错误的问题。</p>
           <!--noindex-->
-          
-            <div class="post-button text-center">
+            <div class="post-button">
               <a class="btn" href="/2017/11/13/celery-python-bad-password/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
-          
           <!--/noindex-->
         
       
     </div>
 
     
-
     
     
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-      
-      
-
-      
-
-      
-      
+      <footer class="post-footer">
         <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
+      </footer>
   </article>
+  
+  
+  
 
-
-    
       
-
-  
-
   
   
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://knktc.com/2017/04/19/fedora-no-network-docker-not-start/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/sonic_avatar.png">
       <meta itemprop="name" content="knktc">
       <meta itemprop="description" content="关注linux,云计算,python，杂乱之地...">
-      <meta itemprop="image" content="/images/sonic_avatar.png">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="knktc的杂乱空间">
     </span>
-
-    
       <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2017/04/19/fedora-no-network-docker-not-start/" class="post-title-link" itemprop="url">解决fedora 25无网情况下docker无法启动的问题</a>
-              
-            
-          </h1>
-        
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2017/04/19/fedora-no-network-docker-not-start/" class="post-title-link" itemprop="url">解决fedora 25无网情况下docker无法启动的问题</a>
+        </h2>
 
         <div class="post-meta">
-
-          
-          
-          
-
-          
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
+                <i class="far fa-calendar"></i>
               </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
+              <span class="post-meta-item-text">发表于</span>
 
               <time title="创建时间：2017-04-19 14:35:12" itemprop="dateCreated datePublished" datetime="2017-04-19T14:35:12+08:00">2017-04-19</time>
             </span>
-          
-
-          
-            
-
-            
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
+                  <i class="far fa-calendar-check"></i>
                 </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
+                <span class="post-meta-item-text">更新于</span>
                 <time title="修改时间：2019-05-26 13:17:12" itemprop="dateModified" datetime="2019-05-26T13:17:12+08:00">2019-05-26</time>
               </span>
-            
-          
-
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          <br>
-          
-
-          
 
           
 
         </div>
       </header>
-    
 
     
     
@@ -572,161 +348,71 @@
     <div class="post-body" itemprop="articleBody">
 
       
-      
-
-      
-        
           <p>由于fedora25默认使用network manager进行网络管理，在无网的情况下(没接网线、没连wifi的场景)就不会创建/etc/resolv.conf文件，而docker容器的dns解析又依赖于该文件，直接导致了这种情况下docker容器无法启动。</p>
           <!--noindex-->
-          
-            <div class="post-button text-center">
+            <div class="post-button">
               <a class="btn" href="/2017/04/19/fedora-no-network-docker-not-start/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
-          
           <!--/noindex-->
         
       
     </div>
 
     
-
     
     
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-      
-      
-
-      
-
-      
-      
+      <footer class="post-footer">
         <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
+      </footer>
   </article>
+  
+  
+  
 
-
-    
       
-
-  
-
   
   
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://knktc.com/2016/06/10/elasticsearch-multiple-instances/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/sonic_avatar.png">
       <meta itemprop="name" content="knktc">
       <meta itemprop="description" content="关注linux,云计算,python，杂乱之地...">
-      <meta itemprop="image" content="/images/sonic_avatar.png">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="knktc的杂乱空间">
     </span>
-
-    
       <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2016/06/10/elasticsearch-multiple-instances/" class="post-title-link" itemprop="url">ElasticSearch单机双实例的配置方法</a>
-              
-            
-          </h1>
-        
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2016/06/10/elasticsearch-multiple-instances/" class="post-title-link" itemprop="url">ElasticSearch单机双实例的配置方法</a>
+        </h2>
 
         <div class="post-meta">
-
-          
-          
-          
-
-          
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
+                <i class="far fa-calendar"></i>
               </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
+              <span class="post-meta-item-text">发表于</span>
 
               <time title="创建时间：2016-06-10 20:27:08" itemprop="dateCreated datePublished" datetime="2016-06-10T20:27:08+08:00">2016-06-10</time>
             </span>
-          
-
-          
-            
-
-            
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
+                  <i class="far fa-calendar-check"></i>
                 </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
+                <span class="post-meta-item-text">更新于</span>
                 <time title="修改时间：2019-05-26 13:17:12" itemprop="dateModified" datetime="2019-05-26T13:17:12+08:00">2019-05-26</time>
               </span>
-            
-          
-
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          <br>
-          
-
-          
 
           
 
         </div>
       </header>
-    
 
     
     
@@ -734,161 +420,71 @@
     <div class="post-body" itemprop="articleBody">
 
       
-      
-
-      
-        
           <p>从ElasticSearch官方的多份文档中可以看到，官方并不建议部署ES时为实例指定超过32GB的内存，但是现在内存的价格非常便宜，一台实体机服务器仅用32G内存显然是非常浪费的。所以我们要尝试在一个服务器上开多个ES实例，以便达到充分利用资源的目的。本文提供了一些ES单机双实例的配置要点，可扩展至单机多实例，供大家来实际参考。</p>
           <!--noindex-->
-          
-            <div class="post-button text-center">
+            <div class="post-button">
               <a class="btn" href="/2016/06/10/elasticsearch-multiple-instances/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
-          
           <!--/noindex-->
         
       
     </div>
 
     
-
     
     
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-      
-      
-
-      
-
-      
-      
+      <footer class="post-footer">
         <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
+      </footer>
   </article>
+  
+  
+  
 
-
-    
       
-
-  
-
   
   
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://knktc.com/2015/05/10/kibana-could-not-contact-elasticsearch/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/sonic_avatar.png">
       <meta itemprop="name" content="knktc">
       <meta itemprop="description" content="关注linux,云计算,python，杂乱之地...">
-      <meta itemprop="image" content="/images/sonic_avatar.png">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="knktc的杂乱空间">
     </span>
-
-    
       <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2015/05/10/kibana-could-not-contact-elasticsearch/" class="post-title-link" itemprop="url">Kibana 3无法连接到elasticsearch</a>
-              
-            
-          </h1>
-        
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2015/05/10/kibana-could-not-contact-elasticsearch/" class="post-title-link" itemprop="url">Kibana 3无法连接到elasticsearch</a>
+        </h2>
 
         <div class="post-meta">
-
-          
-          
-          
-
-          
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
+                <i class="far fa-calendar"></i>
               </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
+              <span class="post-meta-item-text">发表于</span>
 
               <time title="创建时间：2015-05-10 10:49:51" itemprop="dateCreated datePublished" datetime="2015-05-10T10:49:51+08:00">2015-05-10</time>
             </span>
-          
-
-          
-            
-
-            
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
+                  <i class="far fa-calendar-check"></i>
                 </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
+                <span class="post-meta-item-text">更新于</span>
                 <time title="修改时间：2019-05-26 13:17:12" itemprop="dateModified" datetime="2019-05-26T13:17:12+08:00">2019-05-26</time>
               </span>
-            
-          
-
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          <br>
-          
-
-          
 
           
 
         </div>
       </header>
-    
 
     
     
@@ -896,165 +492,75 @@
     <div class="post-body" itemprop="articleBody">
 
       
-      
-
-      
-        
           <p>最近准备升级下使用了很久的ELK组合，将kibana从3代升级到4代，将elasticsearch从1.3升级到1.5。升级完了一看，Kibana 4现在问题真的很多啊，功能是强大了，但是易用性也下降了，而且也不兼容Kibana 3的配置数据。没辙，只能把Kibana 4给降级回去。但是一降级，却发现Kibana不好使了，页面一直显示</p>
 <blockquote>
-<p>“Error Could not contact Elasticsearch at <a href="http://elasticsearch.host:9200" target="_blank" rel="noopener">http://elasticsearch.host:9200</a>. Please ensure that Elasticsearch is reachable from your system.”</p>
+<p>“Error Could not contact Elasticsearch at <a target="_blank" rel="noopener" href="http://elasticsearch.host:9200/">http://elasticsearch.host:9200</a>. Please ensure that Elasticsearch is reachable from your system.”</p>
 </blockquote>
 <p>Kibana不明原因地连接不到elasticsearch了。</p>
           <!--noindex-->
-          
-            <div class="post-button text-center">
+            <div class="post-button">
               <a class="btn" href="/2015/05/10/kibana-could-not-contact-elasticsearch/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
-          
           <!--/noindex-->
         
       
     </div>
 
     
-
     
     
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-      
-      
-
-      
-
-      
-      
+      <footer class="post-footer">
         <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
+      </footer>
   </article>
+  
+  
+  
 
-
-    
       
-
-  
-
   
   
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://knktc.com/2015/02/21/pg_dump-password/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/sonic_avatar.png">
       <meta itemprop="name" content="knktc">
       <meta itemprop="description" content="关注linux,云计算,python，杂乱之地...">
-      <meta itemprop="image" content="/images/sonic_avatar.png">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="knktc的杂乱空间">
     </span>
-
-    
       <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2015/02/21/pg_dump-password/" class="post-title-link" itemprop="url">pg_dump命令不输入密码</a>
-              
-            
-          </h1>
-        
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2015/02/21/pg_dump-password/" class="post-title-link" itemprop="url">pg_dump命令不输入密码</a>
+        </h2>
 
         <div class="post-meta">
-
-          
-          
-          
-
-          
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
+                <i class="far fa-calendar"></i>
               </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
+              <span class="post-meta-item-text">发表于</span>
 
               <time title="创建时间：2015-02-21 17:20:38" itemprop="dateCreated datePublished" datetime="2015-02-21T17:20:38+08:00">2015-02-21</time>
             </span>
-          
-
-          
-            
-
-            
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
+                  <i class="far fa-calendar-check"></i>
                 </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
+                <span class="post-meta-item-text">更新于</span>
                 <time title="修改时间：2019-05-26 13:17:12" itemprop="dateModified" datetime="2019-05-26T13:17:12+08:00">2019-05-26</time>
               </span>
-            
-          
-
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          <br>
-          
-
-          
 
           
 
         </div>
       </header>
-    
 
     
     
@@ -1062,165 +568,73 @@
     <div class="post-body" itemprop="articleBody">
 
       
-      
-
-      
-        
-          
-            <p>最近需要写个简单的脚本进行Postgresql数据库的定时备份，这才发现pg_dump命令必须交互式地输入密码。于是开始在网上找下解决方案，找到了以下两种方案：</p>
+          <p>最近需要写个简单的脚本进行Postgresql数据库的定时备份，这才发现pg_dump命令必须交互式地输入密码。于是开始在网上找下解决方案，找到了以下两种方案：</p>
 <p>1.使用export命令设置环境变量，将数据库密码赋值给PGPASSWORD</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export PGPASSWORD=&quot;$put_here_the_password&quot;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export PGPASSWORD&#x3D;&quot;$put_here_the_password&quot;</span><br></pre></td></tr></table></figure>
 
 <p>2.在用户主目录下创建一个.pgpass文件，将数据库用户名密码信息配置写入其中</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">localhost:5432:mydbname:postgres:mypass</span><br></pre></td></tr></table></figure>
-
 <p>随后将该文件设置权限为600即可（否则可能不会生效）。</p>
 <p>使用以上两种方法，都可以让需要使用密码的命令不再需要交互式地输入密码。</p>
 <p>参考：</p>
-<p><a href="http://www.postgresql.org/docs/current/static/libpq-pgpass.html" target="_blank" rel="noopener">http://www.postgresql.org/docs/current/static/libpq-pgpass.html</a></p>
+<p><a target="_blank" rel="noopener" href="http://www.postgresql.org/docs/current/static/libpq-pgpass.html">http://www.postgresql.org/docs/current/static/libpq-pgpass.html</a></p>
 
-          
-        
       
     </div>
 
     
-
     
     
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-      
-      
-
-      
-
-      
-      
+      <footer class="post-footer">
         <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
+      </footer>
   </article>
+  
+  
+  
 
-
-    
       
-
-  
-
   
   
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://knktc.com/2014/11/23/udf-hiveserver2-cloudera-manager-aux-jars/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/sonic_avatar.png">
       <meta itemprop="name" content="knktc">
       <meta itemprop="description" content="关注linux,云计算,python，杂乱之地...">
-      <meta itemprop="image" content="/images/sonic_avatar.png">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="knktc的杂乱空间">
     </span>
-
-    
       <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2014/11/23/udf-hiveserver2-cloudera-manager-aux-jars/" class="post-title-link" itemprop="url">Cloudera Manager配置hiveserver2使用udf</a>
-              
-            
-          </h1>
-        
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2014/11/23/udf-hiveserver2-cloudera-manager-aux-jars/" class="post-title-link" itemprop="url">Cloudera Manager配置hiveserver2使用udf</a>
+        </h2>
 
         <div class="post-meta">
-
-          
-          
-          
-
-          
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
+                <i class="far fa-calendar"></i>
               </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
+              <span class="post-meta-item-text">发表于</span>
 
               <time title="创建时间：2014-11-23 22:26:08" itemprop="dateCreated datePublished" datetime="2014-11-23T22:26:08+08:00">2014-11-23</time>
             </span>
-          
-
-          
-            
-
-            
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
+                  <i class="far fa-calendar-check"></i>
                 </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
+                <span class="post-meta-item-text">更新于</span>
                 <time title="修改时间：2019-05-26 13:17:12" itemprop="dateModified" datetime="2019-05-26T13:17:12+08:00">2019-05-26</time>
               </span>
-            
-          
-
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          <br>
-          
-
-          
 
           
 
         </div>
       </header>
-    
 
     
     
@@ -1228,161 +642,71 @@
     <div class="post-body" itemprop="articleBody">
 
       
-      
-
-      
-        
           <p>hiveserver2为hive的调用提供了很多的便利，但遗憾的是hiveserver2并没有提供什么便利的方法来直接使用我们编写的udf，对此如果使用hiveserver2来调用udf前，我们需要先进行一些配置。本文中的配置方法适合于使用CDH4的用户。</p>
           <!--noindex-->
-          
-            <div class="post-button text-center">
+            <div class="post-button">
               <a class="btn" href="/2014/11/23/udf-hiveserver2-cloudera-manager-aux-jars/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
-          
           <!--/noindex-->
         
       
     </div>
 
     
-
     
     
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-      
-      
-
-      
-
-      
-      
+      <footer class="post-footer">
         <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
+      </footer>
   </article>
+  
+  
+  
 
-
-    
       
-
-  
-
   
   
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://knktc.com/2014/08/31/powershell-parallel-script/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/sonic_avatar.png">
       <meta itemprop="name" content="knktc">
       <meta itemprop="description" content="关注linux,云计算,python，杂乱之地...">
-      <meta itemprop="image" content="/images/sonic_avatar.png">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="knktc的杂乱空间">
     </span>
-
-    
       <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2014/08/31/powershell-parallel-script/" class="post-title-link" itemprop="url">Powershell:简单实现并行任务的脚本</a>
-              
-            
-          </h1>
-        
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2014/08/31/powershell-parallel-script/" class="post-title-link" itemprop="url">Powershell:简单实现并行任务的脚本</a>
+        </h2>
 
         <div class="post-meta">
-
-          
-          
-          
-
-          
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
+                <i class="far fa-calendar"></i>
               </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
+              <span class="post-meta-item-text">发表于</span>
 
               <time title="创建时间：2014-08-31 12:24:43" itemprop="dateCreated datePublished" datetime="2014-08-31T12:24:43+08:00">2014-08-31</time>
             </span>
-          
-
-          
-            
-
-            
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
+                  <i class="far fa-calendar-check"></i>
                 </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
+                <span class="post-meta-item-text">更新于</span>
                 <time title="修改时间：2019-05-26 13:17:12" itemprop="dateModified" datetime="2019-05-26T13:17:12+08:00">2019-05-26</time>
               </span>
-            
-          
-
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          <br>
-          
-
-          
 
           
 
         </div>
       </header>
-    
 
     
     
@@ -1390,161 +714,71 @@
     <div class="post-body" itemprop="articleBody">
 
       
-      
-
-      
-        
           <p>近期需要向上千台服务器安装程序，发送命令，虽然已经将这些服务器分了几十个组，并在每一组中选择一台安装批量部署程序作为中心节点，向该组内服务器发送文件或命令，但我在本地用传统的方式串行地向各组的中心节点发送命令并等待返回结果，仍然浪费了不少时间。看起来，部署规模大了，使用串行实在是有些忙不过来了。于是我开始尝试powershell的并行任务实现方法。</p>
           <!--noindex-->
-          
-            <div class="post-button text-center">
+            <div class="post-button">
               <a class="btn" href="/2014/08/31/powershell-parallel-script/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
-          
           <!--/noindex-->
         
       
     </div>
 
     
-
     
     
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-      
-      
-
-      
-
-      
-      
+      <footer class="post-footer">
         <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
+      </footer>
   </article>
+  
+  
+  
 
-
-    
       
-
-  
-
   
   
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://knktc.com/2014/08/16/docker-use-dnsmasq-as-hosts/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/sonic_avatar.png">
       <meta itemprop="name" content="knktc">
       <meta itemprop="description" content="关注linux,云计算,python，杂乱之地...">
-      <meta itemprop="image" content="/images/sonic_avatar.png">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="knktc的杂乱空间">
     </span>
-
-    
       <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2014/08/16/docker-use-dnsmasq-as-hosts/" class="post-title-link" itemprop="url">Docker使用dnsmasq替代/etc/hosts解析</a>
-              
-            
-          </h1>
-        
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2014/08/16/docker-use-dnsmasq-as-hosts/" class="post-title-link" itemprop="url">Docker使用dnsmasq替代/etc/hosts解析</a>
+        </h2>
 
         <div class="post-meta">
-
-          
-          
-          
-
-          
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
+                <i class="far fa-calendar"></i>
               </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
+              <span class="post-meta-item-text">发表于</span>
 
               <time title="创建时间：2014-08-16 17:51:30" itemprop="dateCreated datePublished" datetime="2014-08-16T17:51:30+08:00">2014-08-16</time>
             </span>
-          
-
-          
-            
-
-            
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
+                  <i class="far fa-calendar-check"></i>
                 </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
+                <span class="post-meta-item-text">更新于</span>
                 <time title="修改时间：2019-05-26 13:17:12" itemprop="dateModified" datetime="2019-05-26T13:17:12+08:00">2019-05-26</time>
               </span>
-            
-          
-
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          <br>
-          
-
-          
 
           
 
         </div>
       </header>
-    
 
     
     
@@ -1552,161 +786,71 @@
     <div class="post-body" itemprop="articleBody">
 
       
-      
-
-      
-        
           <p>docker目前没有办法直接修改容器中的/etc/hosts文件，如果要修改就会报出权限不足的警告，对此引发了很多的讨论。目前来看，要想彻底解决这个问题，只有等官方未来的解决方案了，但是目前我们可以用dnsmasq来解决本地的解析问题。    </p>
           <!--noindex-->
-          
-            <div class="post-button text-center">
+            <div class="post-button">
               <a class="btn" href="/2014/08/16/docker-use-dnsmasq-as-hosts/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
-          
           <!--/noindex-->
         
       
     </div>
 
     
-
     
     
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-      
-      
-
-      
-
-      
-      
+      <footer class="post-footer">
         <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
+      </footer>
   </article>
+  
+  
+  
 
-
-    
       
-
-  
-
   
   
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://knktc.com/2014/08/09/docker-registry-install/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/sonic_avatar.png">
       <meta itemprop="name" content="knktc">
       <meta itemprop="description" content="关注linux,云计算,python，杂乱之地...">
-      <meta itemprop="image" content="/images/sonic_avatar.png">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="knktc的杂乱空间">
     </span>
-
-    
       <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2014/08/09/docker-registry-install/" class="post-title-link" itemprop="url">搭建自己的docker registry</a>
-              
-            
-          </h1>
-        
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2014/08/09/docker-registry-install/" class="post-title-link" itemprop="url">搭建自己的docker registry</a>
+        </h2>
 
         <div class="post-meta">
-
-          
-          
-          
-
-          
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
+                <i class="far fa-calendar"></i>
               </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
+              <span class="post-meta-item-text">发表于</span>
 
               <time title="创建时间：2014-08-09 11:52:31" itemprop="dateCreated datePublished" datetime="2014-08-09T11:52:31+08:00">2014-08-09</time>
             </span>
-          
-
-          
-            
-
-            
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
+                  <i class="far fa-calendar-check"></i>
                 </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
+                <span class="post-meta-item-text">更新于</span>
                 <time title="修改时间：2019-05-26 13:17:12" itemprop="dateModified" datetime="2019-05-26T13:17:12+08:00">2019-05-26</time>
               </span>
-            
-          
-
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          <br>
-          
-
-          
 
           
 
         </div>
       </header>
-    
 
     
     
@@ -1714,222 +858,29 @@
     <div class="post-body" itemprop="articleBody">
 
       
-      
-
-      
-        
           <p>平时我们使用的docker镜像都来自官方的docker index，由于国内连接docker官网速度太慢，而且有些包含自己代码的镜像也不好直接放到docker官网上，这个时候就需要考虑自己搭建一个docker index的源了。docker官方提供了docker registry这个工具，用于自建docker index，可在本地网络环境中保存和分享docker image，非常适合于公司内部进行docker的推广和使用。本文记录了安装docker registry的过程，作为一个笔记供大家参考吧。    </p>
           <!--noindex-->
-          
-            <div class="post-button text-center">
+            <div class="post-button">
               <a class="btn" href="/2014/08/09/docker-registry-install/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
-          
           <!--/noindex-->
         
       
     </div>
 
     
-
     
     
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-      
-      
-
-      
-
-      
-      
+      <footer class="post-footer">
         <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
+      </footer>
   </article>
-
-
-    
-      
-
-  
-
   
   
   
 
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://knktc.com/2014/08/09/docker-cheat-sheet/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="knktc">
-      <meta itemprop="description" content="关注linux,云计算,python，杂乱之地...">
-      <meta itemprop="image" content="/images/sonic_avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="knktc的杂乱空间">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2014/08/09/docker-cheat-sheet/" class="post-title-link" itemprop="url">docker随手记</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2014-08-09 11:23:40" itemprop="dateCreated datePublished" datetime="2014-08-09T11:23:40+08:00">2014-08-09</time>
-            </span>
-          
-
-          
-            
-
-            
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2019-05-26 13:17:12" itemprop="dateModified" datetime="2019-05-26T13:17:12+08:00">2019-05-26</time>
-              </span>
-            
-          
-
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>试用了两天docker，感觉真的不错，顿时就有把自己的所有程序都容器化了的想法。现在docker火的不得了，网上的讨论非常多，但docker毕竟是个新事物，想要PK vm多年的历史经验还有很长的路。以下是一些最近使用docker时遇到的问题的总结，当一个cheat sheet放着吧。</p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2014/08/09/docker-cheat-sheet/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-      
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-  </section>
 
   
   <nav class="pagination">
@@ -1941,469 +892,119 @@
           </div>
           
 
-        </div>
-        
-          
-  
-  <div class="sidebar-toggle">
-    <div class="sidebar-toggle-line-wrap">
-      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
-    </div>
-  </div>
-
-  <aside id="sidebar" class="sidebar">
-    <div class="sidebar-inner">
-
-      
-
-      
-
-      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
-        <div class="site-overview">
-          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-            
-              <img class="site-author-image" itemprop="image" src="/images/sonic_avatar.png" alt="knktc">
-            
-              <p class="site-author-name" itemprop="name">knktc</p>
-              <div class="site-description motion-element" itemprop="description">关注linux,云计算,python，杂乱之地...</div>
-          </div>
-
-          
-            <nav class="site-state motion-element">
-              
-                <div class="site-state-item site-state-posts">
-                
-                  <a href="/archives/">
-                
-                    <span class="site-state-item-count">47</span>
-                    <span class="site-state-item-name">日志</span>
-                  </a>
-                </div>
-              
-
-              
-
-              
-                
-                
-                <div class="site-state-item site-state-tags">
-                  
-                    
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                    <span class="site-state-item-count">137</span>
-                    <span class="site-state-item-name">标签</span>
-                  
-                </div>
-              
-            </nav>
-          
-
-          
-
-          
-
-          
-            <div class="links-of-author motion-element">
-              
-                <span class="links-of-author-item">
-                  
-                  
-                    
-                  
-                  
-                    
-                  
-                  <a href="https://github.com/knktc" title="GitHub &rarr; https://github.com/knktc" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
-                </span>
-              
-                <span class="links-of-author-item">
-                  
-                  
-                    
-                  
-                  
-                    
-                  
-                  <a href="https://twitter.com/knktc" title="Twitter &rarr; https://twitter.com/knktc" rel="noopener" target="_blank"><i class="fa fa-fw fa-twitter"></i>Twitter</a>
-                </span>
-              
-            </div>
-          
-
-          
-             <div class="cc-license motion-element" itemprop="license">
-              
-              
-                
-              
-              
-              
-              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
-             </div>
-          
-
-          
-          
-
-          
-            
-          
-          
-
-        </div>
-      </div>
-
-      
-
-      
-
-    </div>
-  </aside>
-  
-
-
-        
-      </div>
-    </main>
-
-    <footer id="footer" class="footer">
-      <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
-  <span class="with-love" id="animate">
-    <i class="fa fa-user"></i>
-  </span>
-  <span class="author" itemprop="copyrightHolder">knktc</span>
-
-  
-
-  
-</div>
-
-
-  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
-
-
-
-  <span class="post-meta-divider">|</span>
-
-
-
-  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.2.0</div>
-
-
-
-
-        
-
-
-
-
-
-
-
-
-        
-      </div>
-    </footer>
-
-    
-      <div class="back-to-top">
-        <i class="fa fa-arrow-up"></i>
-        
-      </div>
-    
-
-    
-
-    
-
-    
-  </div>
-
-  
-
 <script>
-  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
-    window.Promise = null;
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
   }
 </script>
 
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="knktc"
+      src="/images/sonic_avatar.png">
+  <p class="site-author-name" itemprop="name">knktc</p>
+  <div class="site-description" itemprop="description">关注linux,云计算,python，杂乱之地...</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">48</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">140</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/knktc" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;knktc" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/knktc" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;knktc" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">knktc</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
 
 
 
@@ -2412,8 +1013,29 @@
 
 
 
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
 
 
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
 
 
 
@@ -2430,88 +1052,9 @@
 
 
   
-  <script src="/lib/jquery/index.js?v=3.4.1"></script>
-
-  
-  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
-
-  
-  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
-
 
   
 
-
-  <script src="/js/utils.js?v=7.2.0"></script>
-
-  <script src="/js/motion.js?v=7.2.0"></script>
-
-
-
-  
-  
-
-
-  <script src="/js/affix.js?v=7.2.0"></script>
-
-  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
-
-
-
-  
-
-  
-
-
-  <script src="/js/next-boot.js?v=7.2.0"></script>
-
-
-  
-
-  
-
-  
-
-  
-  
-
-
-
-
-
-
-  
-
-
-
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
 
 </body>
 </html>

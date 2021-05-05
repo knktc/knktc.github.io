@@ -1,134 +1,56 @@
 <!DOCTYPE html>
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-
-<html class="theme-next pisces use-motion" lang="zh-CN">
-<head><meta name="generator" content="Hexo 3.9.0">
+<html lang="zh-CN">
+<head>
   <meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
 
 
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
-
-<link rel="stylesheet" href="/css/main.css?v=7.2.0">
-
-
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.2.0">
-
-
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.2.0">
-
-
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.2.0">
-
-
-  <link rel="mask-icon" href="/images/logo.svg?v=7.2.0" color="#222">
-
-
-
-
-
-
-
-<script id="hexo.configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    root: '/',
-    scheme: 'Pisces',
-    version: '7.2.0',
-    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
-    back2top: true,
-    back2top_sidebar: false,
-    fancybox: false,
-    fastclick: false,
-    lazyload: false,
-    tabs: true,
-    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
-    algolia: {
-      applicationID: '',
-      apiKey: '',
-      indexName: '',
-      hits: {"per_page":10},
-      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
-    }
-  };
-</script>
-
-
-  
-
-
-
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"knktc.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
 
   <meta name="description" content="平时我们使用的docker镜像都来自官方的docker index，由于国内连接docker官网速度太慢，而且有些包含自己代码的镜像也不好直接放到docker官网上，这个时候就需要考虑自己搭建一个docker index的源了。docker官方提供了docker registry这个工具，用于自建docker index，可在本地网络环境中保存和分享docker image，非常适合于公司内部进行">
-<meta name="keywords" content="linux,docker,docker-registry,部署">
 <meta property="og:type" content="article">
 <meta property="og:title" content="搭建自己的docker registry">
 <meta property="og:url" content="http://knktc.com/2014/08/09/docker-registry-install/index.html">
 <meta property="og:site_name" content="knktc的杂乱空间">
 <meta property="og:description" content="平时我们使用的docker镜像都来自官方的docker index，由于国内连接docker官网速度太慢，而且有些包含自己代码的镜像也不好直接放到docker官网上，这个时候就需要考虑自己搭建一个docker index的源了。docker官方提供了docker registry这个工具，用于自建docker index，可在本地网络环境中保存和分享docker image，非常适合于公司内部进行">
-<meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-05-26T05:17:12.706Z">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2014-08-09T03:52:31.000Z">
+<meta property="article:modified_time" content="2019-05-26T05:17:12.706Z">
+<meta property="article:author" content="knktc">
+<meta property="article:tag" content="linux">
+<meta property="article:tag" content="docker">
+<meta property="article:tag" content="docker-registry">
+<meta property="article:tag" content="部署">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="搭建自己的docker registry">
-<meta name="twitter:description" content="平时我们使用的docker镜像都来自官方的docker index，由于国内连接docker官网速度太慢，而且有些包含自己代码的镜像也不好直接放到docker官网上，这个时候就需要考虑自己搭建一个docker index的源了。docker官方提供了docker registry这个工具，用于自建docker index，可在本地网络环境中保存和分享docker image，非常适合于公司内部进行">
+
+<link rel="canonical" href="http://knktc.com/2014/08/09/docker-registry-install/">
 
 
-
-
-
-  
-  
-  <link rel="canonical" href="http://knktc.com/2014/08/09/docker-registry-install/">
-
-
-
-<script id="page.configurations">
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
   };
 </script>
 
   <title>搭建自己的docker registry | knktc的杂乱空间</title>
   
-
-
-
-
 
 
   <script>
@@ -144,12 +66,8 @@
 
 
 
-
-
-
   <noscript>
   <style>
-  .use-motion .motion-element,
   .use-motion .brand,
   .use-motion .menu-item,
   .sidebar-inner,
@@ -158,9 +76,8 @@
   .use-motion .comments,
   .use-motion .post-header,
   .use-motion .post-body,
-  .use-motion .collection-title { opacity: initial; }
+  .use-motion .collection-header { opacity: initial; }
 
-  .use-motion .logo,
   .use-motion .site-title,
   .use-motion .site-subtitle {
     opacity: initial;
@@ -174,113 +91,59 @@
 
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
-
-  
-  
-    
-  
-
-  <div class="container sidebar-position-left page-post-detail">
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
     <div class="headband"></div>
 
-    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-brand-wrapper">
-  <div class="site-meta">
-    
-
-    <div class="custom-logo-site-title">
-      <a href="/" class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">knktc的杂乱空间</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
     </div>
-    
-      
-        <p class="site-subtitle">python,cloud,linux...</p>
-      
-    
-    
   </div>
 
-  <div class="site-nav-toggle">
-    <button aria-label="切换导航栏">
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-    </button>
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">knktc的杂乱空间</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">python,cloud,linux...</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
   </div>
 </div>
 
 
 
+
 <nav class="site-nav">
-  
-    <ul id="menu" class="menu">
-      
-        
-        
-        
-          
-          <li class="menu-item menu-item-home">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
 
-    
-    
-      
-    
-
-    
-
-    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
 
   </li>
-        
-        
-        
-          
-          <li class="menu-item menu-item-about">
+        <li class="menu-item menu-item-about">
 
-    
-    
-      
-    
-
-    
-
-    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
 
   </li>
-        
-        
-        
-          
-          <li class="menu-item menu-item-archives">
+        <li class="menu-item menu-item-archives">
 
-    
-    
-      
-    
-
-    
-
-    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
 
   </li>
-
-      
-      
-    </ul>
-  
-
-  
-
-  
+  </ul>
 </nav>
 
-
-
-  
 
 
 
@@ -288,119 +151,61 @@
     </header>
 
     
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
 
 
-    <main id="main" class="main">
+    <main class="main">
       <div class="main-inner">
         <div class="content-wrap">
           
+
+          <div class="content post posts-expand">
             
 
-          
-          <div id="content" class="content">
-            
-
-  <div id="posts" class="posts-expand">
     
-
-  
-
   
   
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://knktc.com/2014/08/09/docker-registry-install/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/sonic_avatar.png">
       <meta itemprop="name" content="knktc">
       <meta itemprop="description" content="关注linux,云计算,python，杂乱之地...">
-      <meta itemprop="image" content="/images/sonic_avatar.png">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="knktc的杂乱空间">
     </span>
-
-    
       <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">搭建自己的docker registry
-
-              
-            
-          </h1>
-        
+        <h1 class="post-title" itemprop="name headline">
+          搭建自己的docker registry
+        </h1>
 
         <div class="post-meta">
-
-          
-          
-          
-
-          
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
+                <i class="far fa-calendar"></i>
               </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
+              <span class="post-meta-item-text">发表于</span>
 
               <time title="创建时间：2014-08-09 11:52:31" itemprop="dateCreated datePublished" datetime="2014-08-09T11:52:31+08:00">2014-08-09</time>
             </span>
-          
-
-          
-            
-
-            
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
+                  <i class="far fa-calendar-check"></i>
                 </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
+                <span class="post-meta-item-text">更新于</span>
                 <time title="修改时间：2019-05-26 13:17:12" itemprop="dateModified" datetime="2019-05-26T13:17:12+08:00">2019-05-26</time>
               </span>
-            
-          
-
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          <br>
-          
-
-          
 
           
 
         </div>
       </header>
-    
 
     
     
@@ -408,687 +213,249 @@
     <div class="post-body" itemprop="articleBody">
 
       
-      
-
-      
         <p>平时我们使用的docker镜像都来自官方的docker index，由于国内连接docker官网速度太慢，而且有些包含自己代码的镜像也不好直接放到docker官网上，这个时候就需要考虑自己搭建一个docker index的源了。docker官方提供了docker registry这个工具，用于自建docker index，可在本地网络环境中保存和分享docker image，非常适合于公司内部进行docker的推广和使用。本文记录了安装docker registry的过程，作为一个笔记供大家参考吧。    </p>
-<a id="more"></a>
+<span id="more"></span>
 
 <h2 id="安装环境"><a href="#安装环境" class="headerlink" title="安装环境"></a>安装环境</h2><p>我使用的是Centos 6.5 x64版的系统，docker registry使用python来编写，对于系统环境的要求不会很苛刻。</p>
 <h2 id="安装过程"><a href="#安装过程" class="headerlink" title="安装过程"></a>安装过程</h2><h3 id="使用yum安装依赖"><a href="#使用yum安装依赖" class="headerlink" title="使用yum安装依赖"></a>使用yum安装依赖</h3><p>在正式安装前需要安装几个依赖，使用yum就可以完成了：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install python-devel libevent-devel python-setuptools gcc xz-devel</span><br></pre></td></tr></table></figure>
-
 <h3 id="添加docker用户和目录"><a href="#添加docker用户和目录" class="headerlink" title="添加docker用户和目录"></a>添加docker用户和目录</h3><p>为了安全起见，我们可以添加一个用户docker，使用这个非root用户来允许docker registry程序，同时指定好docker镜像的存储位置，本处指定为/opt/docker_data/registry目录：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">useradd docker</span><br><span class="line">mkdir -p /opt/docker_data/registry</span><br><span class="line">chown -R docker.docker /opt/docker_data/registry</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">useradd docker</span><br><span class="line">mkdir -p &#x2F;opt&#x2F;docker_data&#x2F;registry</span><br><span class="line">chown -R docker.docker &#x2F;opt&#x2F;docker_data&#x2F;registry</span><br></pre></td></tr></table></figure>
 
 <h3 id="使用easy-install-安装"><a href="#使用easy-install-安装" class="headerlink" title="使用easy_install 安装"></a>使用easy_install 安装</h3><p>由于使用python来编写，可以直接使用easy_install(或pip)来安装docker-registry</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">easy_install docker-registry</span><br></pre></td></tr></table></figure>
 
 <h3 id="配置docker-registry"><a href="#配置docker-registry" class="headerlink" title="配置docker registry"></a>配置docker registry</h3><p>使用easy_install安装完成的docker-registry位于/usr/lib/python2.6/site-packages/docker_registry-0.7.3-py2.6.egg目录，此时需要进入这个目录下的config子目录，从模板复制一个配置文件出来：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/lib/python2.6/site-packages/docker_registry-0.7.3-py2.6.egg/config</span><br><span class="line">cp config_sample.yml config.yml</span><br></pre></td></tr></table></figure>
-
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd &#x2F;usr&#x2F;lib&#x2F;python2.6&#x2F;site-packages&#x2F;docker_registry-0.7.3-py2.6.egg&#x2F;config</span><br><span class="line">cp config_sample.yml config.yml</span><br></pre></td></tr></table></figure>
 <p>此时可以修改这个config.yml配置文件，需要注意修改以下的两个地方：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">配置sqlite数据库位置</span><br><span class="line"> sqlalchemy_index_database: _env:SQLALCHEMY_INDEX_DATABASE:sqlite://///opt/docker_data/registry/docker-registry.db</span><br><span class="line"></span><br><span class="line">配置本地存储位置</span><br><span class="line">local: &amp;local</span><br><span class="line">    storage: local</span><br><span class="line">    storage_path: _env:STORAGE_PATH:/opt/docker_data/registry</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">配置sqlite数据库位置</span><br><span class="line"> sqlalchemy_index_database: _env:SQLALCHEMY_INDEX_DATABASE:sqlite:&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;opt&#x2F;docker_data&#x2F;registry&#x2F;docker-registry.db</span><br><span class="line"></span><br><span class="line">配置本地存储位置</span><br><span class="line">local: &amp;local</span><br><span class="line">    storage: local</span><br><span class="line">    storage_path: _env:STORAGE_PATH:&#x2F;opt&#x2F;docker_data&#x2F;registry</span><br></pre></td></tr></table></figure>
 
 <h3 id="配置nginx"><a href="#配置nginx" class="headerlink" title="配置nginx"></a>配置nginx</h3><p>为了方便使用，可以在本地dns服务器上注册docker.knktc.com这个域名，并使用nginx来进行代理。</p>
 <p>配置文件中加入以下语句:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">#for docker</span><br><span class="line">upstream docker-registry &#123;</span><br><span class="line">  server localhost:5000;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">server &#123;</span><br><span class="line">  listen 80;</span><br><span class="line">  server_name docker.knktc.com;</span><br><span class="line">  </span><br><span class="line">  proxy_set_header Host       $http_host;   # required for docker client&apos;s sake</span><br><span class="line">  proxy_set_header X-Real-IP  $remote_addr; # pass on real client&apos;s IP</span><br><span class="line">  </span><br><span class="line">  client_max_body_size 0; # disable any limits to avoid HTTP 413 for large image uploads</span><br><span class="line"></span><br><span class="line">  # required to avoid HTTP 411: see Issue #1486 (https://github.com/dotcloud/docker/issues/1486)</span><br><span class="line">  chunked_transfer_encoding on;</span><br><span class="line">  #     </span><br><span class="line">  location / &#123;</span><br><span class="line">       proxy_pass http://docker-registry;</span><br><span class="line">               &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">#for docker</span><br><span class="line">upstream docker-registry &#123;</span><br><span class="line">  server localhost:5000;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">server &#123;</span><br><span class="line">  listen 80;</span><br><span class="line">  server_name docker.knktc.com;</span><br><span class="line">  </span><br><span class="line">  proxy_set_header Host       $http_host;   # required for docker client&#39;s sake</span><br><span class="line">  proxy_set_header X-Real-IP  $remote_addr; # pass on real client&#39;s IP</span><br><span class="line">  </span><br><span class="line">  client_max_body_size 0; # disable any limits to avoid HTTP 413 for large image uploads</span><br><span class="line"></span><br><span class="line">  # required to avoid HTTP 411: see Issue #1486 (https:&#x2F;&#x2F;github.com&#x2F;dotcloud&#x2F;docker&#x2F;issues&#x2F;1486)</span><br><span class="line">  chunked_transfer_encoding on;</span><br><span class="line">  #     </span><br><span class="line">  location &#x2F; &#123;</span><br><span class="line">       proxy_pass http:&#x2F;&#x2F;docker-registry;</span><br><span class="line">               &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <h3 id="测试启动"><a href="#测试启动" class="headerlink" title="测试启动"></a>测试启动</h3><p>nginx启动之后，使用docker用户执行以下的命令可以测试启动：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/bin/gunicorn --debug -k gevent -b 0.0.0.0:5000 -w 8 docker_registry.wsgi:application</span><br></pre></td></tr></table></figure>
-
-<p>此时可能会遇到数量众多的import error，逐个使用easy_install 安装缺失的模块就可以了。最后在浏览器中访问<a href="http://docker.knktc.com，如果看到以下的输出，则表明docker" target="_blank" rel="noopener">http://docker.knktc.com，如果看到以下的输出，则表明docker</a> registry安装成功了：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;usr&#x2F;bin&#x2F;gunicorn --debug -k gevent -b 0.0.0.0:5000 -w 8 docker_registry.wsgi:application </span><br></pre></td></tr></table></figure>
+<p>此时可能会遇到数量众多的import error，逐个使用easy_install 安装缺失的模块就可以了。最后在浏览器中访问<a target="_blank" rel="noopener" href="http://docker.knktc.com,如果看到以下的输出,则表明docker/">http://docker.knktc.com，如果看到以下的输出，则表明docker</a> registry安装成功了：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;docker-registry server (dev) (v0.7.3)&quot;</span><br></pre></td></tr></table></figure>
 
 <h3 id="使用supervisord来进行进程的监控"><a href="#使用supervisord来进行进程的监控" class="headerlink" title="使用supervisord来进行进程的监控"></a>使用supervisord来进行进程的监控</h3><p>官方和其他的文档都推荐使用supervisord来进行docker registry的进程监控，安装supervisor后，在/etc/supervisord中加入以下语句即可：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[program:docker-registry]</span><br><span class="line">user=docker</span><br><span class="line">command=/usr/bin/gunicorn --debug -k gevent -b 0.0.0.0:5000 -w 8 docker_registry.wsgi:application </span><br><span class="line">redirect_stderr=true  </span><br><span class="line">stderr_logfile=/var/log/supervisor/docker-registry-error.log</span><br><span class="line">stdout_logfile=/var/log/supervisor/docker-registry.log  </span><br><span class="line">autostart=true  </span><br><span class="line">autorestart=true</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[program:docker-registry]</span><br><span class="line">user&#x3D;docker</span><br><span class="line">command&#x3D;&#x2F;usr&#x2F;bin&#x2F;gunicorn --debug -k gevent -b 0.0.0.0:5000 -w 8 docker_registry.wsgi:application </span><br><span class="line">redirect_stderr&#x3D;true  </span><br><span class="line">stderr_logfile&#x3D;&#x2F;var&#x2F;log&#x2F;supervisor&#x2F;docker-registry-error.log</span><br><span class="line">stdout_logfile&#x3D;&#x2F;var&#x2F;log&#x2F;supervisor&#x2F;docker-registry.log  </span><br><span class="line">autostart&#x3D;true  </span><br><span class="line">autorestart&#x3D;true </span><br></pre></td></tr></table></figure>
 
 <h3 id="测试使用"><a href="#测试使用" class="headerlink" title="测试使用"></a>测试使用</h3><p>docker registry搭建完毕之后就可以使用tag命令将本地的镜像设置为使用本地的docker registry来存储了，一个简单的例子如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#将本地的localimage镜像设置为存储到docker registry上，命名为knktc/testimage</span><br><span class="line">docker tag localimage docker.knktc.com/knktc/testimage</span><br><span class="line"></span><br><span class="line">#上传这个镜像到docker registry中</span><br><span class="line">docker push docker.knktc.com/knktc/testimage</span><br><span class="line"></span><br><span class="line">#换一台机器来pull这个镜像</span><br><span class="line">docker pull docker.knktc.com/knktc/testimage</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">#将本地的localimage镜像设置为存储到docker registry上，命名为knktc&#x2F;testimage</span><br><span class="line">docker tag localimage docker.knktc.com&#x2F;knktc&#x2F;testimage</span><br><span class="line"></span><br><span class="line">#上传这个镜像到docker registry中</span><br><span class="line">docker push docker.knktc.com&#x2F;knktc&#x2F;testimage</span><br><span class="line"></span><br><span class="line">#换一台机器来pull这个镜像</span><br><span class="line">docker pull docker.knktc.com&#x2F;knktc&#x2F;testimage</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="https://github.com/docker/docker-registry" target="_blank" rel="noopener">https://github.com/docker/docker-registry</a><br><a href="https://www.dockboard.org/build-your-own-docker-repository/" target="_blank" rel="noopener">https://www.dockboard.org/build-your-own-docker-repository/</a></p>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a target="_blank" rel="noopener" href="https://github.com/docker/docker-registry">https://github.com/docker/docker-registry</a><br><a target="_blank" rel="noopener" href="https://www.dockboard.org/build-your-own-docker-repository/">https://www.dockboard.org/build-your-own-docker-repository/</a></p>
 
-      
     </div>
 
     
-
     
     
-    
-
-    
-
-    
-      
-    
-    
-      <div>
-        <div id="reward-container">
-  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
-  <button id="reward-button" disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+        <div class="reward-container">
+  <div>如果我的文字帮到了您，那么可不可以请我喝罐可乐？</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
     打赏
   </button>
   <div id="qr" style="display: none;">
-
-    
       
-      
-        
-      
-      <div style="display: inline-block">
+      <div style="display: inline-block;">
         <img src="/images/wechat.png" alt="knktc 微信支付">
         <p>微信支付</p>
       </div>
-    
       
-      
-        
-      
-      <div style="display: inline-block">
+      <div style="display: inline-block;">
         <img src="/images/alipay.jpg" alt="knktc 支付宝">
         <p>支付宝</p>
       </div>
-    
 
   </div>
 </div>
 
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-6959365962327411" data-ad-slot="4588493450"></ins>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-6959365962327411"
+     data-ad-slot="4588493450"></ins>
 <script>
      (adsbygoogle = window.adsbygoogle || []).push({});
 </script>
 
-      </div>
-    
-
-    
-      <div>
         
 
-
-
-
-  
-
-
-
+<div>
 <ul class="post-copyright">
   <li class="post-copyright-author">
-    <strong>本文作者： </strong>knktc</li>
+    <strong>本文作者： </strong>knktc
+  </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    
     <a href="http://knktc.com/2014/08/09/docker-registry-install/" title="搭建自己的docker registry">http://knktc.com/2014/08/09/docker-registry-install/</a>
   </li>
   <li class="post-copyright-license">
-    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！</li>
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
 </ul>
-
-      </div>
-    
-
-    <footer class="post-footer">
-      
-        
-          
-        
-        <div class="post-tags">
-          
-            <a href="/tags/linux/" rel="tag"># linux</a>
-          
-            <a href="/tags/docker/" rel="tag"># docker</a>
-          
-            <a href="/tags/docker-registry/" rel="tag"># docker-registry</a>
-          
-            <a href="/tags/部署/" rel="tag"># 部署</a>
-          
-        </div>
-      
-      
-      
-      
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2014/08/09/docker-cheat-sheet/" rel="next" title="docker随手记">
-                <i class="fa fa-chevron-left"></i> docker随手记
-              </a>
-            
-          </div>
-
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2014/08/16/docker-use-dnsmasq-as-hosts/" rel="prev" title="Docker使用dnsmasq替代/etc/hosts解析">
-                Docker使用dnsmasq替代/etc/hosts解析 <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
-
-      
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-  </div>
-
-
-          </div>
-          
-
-  
-    <div class="comments" id="comments">
-      <div id="disqus_thread">
-        <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
-      </div>
-    </div>
-
-  
-
-
-
-        </div>
-        
-          
-  
-  <div class="sidebar-toggle">
-    <div class="sidebar-toggle-line-wrap">
-      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
-    </div>
-  </div>
-
-  <aside id="sidebar" class="sidebar">
-    <div class="sidebar-inner">
-
-      
-
-      
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
-
-      <div class="site-overview-wrap sidebar-panel">
-        <div class="site-overview">
-          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-            
-              <img class="site-author-image" itemprop="image" src="/images/sonic_avatar.png" alt="knktc">
-            
-              <p class="site-author-name" itemprop="name">knktc</p>
-              <div class="site-description motion-element" itemprop="description">关注linux,云计算,python，杂乱之地...</div>
-          </div>
-
-          
-            <nav class="site-state motion-element">
-              
-                <div class="site-state-item site-state-posts">
-                
-                  <a href="/archives/">
-                
-                    <span class="site-state-item-count">47</span>
-                    <span class="site-state-item-name">日志</span>
-                  </a>
-                </div>
-              
-
-              
-
-              
-                
-                
-                <div class="site-state-item site-state-tags">
-                  
-                    
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                    <span class="site-state-item-count">137</span>
-                    <span class="site-state-item-name">标签</span>
-                  
-                </div>
-              
-            </nav>
-          
-
-          
-
-          
-
-          
-            <div class="links-of-author motion-element">
-              
-                <span class="links-of-author-item">
-                  
-                  
-                    
-                  
-                  
-                    
-                  
-                  <a href="https://github.com/knktc" title="GitHub &rarr; https://github.com/knktc" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
-                </span>
-              
-                <span class="links-of-author-item">
-                  
-                  
-                    
-                  
-                  
-                    
-                  
-                  <a href="https://twitter.com/knktc" title="Twitter &rarr; https://twitter.com/knktc" rel="noopener" target="_blank"><i class="fa fa-fw fa-twitter"></i>Twitter</a>
-                </span>
-              
-            </div>
-          
-
-          
-             <div class="cc-license motion-element" itemprop="license">
-              
-              
-                
-              
-              
-              
-              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
-             </div>
-          
-
-          
-          
-
-          
-            
-          
-          
-
-        </div>
-      </div>
-
-      
-      <!--noindex-->
-        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-            
-            
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装环境"><span class="nav-number">1.</span> <span class="nav-text">安装环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装过程"><span class="nav-number">2.</span> <span class="nav-text">安装过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#使用yum安装依赖"><span class="nav-number">2.1.</span> <span class="nav-text">使用yum安装依赖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#添加docker用户和目录"><span class="nav-number">2.2.</span> <span class="nav-text">添加docker用户和目录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用easy-install-安装"><span class="nav-number">2.3.</span> <span class="nav-text">使用easy_install 安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置docker-registry"><span class="nav-number">2.4.</span> <span class="nav-text">配置docker registry</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置nginx"><span class="nav-number">2.5.</span> <span class="nav-text">配置nginx</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#测试启动"><span class="nav-number">2.6.</span> <span class="nav-text">测试启动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用supervisord来进行进程的监控"><span class="nav-number">2.7.</span> <span class="nav-text">使用supervisord来进行进程的监控</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#测试使用"><span class="nav-number">2.8.</span> <span class="nav-text">测试使用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考链接"><span class="nav-number">3.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
-            
-
-          </div>
-        </div>
-      <!--/noindex-->
-      
-
-      
-
-    </div>
-  </aside>
-  
-
-
-        
-      </div>
-    </main>
-
-    <footer id="footer" class="footer">
-      <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
-  <span class="with-love" id="animate">
-    <i class="fa fa-user"></i>
-  </span>
-  <span class="author" itemprop="copyrightHolder">knktc</span>
-
-  
-
-  
 </div>
 
 
-  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
-
-
-
-  <span class="post-meta-divider">|</span>
-
-
-
-  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.2.0</div>
-
-
-
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/linux/" rel="tag"># linux</a>
+              <a href="/tags/docker/" rel="tag"># docker</a>
+              <a href="/tags/docker-registry/" rel="tag"># docker-registry</a>
+              <a href="/tags/%E9%83%A8%E7%BD%B2/" rel="tag"># 部署</a>
+          </div>
 
         
 
 
-
-
-
-
-
-
         
-      </div>
-    </footer>
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2014/08/09/docker-cheat-sheet/" rel="prev" title="docker随手记">
+      <i class="fa fa-chevron-left"></i> docker随手记
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2014/08/16/docker-use-dnsmasq-as-hosts/" rel="next" title="Docker使用dnsmasq替代/etc/hosts解析">
+      Docker使用dnsmasq替代/etc/hosts解析 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
 
-    
-      <div class="back-to-top">
-        <i class="fa fa-arrow-up"></i>
-        
-      </div>
-    
 
-    
 
+          </div>
+          
     
-
-    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
   </div>
-
   
 
 <script>
-  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
-    window.Promise = null;
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
   }
 </script>
 
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E7%8E%AF%E5%A2%83"><span class="nav-number">1.</span> <span class="nav-text">安装环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E8%BF%87%E7%A8%8B"><span class="nav-number">2.</span> <span class="nav-text">安装过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8yum%E5%AE%89%E8%A3%85%E4%BE%9D%E8%B5%96"><span class="nav-number">2.1.</span> <span class="nav-text">使用yum安装依赖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0docker%E7%94%A8%E6%88%B7%E5%92%8C%E7%9B%AE%E5%BD%95"><span class="nav-number">2.2.</span> <span class="nav-text">添加docker用户和目录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8easy-install-%E5%AE%89%E8%A3%85"><span class="nav-number">2.3.</span> <span class="nav-text">使用easy_install 安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEdocker-registry"><span class="nav-number">2.4.</span> <span class="nav-text">配置docker registry</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEnginx"><span class="nav-number">2.5.</span> <span class="nav-text">配置nginx</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E5%90%AF%E5%8A%A8"><span class="nav-number">2.6.</span> <span class="nav-text">测试启动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8supervisord%E6%9D%A5%E8%BF%9B%E8%A1%8C%E8%BF%9B%E7%A8%8B%E7%9A%84%E7%9B%91%E6%8E%A7"><span class="nav-number">2.7.</span> <span class="nav-text">使用supervisord来进行进程的监控</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E4%BD%BF%E7%94%A8"><span class="nav-number">2.8.</span> <span class="nav-text">测试使用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="nav-number">3.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="knktc"
+      src="/images/sonic_avatar.png">
+  <p class="site-author-name" itemprop="name">knktc</p>
+  <div class="site-description" itemprop="description">关注linux,云计算,python，杂乱之地...</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">48</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">140</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/knktc" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;knktc" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/knktc" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;knktc" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">knktc</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
 
 
 
@@ -1097,8 +464,29 @@
 
 
 
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
 
 
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
 
 
 
@@ -1115,111 +503,29 @@
 
 
   
-  <script src="/lib/jquery/index.js?v=3.4.1"></script>
 
-  
-  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
-
-  
-  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
-
-
-  
-
-
-  <script src="/js/utils.js?v=7.2.0"></script>
-
-  <script src="/js/motion.js?v=7.2.0"></script>
-
-
-
-  
-  
-
-
-  <script src="/js/affix.js?v=7.2.0"></script>
-
-  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
-
-
-
-  
-  <script src="/js/scrollspy.js?v=7.2.0"></script>
-<script src="/js/post-details.js?v=7.2.0"></script>
-
-
-
-  
-
-
-  <script src="/js/next-boot.js?v=7.2.0"></script>
-
-
-  
-
-  
-
-  
-
-  
   
 
 <script>
   var disqus_config = function() {
     this.page.url = "http://knktc.com/2014/08/09/docker-registry-install/";
     this.page.identifier = "2014/08/09/docker-registry-install/";
-    this.page.title = '搭建自己的docker registry';
+    this.page.title = "搭建自己的docker registry";
     };
-  function loadComments() {
-    var d = document, s = d.createElement('script');
-    s.src = 'https://knktc.disqus.com/embed.js';
-    s.setAttribute('data-timestamp', '' + +new Date());
-    (d.head || d.body).appendChild(s);
-  }
-  
-    window.addEventListener('load', loadComments, false);
-  
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://knktc.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
 </script>
-
-
-
-
-
-  
-
-
-  
-
-
-
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
 
 </body>
 </html>
