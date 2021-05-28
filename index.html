@@ -235,72 +235,6 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://knktc.com/2021/05/23/run-script-in-django-environment/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/sonic_avatar.png">
-      <meta itemprop="name" content="knktc">
-      <meta itemprop="description" content="关注linux,云计算,python，杂乱之地...">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="knktc的杂乱空间">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/05/23/run-script-in-django-environment/" class="post-title-link" itemprop="url">在Django环境下运行脚本</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-05-23 21:37:38 / 修改时间：21:57:02" itemprop="dateCreated datePublished" datetime="2021-05-23T21:37:38+08:00">2021-05-23</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>给客户交付是Django写的项目，有时需要临时写点脚本给客户测试下，就得考虑这个脚本能不能直接在Django项目的环境下运行，这样脚本就可以直接用项目中已经写好的各种方法了。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/05/23/run-script-in-django-environment/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://knktc.com/2021/05/05/django-3-2-cannot-import-check-that-name-is-correct/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -826,6 +760,75 @@
   
   
 
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://knktc.com/2019/12/21/django-pgpool2-client-idle-limit-unable-to-read-data/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/sonic_avatar.png">
+      <meta itemprop="name" content="knktc">
+      <meta itemprop="description" content="关注linux,云计算,python，杂乱之地...">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="knktc的杂乱空间">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/12/21/django-pgpool2-client-idle-limit-unable-to-read-data/" class="post-title-link" itemprop="url">Django使用pgpool2时unable to read data简单处理方案</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2019-12-21 21:19:32 / 修改时间：22:44:48" itemprop="dateCreated datePublished" datetime="2019-12-21T21:19:32+08:00">2019-12-21</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>最近发现用Django写的某项目时不时会有报错发生，我们用的是postgresql+pgpool2的组合，日志显示报错信息如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">psycopg2.OperationalError: unable to read data</span><br><span class="line">DETAIL:  child connection forced to terminate due to client_idle_limit:10 is reached</span><br><span class="line">server closed the connection unexpectedly</span><br><span class="line">        This probably means the server terminated abnormally</span><br><span class="line">        before or while processing the request.</span><br></pre></td></tr></table></figure>
+
+<p>从报错日志来看，是由于pgpool2的client_idle_limit参数设置得太短，设置成了10秒，自动将10秒不活动的客户端连接给关闭了，但Django这边并没有感知数据库连接已经断开，还在继续使用数据库连接，导致了这个报错。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/12/21/django-pgpool2-client-idle-limit-unable-to-read-data/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
 
   
   <nav class="pagination">
@@ -897,12 +900,12 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">50</span>
+          <span class="site-state-item-count">49</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">144</span>
+        <span class="site-state-item-count">143</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>
