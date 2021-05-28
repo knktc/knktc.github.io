@@ -163,6 +163,79 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://knktc.com/2018/06/03/postman-set-token/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/sonic_avatar.png">
+      <meta itemprop="name" content="knktc">
+      <meta itemprop="description" content="关注linux,云计算,python，杂乱之地...">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="knktc的杂乱空间">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2018/06/03/postman-set-token/" class="post-title-link" itemprop="url">postman自动设置token(csrf及authorization token)</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-06-03 00:12:18" itemprop="dateCreated datePublished" datetime="2018-06-03T00:12:18+08:00">2018-06-03</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-05-26 13:17:12" itemprop="dateModified" datetime="2019-05-26T13:17:12+08:00">2019-05-26</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>近期在开发一个Django的项目，由于开启了csrf防护，所以需要在请求的header中加入“X-CSRFToken”。使用postman进行请求的测试时，如果不加这个header，则会返回403错误。</p>
+<p>Django项目的csrftoken一般在登录的时候会设置到cookie中，本文描述了如何使用postman自动获取cookie中的csrftoken，并将该值自动设置到后续请求的header中。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2018/06/03/postman-set-token/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://knktc.com/2018/06/02/test-image/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -809,78 +882,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://knktc.com/2014/08/16/docker-use-dnsmasq-as-hosts/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/sonic_avatar.png">
-      <meta itemprop="name" content="knktc">
-      <meta itemprop="description" content="关注linux,云计算,python，杂乱之地...">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="knktc的杂乱空间">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2014/08/16/docker-use-dnsmasq-as-hosts/" class="post-title-link" itemprop="url">Docker使用dnsmasq替代/etc/hosts解析</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2014-08-16 17:51:30" itemprop="dateCreated datePublished" datetime="2014-08-16T17:51:30+08:00">2014-08-16</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2019-05-26 13:17:12" itemprop="dateModified" datetime="2019-05-26T13:17:12+08:00">2019-05-26</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>docker目前没有办法直接修改容器中的/etc/hosts文件，如果要修改就会报出权限不足的警告，对此引发了很多的讨论。目前来看，要想彻底解决这个问题，只有等官方未来的解决方案了，但是目前我们可以用dnsmasq来解决本地的解析问题。    </p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2014/08/16/docker-use-dnsmasq-as-hosts/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -952,12 +953,12 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">49</span>
+          <span class="site-state-item-count">50</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">141</span>
+        <span class="site-state-item-count">144</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>
