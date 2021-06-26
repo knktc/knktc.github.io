@@ -1,0 +1,17 @@
+# workflow to summit Sitemap to google, etc.
+
+name: Submit Sitemap
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  submit:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Ping Google
+      run: curl https://www.google.com/ping?sitemap=https://knktc.com/sitemap.xml
+
