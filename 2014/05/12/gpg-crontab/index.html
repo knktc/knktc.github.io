@@ -216,11 +216,11 @@
 <span id="more"></span> 
 <p>如果是平时在命令行下加密文件，例如给邮件名为<a href="mailto:test@knktc.com">test@knktc.com</a>的公钥用户加密一个testfile.txt的文件，那我会使用以下的命令： </p>
 <blockquote>
-<p>gpg -ear <a href="mailto:&#x74;&#101;&#115;&#x74;&#64;&#107;&#x6e;&#107;&#116;&#x63;&#x2e;&#x63;&#x6f;&#x6d;">&#x74;&#101;&#115;&#x74;&#64;&#107;&#x6e;&#107;&#116;&#x63;&#x2e;&#x63;&#x6f;&#x6d;</a> –trust-model always –yes .testfile.txt</p>
+<p>gpg -ear <a href="mailto:&#116;&#x65;&#x73;&#x74;&#x40;&#107;&#110;&#107;&#x74;&#x63;&#46;&#x63;&#x6f;&#x6d;">&#116;&#x65;&#x73;&#x74;&#x40;&#107;&#110;&#107;&#x74;&#x63;&#46;&#x63;&#x6f;&#x6d;</a> –trust-model always –yes .testfile.txt</p>
 </blockquote>
 <p>本来以为这样的命令写入脚本后再加入到crontab中是没有什么问题的，但几分钟后我却发现加入到crontab中的脚本没有执行gpg加密的功能。对此，上网上查了些资料，发现如果想让cron服务来执行gpg的加密，还需要两个参数: –no-tty和—homedir， 修改完成后的命令应该是： </p>
 <blockquote>
-<p>gpg –homedir=/root/.gnupg –no-tty -ear <a href="mailto:&#116;&#101;&#x73;&#x74;&#x40;&#x6b;&#110;&#107;&#x74;&#x63;&#46;&#x63;&#x6f;&#109;">&#116;&#101;&#x73;&#x74;&#x40;&#x6b;&#110;&#107;&#x74;&#x63;&#46;&#x63;&#x6f;&#109;</a> –trust-model always –yes .testfile.txt</p>
+<p>gpg –homedir=/root/.gnupg –no-tty -ear <a href="mailto:&#x74;&#101;&#x73;&#x74;&#x40;&#x6b;&#x6e;&#107;&#116;&#x63;&#46;&#99;&#x6f;&#109;">&#x74;&#101;&#x73;&#x74;&#x40;&#x6b;&#x6e;&#107;&#116;&#x63;&#46;&#99;&#x6f;&#109;</a> –trust-model always –yes .testfile.txt</p>
 </blockquote>
 <p>这样的话，cron在执行定时的加密任务时就可以找到存放公钥的目录，同时也可以在cron自己的环境下完成加密任务了。</p>
 
