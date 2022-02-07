@@ -6,5 +6,5 @@ Allow: /tags/
 Allow: /about/
 
 Sitemap: https://knktc.com/sitemap.xml
-Sitemap: https://knktc.com/baidu_sitemap.xml
+Sitemap: https://knktc.com/baidusitemap.xml
 
