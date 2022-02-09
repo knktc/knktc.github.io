@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://knktc.com/2022/02/09/shorten-prompt-ps1-of-poetry-env/</loc>
+    
+    <lastmod>2022-02-09</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://knktc.com/2022/02/05/install-headless-chrome-in-docker/</loc>
     
     <lastmod>2022-02-05</lastmod>
@@ -1510,6 +1517,34 @@
   
   <url>
     <loc>https://knktc.com/tags/headless/</loc>
+    <lastmod>2022-02-09</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/poetry/</loc>
+    <lastmod>2022-02-09</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/bash/</loc>
+    <lastmod>2022-02-09</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/prompt/</loc>
+    <lastmod>2022-02-09</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/%E4%BF%AE%E6%94%B9/</loc>
     <lastmod>2022-02-09</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>

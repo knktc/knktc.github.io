@@ -163,6 +163,78 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://knktc.com/2018/07/24/uwsgi-spooler-as-async-queue/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/sonic_avatar.png">
+      <meta itemprop="name" content="knktc">
+      <meta itemprop="description" content="关注linux,云计算,python，杂乱之地...">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="knktc的杂乱空间">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2018/07/24/uwsgi-spooler-as-async-queue/" class="post-title-link" itemprop="url">使用uwsgi实现异步任务</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-07-24 15:09:45" itemprop="dateCreated datePublished" datetime="2018-07-24T15:09:45+08:00">2018-07-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-05-26 13:17:12" itemprop="dateModified" datetime="2019-05-26T13:17:12+08:00">2019-05-26</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>在开发<a target="_blank" rel="noopener" href="https://github.com/pyajs/closestack">closestack</a>这个虚拟机管理项目的时候，本着精简的原则，我没有使用celery等异步的方案，部署倒是简单了，但是可以预见，如果同时使用系统的人员增加的话，可能出现等待时间超长的问题。因此需要使用过一个简单的方法来实现异步，以解决并发的问题。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2018/07/24/uwsgi-spooler-as-async-queue/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://knktc.com/2018/06/22/docker-layer-doest-not-exist/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -806,78 +878,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://knktc.com/2017/04/19/fedora-no-network-docker-not-start/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/sonic_avatar.png">
-      <meta itemprop="name" content="knktc">
-      <meta itemprop="description" content="关注linux,云计算,python，杂乱之地...">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="knktc的杂乱空间">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2017/04/19/fedora-no-network-docker-not-start/" class="post-title-link" itemprop="url">解决fedora 25无网情况下docker无法启动的问题</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2017-04-19 14:35:12" itemprop="dateCreated datePublished" datetime="2017-04-19T14:35:12+08:00">2017-04-19</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2019-05-26 13:17:12" itemprop="dateModified" datetime="2019-05-26T13:17:12+08:00">2019-05-26</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>由于fedora25默认使用network manager进行网络管理，在无网的情况下(没接网线、没连wifi的场景)就不会创建/etc/resolv.conf文件，而docker容器的dns解析又依赖于该文件，直接导致了这种情况下docker容器无法启动。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2017/04/19/fedora-no-network-docker-not-start/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -949,12 +949,12 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">55</span>
+          <span class="site-state-item-count">56</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">159</span>
+        <span class="site-state-item-count">163</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>

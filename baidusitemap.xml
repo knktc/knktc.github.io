@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://knktc.com/2022/02/09/shorten-prompt-ps1-of-poetry-env/</loc>
+    <lastmod>2022-02-09</lastmod>
+  </url>
+  <url>
     <loc>https://knktc.com/2022/02/05/install-headless-chrome-in-docker/</loc>
     <lastmod>2022-02-05</lastmod>
   </url>
