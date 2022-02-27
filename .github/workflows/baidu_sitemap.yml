@@ -1,0 +1,23 @@
+# workflow to summit urls from sitemap to baidu
+
+name: Submit baidu Sitemap
+
+on:
+  schedule:
+    - cron: '15 2 * * *'
+
+jobs:
+  submit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: get gist
+        uses: andymckay/get-gist-action@0.1
+        with:
+          gistURL: https://gist.github.com/knktc/846950067e60a92612c1befbe4213a32
+      
+      - name: run script
+        env:
+          BAIDU_TOKEN: ${{ secrets.BAIDU_TOKEN }}
+        run: python3 /tmp/baidu_submit.py --site https://knktc.com --token $BAIDU_TOKEN
+
