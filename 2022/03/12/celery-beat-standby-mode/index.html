@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"knktc.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="我一直用Celery Beat来做定时任务，Beat这东西简单易用，但一直有个问题就是同时启动多个Beat实例时任务就会重复发起。我们之前用uwsgi的legion模式来控制同一时间只能有一个beat实例运行，这个其实依赖于一个靠谱的网络连接。最近遇到一个问题：两个跑beat的节点的网络连接可能不稳定，那uwsgi legion可能就不太稳妥了。对此只好看看如何手动来设置，让celery beat">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用Monkey Patch让Celery Beat支持“待命”模式">
+<meta property="og:url" content="https://knktc.com/2022/03/12/celery-beat-standby-mode/index.html">
+<meta property="og:site_name" content="knktc的杂乱空间">
+<meta property="og:description" content="我一直用Celery Beat来做定时任务，Beat这东西简单易用，但一直有个问题就是同时启动多个Beat实例时任务就会重复发起。我们之前用uwsgi的legion模式来控制同一时间只能有一个beat实例运行，这个其实依赖于一个靠谱的网络连接。最近遇到一个问题：两个跑beat的节点的网络连接可能不稳定，那uwsgi legion可能就不太稳妥了。对此只好看看如何手动来设置，让celery beat">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-03-12T09:24:03.000Z">
+<meta property="article:modified_time" content="2022-03-12T09:52:26.503Z">
+<meta property="article:author" content="knktc">
+<meta property="article:tag" content="celery">
+<meta property="article:tag" content="beat">
+<meta property="article:tag" content="standby">
+<meta property="article:tag" content="monkey">
+<meta property="article:tag" content="patch">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://knktc.com/2022/03/12/celery-beat-standby-mode/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>使用Monkey Patch让Celery Beat支持“待命”模式 | knktc的杂乱空间</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a23b2d1c6159a3a6c798edbc7f9211f9";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">knktc的杂乱空间</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">python,cloud,linux...</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://knktc.com/2022/03/12/celery-beat-standby-mode/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/sonic_avatar.png">
+      <meta itemprop="name" content="knktc">
+      <meta itemprop="description" content="关注linux,云计算,python，杂乱之地...">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="knktc的杂乱空间">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          使用Monkey Patch让Celery Beat支持“待命”模式
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-03-12 17:24:03 / 修改时间：17:52:26" itemprop="dateCreated datePublished" datetime="2022-03-12T17:24:03+08:00">2022-03-12</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>我一直用Celery Beat来做定时任务，Beat这东西简单易用，但一直有个问题就是同时启动多个Beat实例时任务就会重复发起。我们之前用uwsgi的legion模式来控制同一时间只能有一个beat实例运行，这个其实依赖于一个靠谱的网络连接。最近遇到一个问题：两个跑beat的节点的网络连接可能不稳定，那uwsgi legion可能就不太稳妥了。对此只好看看如何手动来设置，让celery beat能进入待命的模式：虽然服务在跑，但是不生成定时任务。</p>
+<span id="more"></span>
+
+
+
+<p>阅读了下celery beat的源码，使用celery命令行工具启动beat worker的时候，调用的是celery.beat下的Service类中的start方法，应该只需要修改下这里，让beat空跑起来就可以了。</p>
+<p>简单写了下Monkey Patch相关的代码，贴出来如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">from</span> celery.beat <span class="keyword">import</span> info, debug, humanize_seconds, signals, platforms</span><br><span class="line"></span><br><span class="line">STANDBY_CHECK_INTERVAL = <span class="number">5</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">is_standby</span>():</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">True</span> <span class="keyword">if</span> os.path.isfile(<span class="string">&#x27;/tmp/standby.flag&#x27;</span>) <span class="keyword">else</span> <span class="literal">False</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">patched_start</span>(<span class="params">self, embedded_process=<span class="literal">False</span></span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot; monkey patched start method, will skip tasks when standby flag is setted &quot;&quot;&quot;</span></span><br><span class="line">    info(<span class="string">&#x27;beat: Starting...&#x27;</span>)</span><br><span class="line">    debug(<span class="string">&#x27;beat: Ticking with max interval-&gt;%s&#x27;</span>,</span><br><span class="line">          humanize_seconds(self.scheduler.max_interval))</span><br><span class="line"></span><br><span class="line">    signals.beat_init.send(sender=self)</span><br><span class="line">    <span class="keyword">if</span> embedded_process:</span><br><span class="line">        signals.beat_embedded_init.send(sender=self)</span><br><span class="line">        platforms.set_process_title(<span class="string">&#x27;celery beat&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="keyword">while</span> <span class="keyword">not</span> self._is_shutdown.is_set():</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># patch starts from here</span></span><br><span class="line">            <span class="keyword">if</span> is_standby():</span><br><span class="line">                debug(<span class="string">f&#x27;beat: in standby mode, all tasks will be skipped, &#x27;</span></span><br><span class="line">                      <span class="string">f&#x27;will check in [<span class="subst">&#123;STANDBY_CHECK_INTERVAL&#125;</span>] seconds&#x27;</span>)</span><br><span class="line">                time.sleep(STANDBY_CHECK_INTERVAL)</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">            <span class="comment"># patch ends</span></span><br><span class="line">            </span><br><span class="line">            interval = self.scheduler.tick()</span><br><span class="line">            <span class="keyword">if</span> interval <span class="keyword">and</span> interval &gt; <span class="number">0.0</span>:</span><br><span class="line">                debug(<span class="string">&#x27;beat: Waking up %s.&#x27;</span>,</span><br><span class="line">                      humanize_seconds(interval, prefix=<span class="string">&#x27;in &#x27;</span>))</span><br><span class="line">                time.sleep(interval)</span><br><span class="line">                <span class="keyword">if</span> self.scheduler.should_sync():</span><br><span class="line">                    self.scheduler._do_sync()</span><br><span class="line">    <span class="keyword">except</span> (KeyboardInterrupt, SystemExit):</span><br><span class="line">        self._is_shutdown.<span class="built_in">set</span>()</span><br><span class="line">    <span class="keyword">finally</span>:</span><br><span class="line">        self.sync()</span><br></pre></td></tr></table></figure>
+
+
+
+<p>简单说明下：</p>
+<ul>
+<li>这个示例中检查了/tmp目录中是否有standby.flag文件，如果有的话就算是进入了待命的状态；</li>
+<li>在while循环中先检查了这个文件是否存在，如果存在，则sleep 5秒钟，然后再次检查。</li>
+</ul>
+<p>在使用的时候只需要在代码入口处应用这个patch就可以了，例如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> celery.beat <span class="keyword">import</span> Service</span><br><span class="line"></span><br><span class="line">Service.start = patched_start</span><br></pre></td></tr></table></figure>
+
+
+
+<p>测试运行下，当celery beat启动后，只需要touch /tmp/standby.flag，创建标志文件，可以看到celery beat进入待命模式，不再生成定时任务。删除这个文件后，等待几秒钟，celery beat将会继续开始生成定时任务。</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>如果我的文字帮到了您，那么可不可以请我喝罐可乐？</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechat.png" alt="knktc 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="knktc 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-6959365962327411"
+     data-ad-slot="4588493450"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>knktc
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://knktc.com/2022/03/12/celery-beat-standby-mode/" title="使用Monkey Patch让Celery Beat支持“待命”模式">https://knktc.com/2022/03/12/celery-beat-standby-mode/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/celery/" rel="tag"># celery</a>
+              <a href="/tags/beat/" rel="tag"># beat</a>
+              <a href="/tags/standby/" rel="tag"># standby</a>
+              <a href="/tags/monkey/" rel="tag"># monkey</a>
+              <a href="/tags/patch/" rel="tag"># patch</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/02/27/submit-baidu-sitemap-by-github-actions/" rel="prev" title="Hexo博客使用GitHub Actions自动提交百度Sitemap">
+      <i class="fa fa-chevron-left"></i> Hexo博客使用GitHub Actions自动提交百度Sitemap
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="knktc"
+      src="/images/sonic_avatar.png">
+  <p class="site-author-name" itemprop="name">knktc</p>
+  <div class="site-description" itemprop="description">关注linux,云计算,python，杂乱之地...</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">60</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">178</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/knktc" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;knktc" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/knktc" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;knktc" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">鄂ICP备2021019593号-1 </a>
+      <img src="/images/beian.png" style="display: inline-block;"><a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=42018502005554" rel="noopener" target="_blank">鄂公网安备 42018502005554号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">knktc</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
