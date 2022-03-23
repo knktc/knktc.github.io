@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"knktc.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="我这边的一个系统用了telegraf的snmp_trap插件来采集snmp trap告警，然后再转换为http格式吐出进入下一个环节。这个插件配置起来倒是简单，但是其中对于OID的翻译依赖于snmptranslate命令的结果，而如果让snmptranslate命令能正常翻译，又依赖于MIB库文件的正确放置和配置。最近在用这套东西来采集H3C交换机设备的告警，正好记录下在ubuntu环境下导入MI">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ubuntu系统中如何导入SNMP MIB库文件">
+<meta property="og:url" content="https://knktc.com/2022/03/23/where-to-place-mib-files-in-ubuntu/index.html">
+<meta property="og:site_name" content="knktc的杂乱空间">
+<meta property="og:description" content="我这边的一个系统用了telegraf的snmp_trap插件来采集snmp trap告警，然后再转换为http格式吐出进入下一个环节。这个插件配置起来倒是简单，但是其中对于OID的翻译依赖于snmptranslate命令的结果，而如果让snmptranslate命令能正常翻译，又依赖于MIB库文件的正确放置和配置。最近在用这套东西来采集H3C交换机设备的告警，正好记录下在ubuntu环境下导入MI">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-03-23T14:39:41.000Z">
+<meta property="article:modified_time" content="2022-03-23T15:10:08.805Z">
+<meta property="article:author" content="knktc">
+<meta property="article:tag" content="ubuntu">
+<meta property="article:tag" content="mib">
+<meta property="article:tag" content="snmp">
+<meta property="article:tag" content="mibs">
+<meta property="article:tag" content="telegraf">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://knktc.com/2022/03/23/where-to-place-mib-files-in-ubuntu/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Ubuntu系统中如何导入SNMP MIB库文件 | knktc的杂乱空间</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a23b2d1c6159a3a6c798edbc7f9211f9";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">knktc的杂乱空间</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">python,cloud,linux...</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://knktc.com/2022/03/23/where-to-place-mib-files-in-ubuntu/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/sonic_avatar.png">
+      <meta itemprop="name" content="knktc">
+      <meta itemprop="description" content="关注linux,云计算,python，杂乱之地...">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="knktc的杂乱空间">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Ubuntu系统中如何导入SNMP MIB库文件
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-03-23 22:39:41 / 修改时间：23:10:08" itemprop="dateCreated datePublished" datetime="2022-03-23T22:39:41+08:00">2022-03-23</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>我这边的一个系统用了telegraf的snmp_trap插件来采集snmp trap告警，然后再转换为http格式吐出进入下一个环节。这个插件配置起来倒是简单，但是其中对于OID的翻译依赖于snmptranslate命令的结果，而如果让snmptranslate命令能正常翻译，又依赖于MIB库文件的正确放置和配置。最近在用这套东西来采集H3C交换机设备的告警，正好记录下在ubuntu环境下导入MIB库文件的方法。</p>
+<span id="more"></span>
+
+
+
+<h1 id="配置前"><a href="#配置前" class="headerlink" title="配置前"></a>配置前</h1><p>在进行配置前，可以先尝试运行下snmptranslate命令(注意，这里的-L n参数可以忽略输出的错误信息)：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">snmptranslate -L n .1.3.6.1.4.1.25506.2.38.1.6.3.0.1</span><br></pre></td></tr></table></figure>
+
+<p>这个示例中的OID来自H3C的交换机设备，如果没导入MIB库的话，结果只会是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SNMPv2-SMI::enterprises.25506.2.38.1.6.3.0.1</span><br></pre></td></tr></table></figure>
+
+<p>很明显，光看这个还是没法知道设备发了个啥信息过来。</p>
+<h1 id="导入和配置"><a href="#导入和配置" class="headerlink" title="导入和配置"></a>导入和配置</h1><p>先从H3C官方搞到MIB库文件，然后把这些mib文件解压到一个目录中。在这个示例中，我们把这些mib文件都放置到/usr/share/mibs/h3c_mibs目录下。</p>
+<p>放好MIB库文件后，就可以开始配置snmp.conf这个配置文件了：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim &#x2F;etc&#x2F;snmp&#x2F;snmp.conf</span><br></pre></td></tr></table></figure>
+
+<p>(如果没有这个文件，可能需要先使用apt install snmp命令来安装下相关的组件。)</p>
+<p>配置文件中原始的配置内容是这样的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># As the snmp packages come without MIB files due to license reasons, loading</span><br><span class="line"># of MIBs is disabled by default. If you added the MIBs you can reenable</span><br><span class="line"># loading them by commenting out the following line.</span><br><span class="line">mibs :</span><br></pre></td></tr></table></figure>
+
+<p>为了能让新加的MIB库生效，需要做下修改：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># mibs :</span><br><span class="line"></span><br><span class="line">mibdirs +&#x2F;usr&#x2F;share&#x2F;mibs&#x2F;h3c_mibs</span><br><span class="line">mibdirs +&#x2F;usr&#x2F;share&#x2F;mibs&#x2F;another_mib_dir  # for example</span><br><span class="line"></span><br><span class="line">mibs +ALL</span><br></pre></td></tr></table></figure>
+
+<p>稍微解释下：</p>
+<ul>
+<li>注释掉了原有的mib : 这行，让系统可以加载第三方的库；</li>
+<li>mibdirs参数用于指定加载的MIB库路径，如果有多个MIB库的目录，可以多次使用这个参数</li>
+<li>mibs +ALL参数指定了在所有的mib文件中来进行查找。</li>
+</ul>
+<p>配置文件修改完成后，保存退出即可，无需重启啥服务。</p>
+<h1 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h1><p>再次测试翻译OID，在正确放置mib文件和正确配置的情况下，是可以成功翻译出结果的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">root@knktc.com:&#x2F;root# snmptranslate -L n .1.3.6.1.4.1.25506.2.38.1.6.3.0.1</span><br><span class="line">HH3C-TRAP-MIB::hh3cPeriodicalTrap</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
+<li>telegraf的snmp trap插件官网是：<a target="_blank" rel="noopener" href="https://github.com/influxdata/telegraf/tree/master/plugins/inputs/snmp_trap">https://github.com/influxdata/telegraf/tree/master/plugins/inputs/snmp_trap</a></li>
+<li>snmp.conf配置文件的更多内容可参考man page的帮助：<a target="_blank" rel="noopener" href="https://linux.die.net/man/5/snmp.conf">https://linux.die.net/man/5/snmp.conf</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>如果我的文字帮到了您，那么可不可以请我喝罐可乐？</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechat.png" alt="knktc 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="knktc 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-6959365962327411"
+     data-ad-slot="4588493450"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>knktc
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://knktc.com/2022/03/23/where-to-place-mib-files-in-ubuntu/" title="Ubuntu系统中如何导入SNMP MIB库文件">https://knktc.com/2022/03/23/where-to-place-mib-files-in-ubuntu/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/ubuntu/" rel="tag"># ubuntu</a>
+              <a href="/tags/mib/" rel="tag"># mib</a>
+              <a href="/tags/snmp/" rel="tag"># snmp</a>
+              <a href="/tags/mibs/" rel="tag"># mibs</a>
+              <a href="/tags/telegraf/" rel="tag"># telegraf</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/03/21/git-use-different-ssh-key/" rel="prev" title="Git命令使用不同的SSH密钥">
+      <i class="fa fa-chevron-left"></i> Git命令使用不同的SSH密钥
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E5%89%8D"><span class="nav-number">1.</span> <span class="nav-text">配置前</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AF%BC%E5%85%A5%E5%92%8C%E9%85%8D%E7%BD%AE"><span class="nav-number">2.</span> <span class="nav-text">导入和配置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95"><span class="nav-number">3.</span> <span class="nav-text">测试</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="knktc"
+      src="/images/sonic_avatar.png">
+  <p class="site-author-name" itemprop="name">knktc</p>
+  <div class="site-description" itemprop="description">关注linux,云计算,python，杂乱之地...</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">62</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">186</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/knktc" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;knktc" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/knktc" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;knktc" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">鄂ICP备2021019593号-1 </a>
+      <img src="/images/beian.png" style="display: inline-block;"><a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=42018502005554" rel="noopener" target="_blank">鄂公网安备 42018502005554号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">knktc</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

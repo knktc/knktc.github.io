@@ -163,6 +163,72 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://knktc.com/2022/03/23/where-to-place-mib-files-in-ubuntu/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/sonic_avatar.png">
+      <meta itemprop="name" content="knktc">
+      <meta itemprop="description" content="关注linux,云计算,python，杂乱之地...">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="knktc的杂乱空间">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/03/23/where-to-place-mib-files-in-ubuntu/" class="post-title-link" itemprop="url">Ubuntu系统中如何导入SNMP MIB库文件</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-03-23 22:39:41 / 修改时间：23:10:08" itemprop="dateCreated datePublished" datetime="2022-03-23T22:39:41+08:00">2022-03-23</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>我这边的一个系统用了telegraf的snmp_trap插件来采集snmp trap告警，然后再转换为http格式吐出进入下一个环节。这个插件配置起来倒是简单，但是其中对于OID的翻译依赖于snmptranslate命令的结果，而如果让snmptranslate命令能正常翻译，又依赖于MIB库文件的正确放置和配置。最近在用这套东西来采集H3C交换机设备的告警，正好记录下在ubuntu环境下导入MIB库文件的方法。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/03/23/where-to-place-mib-files-in-ubuntu/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://knktc.com/2022/03/21/git-use-different-ssh-key/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -775,72 +841,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://knktc.com/2021/06/26/hexo-use-github-actions-to-submit-sitemap/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/sonic_avatar.png">
-      <meta itemprop="name" content="knktc">
-      <meta itemprop="description" content="关注linux,云计算,python，杂乱之地...">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="knktc的杂乱空间">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/06/26/hexo-use-github-actions-to-submit-sitemap/" class="post-title-link" itemprop="url">Hexo博客使用GitHub Actions来自动提交Sitemap</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-06-26 10:25:58 / 修改时间：11:17:41" itemprop="dateCreated datePublished" datetime="2021-06-26T10:25:58+08:00">2021-06-26</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>我的这个博客使用了Hexo，使用传统的hexo deploy方法，通过git来部署到GitHub上。最近寻思着每次发布文章的时候可以用GitHub Actions功能来自动触发个工作流，自动给Google提交下最新的sitemap。这篇文章就记录了下如何进行相关的配置。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/06/26/hexo-use-github-actions-to-submit-sitemap/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -912,12 +912,12 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">61</span>
+          <span class="site-state-item-count">62</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">182</span>
+        <span class="site-state-item-count">186</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>
