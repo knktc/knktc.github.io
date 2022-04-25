@@ -163,6 +163,82 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://knktc.com/2015/05/10/kibana-could-not-contact-elasticsearch/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/sonic_avatar.png">
+      <meta itemprop="name" content="knktc">
+      <meta itemprop="description" content="关注linux,云计算,python，杂乱之地...">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="knktc的杂乱空间">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2015/05/10/kibana-could-not-contact-elasticsearch/" class="post-title-link" itemprop="url">Kibana 3无法连接到elasticsearch</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2015-05-10 10:49:51" itemprop="dateCreated datePublished" datetime="2015-05-10T10:49:51+08:00">2015-05-10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-05-26 13:17:12" itemprop="dateModified" datetime="2019-05-26T13:17:12+08:00">2019-05-26</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>最近准备升级下使用了很久的ELK组合，将kibana从3代升级到4代，将elasticsearch从1.3升级到1.5。升级完了一看，Kibana 4现在问题真的很多啊，功能是强大了，但是易用性也下降了，而且也不兼容Kibana 3的配置数据。没辙，只能把Kibana 4给降级回去。但是一降级，却发现Kibana不好使了，页面一直显示</p>
+<blockquote>
+<p>“Error Could not contact Elasticsearch at <a target="_blank" rel="noopener" href="http://elasticsearch.host:9200/">http://elasticsearch.host:9200</a>. Please ensure that Elasticsearch is reachable from your system.”</p>
+</blockquote>
+<p>Kibana不明原因地连接不到elasticsearch了。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2015/05/10/kibana-could-not-contact-elasticsearch/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://knktc.com/2015/02/21/pg_dump-password/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -816,78 +892,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://knktc.com/2014/06/14/remove-clean-dmraid/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/sonic_avatar.png">
-      <meta itemprop="name" content="knktc">
-      <meta itemprop="description" content="关注linux,云计算,python，杂乱之地...">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="knktc的杂乱空间">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2014/06/14/remove-clean-dmraid/" class="post-title-link" itemprop="url">清除dmraid残留信息</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2014-06-14 08:57:48" itemprop="dateCreated datePublished" datetime="2014-06-14T08:57:48+08:00">2014-06-14</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2019-05-26 13:17:12" itemprop="dateModified" datetime="2019-05-26T13:17:12+08:00">2019-05-26</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>近期遇到一个问题，一台服务器的一个sdb磁盘总会被LVM接管，无法自由按照分区来挂载，且在将此磁盘进行格式化的时候会提示磁盘正在被占用，无法直接格式化磁盘。对此在网上查找了相关的资料，发现问题可能是由于该磁盘带有dmraid的残留信息才造成的。  </p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2014/06/14/remove-clean-dmraid/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -959,7 +963,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">63</span>
+          <span class="site-state-item-count">64</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

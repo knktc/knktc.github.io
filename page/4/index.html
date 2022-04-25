@@ -163,6 +163,79 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://knktc.com/2018/06/12/how-to-duplicate-kvm-snapshot/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/sonic_avatar.png">
+      <meta itemprop="name" content="knktc">
+      <meta itemprop="description" content="关注linux,云计算,python，杂乱之地...">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="knktc的杂乱空间">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2018/06/12/how-to-duplicate-kvm-snapshot/" class="post-title-link" itemprop="url">如何复制KVM虚拟机的快照</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-06-12 22:46:00" itemprop="dateCreated datePublished" datetime="2018-06-12T22:46:00+08:00">2018-06-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-05-26 13:17:12" itemprop="dateModified" datetime="2019-05-26T13:17:12+08:00">2019-05-26</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>KVM虚拟机的快照(snapshot)功能可以保存虚拟机运行时的内存状态，恢复快照后虚拟机即可恢复到创建快照时的运行时状态，所有的软件运行状态依旧，类似于游戏中的SL(save/load)大法。我们可以使用快照功能实现很多业务，例如快速恢复沙箱的运行状态，而不用清理环境或是重启虚拟机等待服务一一启动。</p>
+<p>但是KVM虚拟机的快照功能却不是很好利用，当需要大规模使用快照时就会发现似乎快照没那么好复制，复制出来的快照往往启动后也会失效，无法恢复，让批量化部署变得很困难。本文介绍了复制KVM虚拟机快照方法，用较低的成本将一个虚拟机的快照复制出来，方便批量部署。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2018/06/12/how-to-duplicate-kvm-snapshot/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://knktc.com/2018/06/10/python3-uwsgi-no-python-application-found/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -805,82 +878,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://knktc.com/2015/05/10/kibana-could-not-contact-elasticsearch/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/sonic_avatar.png">
-      <meta itemprop="name" content="knktc">
-      <meta itemprop="description" content="关注linux,云计算,python，杂乱之地...">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="knktc的杂乱空间">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2015/05/10/kibana-could-not-contact-elasticsearch/" class="post-title-link" itemprop="url">Kibana 3无法连接到elasticsearch</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2015-05-10 10:49:51" itemprop="dateCreated datePublished" datetime="2015-05-10T10:49:51+08:00">2015-05-10</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2019-05-26 13:17:12" itemprop="dateModified" datetime="2019-05-26T13:17:12+08:00">2019-05-26</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>最近准备升级下使用了很久的ELK组合，将kibana从3代升级到4代，将elasticsearch从1.3升级到1.5。升级完了一看，Kibana 4现在问题真的很多啊，功能是强大了，但是易用性也下降了，而且也不兼容Kibana 3的配置数据。没辙，只能把Kibana 4给降级回去。但是一降级，却发现Kibana不好使了，页面一直显示</p>
-<blockquote>
-<p>“Error Could not contact Elasticsearch at <a target="_blank" rel="noopener" href="http://elasticsearch.host:9200/">http://elasticsearch.host:9200</a>. Please ensure that Elasticsearch is reachable from your system.”</p>
-</blockquote>
-<p>Kibana不明原因地连接不到elasticsearch了。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2015/05/10/kibana-could-not-contact-elasticsearch/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -952,7 +949,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">63</span>
+          <span class="site-state-item-count">64</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
