@@ -4,7 +4,7 @@
   <url>
     <loc>https://knktc.com/2022/04/22/set-mirror-when-installing-poerty/</loc>
     
-    <lastmod>2022-04-22</lastmod>
+    <lastmod>2022-04-25</lastmod>
     
   </url>
   
@@ -1776,6 +1776,20 @@
   
   <url>
     <loc>https://knktc.com/tags/broadcast/</loc>
+    <lastmod>2022-04-25</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/%E9%95%9C%E5%83%8F/</loc>
+    <lastmod>2022-04-25</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/pip/</loc>
     <lastmod>2022-04-25</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
