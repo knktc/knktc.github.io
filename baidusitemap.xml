@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://knktc.com/2022/06/16/certbot-on-ubuntu-cheatsheet/</loc>
+    <lastmod>2022-06-16</lastmod>
+  </url>
+  <url>
     <loc>https://knktc.com/2022/04/22/set-mirror-when-installing-poerty/</loc>
     <lastmod>2022-04-25</lastmod>
   </url>
