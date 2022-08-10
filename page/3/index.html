@@ -163,6 +163,73 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://knktc.com/2021/04/04/python-trust-self-signed-ssl-certicates/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/sonic_avatar.png">
+      <meta itemprop="name" content="knktc">
+      <meta itemprop="description" content="关注linux,云计算,python，杂乱之地...">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="knktc的杂乱空间">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/04/04/python-trust-self-signed-ssl-certicates/" class="post-title-link" itemprop="url">Python信任SSL自签名证书</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-04-04 16:48:04 / 修改时间：17:55:19" itemprop="dateCreated datePublished" datetime="2021-04-04T16:48:04+08:00">2021-04-04</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>最近发现有的客户环境中用的是自签名的SSL证书来提供服务，于是项目中依赖这些服务的代码就开始咔咔报证书验证失败的错误了。</p>
+<p>由于项目代码中并没有忽略证书验证的配置，所以只好想办法在不修改代码的情况下忽略证书的验证了。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/04/04/python-trust-self-signed-ssl-certicates/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://knktc.com/2021/02/16/bulk-disable-confluence-users/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -753,76 +820,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://knktc.com/2019/07/06/ssh-run-python-script-UnicodeDecodeError/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/sonic_avatar.png">
-      <meta itemprop="name" content="knktc">
-      <meta itemprop="description" content="关注linux,云计算,python，杂乱之地...">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="knktc的杂乱空间">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/07/06/ssh-run-python-script-UnicodeDecodeError/" class="post-title-link" itemprop="url">ssh远程运行python脚本报UnicodeDecodeError错误</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2019-07-06 18:20:06 / 修改时间：23:15:54" itemprop="dateCreated datePublished" datetime="2019-07-06T18:20:06+08:00">2019-07-06</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>最近在服务器上写了个python脚本来跑一些任务，本地(macos 10.14)通过ssh来远程运行这个脚本:</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh knktc@cloud.knktc.com /home/knktc/test.py</span><br></pre></td></tr></table></figure>
-
-<p>结果却出现了类似下面的错误：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">UnicodeDecodeError: &#39;ascii&#39; codec can&#39;t decode byte 0xe9 in position 1941: ordinal not in range(128)</span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2019/07/06/ssh-run-python-script-UnicodeDecodeError/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -894,12 +891,12 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">66</span>
+          <span class="site-state-item-count">67</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">196</span>
+        <span class="site-state-item-count">198</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>
