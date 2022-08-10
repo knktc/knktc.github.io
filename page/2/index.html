@@ -163,6 +163,78 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://knktc.com/2022/02/09/shorten-prompt-ps1-of-poetry-env/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/sonic_avatar.png">
+      <meta itemprop="name" content="knktc">
+      <meta itemprop="description" content="关注linux,云计算,python，杂乱之地...">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="knktc的杂乱空间">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/02/09/shorten-prompt-ps1-of-poetry-env/" class="post-title-link" itemprop="url">缩短poetry虚拟环境的命令行提示符前缀</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-02-09 22:52:01 / 修改时间：23:13:52" itemprop="dateCreated datePublished" datetime="2022-02-09T22:52:01+08:00">2022-02-09</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>最近在尝试使用poetry来进行项目的包管理，发现poetry创建的虚拟环境中，命令行提示符特别的长。</p>
+<p>比如我创建了一个名为”test-poetry”的项目，那么使用 <strong>poetry shell</strong> 命令激活虚拟环境后，却发现整个命令行提示符如此之长：</p>
+<blockquote>
+<p>(test-poetry-FvrREBVp-py3.6) knktc@knktc-rmbp test_poetry % </p>
+</blockquote>
+<p>因为poetry自动为虚拟环境编了个码，同时还加上了python版本号，都放到命令行提示符里作为前缀就很长了。对于小屏幕的用户来说(比如我这13寸笔记本的用户)就很不友好了。</p>
+<p>还是想想怎么缩短下这个括号中的环境名称吧。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/02/09/shorten-prompt-ps1-of-poetry-env/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://knktc.com/2022/02/05/install-headless-chrome-in-docker/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -773,72 +845,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://knktc.com/2021/02/16/bulk-disable-confluence-users/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/sonic_avatar.png">
-      <meta itemprop="name" content="knktc">
-      <meta itemprop="description" content="关注linux,云计算,python，杂乱之地...">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="knktc的杂乱空间">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/02/16/bulk-disable-confluence-users/" class="post-title-link" itemprop="url">批量禁用Confluence用户</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-02-16 15:43:23 / 修改时间：18:36:59" itemprop="dateCreated datePublished" datetime="2021-02-16T15:43:23+08:00">2021-02-16</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>近期想清理一批Confluence中离职的用户，以便于能释放一些License出来，却发现官方似乎没有提供批量清理的功能。官方的REST API中也没有提供禁用用户的接口，只好学习下Selenium，自己写个脚本来清理了。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/02/16/bulk-disable-confluence-users/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -910,12 +916,12 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">65</span>
+          <span class="site-state-item-count">66</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">193</span>
+        <span class="site-state-item-count">196</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>
