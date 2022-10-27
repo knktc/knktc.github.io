@@ -20,15 +20,15 @@
     var CONFIG = {"hostname":"knktc.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="最近尝鲜升级了mac os 13 ventura，结果发现git push代码的时候怎么都不行，直接报了个错误:  1234Permission denied (publickey).fatal: Could not read from remote repository. Please make sure you have the correct access rights">
+  <meta name="description" content="最近尝鲜升级了mac os 13 ventura，结果发现git push代码的时候怎么都不行，直接报了个错误:  1234Permission denied (publickey).fatal: Could not read from remote repository.Please make sure you have the correct access rights">
 <meta property="og:type" content="article">
 <meta property="og:title" content="修复升级Macos 13 Ventura后Git报Pemission Denied的问题">
 <meta property="og:url" content="https://knktc.com/2022/10/27/fix-mac-os-13-ventura-git-ssh-permission-denied/index.html">
 <meta property="og:site_name" content="knktc的杂乱空间">
-<meta property="og:description" content="最近尝鲜升级了mac os 13 ventura，结果发现git push代码的时候怎么都不行，直接报了个错误:  1234Permission denied (publickey).fatal: Could not read from remote repository. Please make sure you have the correct access rights">
+<meta property="og:description" content="最近尝鲜升级了mac os 13 ventura，结果发现git push代码的时候怎么都不行，直接报了个错误:  1234Permission denied (publickey).fatal: Could not read from remote repository.Please make sure you have the correct access rights">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-10-27T04:41:08.000Z">
-<meta property="article:modified_time" content="2022-10-27T04:51:10.718Z">
+<meta property="article:modified_time" content="2022-10-27T13:18:29.822Z">
 <meta property="article:author" content="knktc">
 <meta property="article:tag" content="ssh">
 <meta property="article:tag" content="git">
@@ -195,7 +195,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2022-10-27 12:41:08 / 修改时间：12:51:10" itemprop="dateCreated datePublished" datetime="2022-10-27T12:41:08+08:00">2022-10-27</time>
+              <time title="创建时间：2022-10-27 12:41:08 / 修改时间：21:18:29" itemprop="dateCreated datePublished" datetime="2022-10-27T12:41:08+08:00">2022-10-27</time>
             </span>
 
           
@@ -210,20 +210,14 @@
 
       
         <p>最近尝鲜升级了mac os 13 ventura，结果发现git push代码的时候怎么都不行，直接报了个错误: </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Permission denied (publickey).</span><br><span class="line">fatal: Could not read from remote repository.</span><br><span class="line"> </span><br><span class="line">Please make sure you have the correct access rights</span><br></pre></td></tr></table></figure>
-
-
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Permission denied (publickey).</span><br><span class="line">fatal: Could not read from remote repository.</span><br><span class="line"></span><br><span class="line">Please make sure you have the correct access rights</span><br></pre></td></tr></table></figure>
 
 <span id="more"></span>
 
-
-
 <p>在反复确认自己的公钥已经放到gitlab上后，开始google，参考了下网上的讨论：<a target="_blank" rel="noopener" href="https://superuser.com/questions/1749364/git-ssh-permission-denied-in-macos-13-ventura">https://superuser.com/questions/1749364/git-ssh-permission-denied-in-macos-13-ventura</a></p>
 <p>应该是因为mac os 13中自带的OpenSSH_9.0p1默认禁止了RSA/SHA-1算法导致的。</p>
-<p>解决方法的话，要么是生成一个新的ssh密钥(mac上现在默认是rsa-sha2-512了)，替换下（成本可能有点高）：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa</span><br></pre></td></tr></table></figure>
-
-
+<p>解决方法的话，要么是生成一个新的ssh密钥，替换下（成本可能有点高）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t ed25519</span><br></pre></td></tr></table></figure>
 
 <p>要么就是编辑 ~/.ssh/config配置文件，在文件中加入以下的配置即可(还可以应对服务端太老不支持新的加密算法的情况)：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Host *</span><br><span class="line">    HostkeyAlgorithms +ssh-rsa</span><br><span class="line">    PubkeyAcceptedAlgorithms +ssh-rsa</span><br></pre></td></tr></table></figure>
