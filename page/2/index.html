@@ -163,6 +163,72 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://knktc.com/2022/02/26/nginx-etag-different-in-2-nodes/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/sonic_avatar.png">
+      <meta itemprop="name" content="knktc">
+      <meta itemprop="description" content="关注linux,云计算,python，杂乱之地...">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="knktc的杂乱空间">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/02/26/nginx-etag-different-in-2-nodes/" class="post-title-link" itemprop="url">解决Nginx多节点上相同静态文件的etag不同的问题</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-02-26 00:06:05 / 修改时间：00:30:40" itemprop="dateCreated datePublished" datetime="2022-02-26T00:06:05+08:00">2022-02-26</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>最近用nginx来提供一些静态文件作为配置。nginx从1.3.3版起就支持etag了，默认就可以生效，配置文件更改后可以通过etag的变化来让浏览器拉取新的配置，还是挺方便的。但是在测试环境部署后，却发现了问题：测试环境的nginx有两个节点，前面再放个负载均衡器，轮询访问到不同的服务器上，此时发现请求相同的静态文件时，返回的etag却不同，浏览器每次请求都会返回个200，而不是304，没有缓存的效果了。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/02/26/nginx-etag-different-in-2-nodes/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://knktc.com/2022/02/17/add-jira-charts-to-confluence-macro/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -774,76 +840,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://knktc.com/2021/05/05/django-3-2-cannot-import-check-that-name-is-correct/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/sonic_avatar.png">
-      <meta itemprop="name" content="knktc">
-      <meta itemprop="description" content="关注linux,云计算,python，杂乱之地...">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="knktc的杂乱空间">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/05/05/django-3-2-cannot-import-check-that-name-is-correct/" class="post-title-link" itemprop="url">Django 3.2加载子目录下的app报错</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-05-05 08:48:11 / 修改时间：11:19:26" itemprop="dateCreated datePublished" datetime="2021-05-05T08:48:11+08:00">2021-05-05</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>最近看着Django 3.2 LTS发布了，就想着啥时候把当前项目用的Django 2.2版本给升级下。结果一升级，发现项目直接无法启动了，界面上在报类似下面的错误：</p>
-<blockquote>
-<p>django.core.exceptions.ImproperlyConfigured: Cannot import ‘myapp’. Check that ‘apps.myapp.apps.MyappConfig.name’ is correct.</p>
-</blockquote>
-<p>我在写这个项目的时候，习惯把自己创建的app都放到了项目src下的apps目录下，一个app一个目录，要import也应该是import apps.myapp啊，这里的import myapp失败是个啥问题？难道是这个写法到Django 3.2已经不支持了？</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/05/05/django-3-2-cannot-import-check-that-name-is-correct/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -915,12 +911,12 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">67</span>
+          <span class="site-state-item-count">68</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">198</span>
+        <span class="site-state-item-count">202</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>
