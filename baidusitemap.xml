@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://knktc.com/2023/05/06/install-pandas-on-kylin-v10-with-sw64-cpu/</loc>
+    <lastmod>2023-05-11</lastmod>
+  </url>
+  <url>
     <loc>https://knktc.com/2022/10/27/fix-mac-os-13-ventura-git-ssh-permission-denied/</loc>
     <lastmod>2022-10-27</lastmod>
   </url>
