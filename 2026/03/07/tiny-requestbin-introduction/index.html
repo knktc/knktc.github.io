@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"knktc.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="最近整理自己的开源项目时，我重新看了一遍 tiny-requestbin 的 GitHub 页面，发现它已经不只是一个“能收请求的小工具”，而是一个非常适合本地调试、Webhook 联调和临时排查 HTTP 请求问题的轻量级工具。这个项目使用 Go 编写，目标非常明确：尽量少的依赖、尽量快地启动、尽量直观地查看收到的请求内容。 如果你经常需要验证第三方回调、调试自建服务的入站请求，或者只是想临时抓">
+<meta property="og:type" content="article">
+<meta property="og:title" content="tiny-requestbin：一个用 Go 编写的轻量级 HTTP 请求调试工具">
+<meta property="og:url" content="https://knktc.com/2026/03/07/tiny-requestbin-introduction/index.html">
+<meta property="og:site_name" content="knktc的杂乱空间">
+<meta property="og:description" content="最近整理自己的开源项目时，我重新看了一遍 tiny-requestbin 的 GitHub 页面，发现它已经不只是一个“能收请求的小工具”，而是一个非常适合本地调试、Webhook 联调和临时排查 HTTP 请求问题的轻量级工具。这个项目使用 Go 编写，目标非常明确：尽量少的依赖、尽量快地启动、尽量直观地查看收到的请求内容。 如果你经常需要验证第三方回调、调试自建服务的入站请求，或者只是想临时抓">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://knktc.com/2026/03/07/tiny-requestbin-introduction/run_in_cmd.png">
+<meta property="og:image" content="https://knktc.com/2026/03/07/tiny-requestbin-introduction/webpage.png">
+<meta property="article:published_time" content="2026-03-07T04:25:23.000Z">
+<meta property="article:modified_time" content="2026-03-07T12:31:07.592Z">
+<meta property="article:author" content="knktc">
+<meta property="article:tag" content="tiny-requestbin">
+<meta property="article:tag" content="requestbin">
+<meta property="article:tag" content="go">
+<meta property="article:tag" content="开源项目">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://knktc.com/2026/03/07/tiny-requestbin-introduction/run_in_cmd.png">
+
+<link rel="canonical" href="https://knktc.com/2026/03/07/tiny-requestbin-introduction/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>tiny-requestbin：一个用 Go 编写的轻量级 HTTP 请求调试工具 | knktc的杂乱空间</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a23b2d1c6159a3a6c798edbc7f9211f9";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">knktc的杂乱空间</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">python,cloud,linux...</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://knktc.com/2026/03/07/tiny-requestbin-introduction/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/sonic_avatar.png">
+      <meta itemprop="name" content="knktc">
+      <meta itemprop="description" content="关注linux,云计算,python，杂乱之地...">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="knktc的杂乱空间">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          tiny-requestbin：一个用 Go 编写的轻量级 HTTP 请求调试工具
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2026-03-07 12:25:23 / 修改时间：20:31:07" itemprop="dateCreated datePublished" datetime="2026-03-07T12:25:23+08:00">2026-03-07</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>最近整理自己的开源项目时，我重新看了一遍 <a target="_blank" rel="noopener" href="https://github.com/knktc/tiny-requestbin">tiny-requestbin</a> 的 GitHub 页面，发现它已经不只是一个“能收请求的小工具”，而是一个非常适合本地调试、Webhook 联调和临时排查 HTTP 请求问题的轻量级工具。这个项目使用 Go 编写，目标非常明确：<strong>尽量少的依赖、尽量快地启动、尽量直观地查看收到的请求内容</strong>。</p>
+<p>如果你经常需要验证第三方回调、调试自建服务的入站请求，或者只是想临时抓一把 HTTP 请求看看内容，那它应该会很顺手。</p>
+<span id="more"></span>
+
+<h2 id="这个项目是做什么的"><a href="#这个项目是做什么的" class="headerlink" title="这个项目是做什么的"></a>这个项目是做什么的</h2><p>根据仓库首页的介绍，tiny-requestbin 是一个 <strong>轻量级 HTTP 请求检查与调试工具</strong>。启动之后，它会捕获发往当前服务的 HTTP 请求，并把这些请求展示出来，方便开发者查看：</p>
+<ul>
+<li>请求方法</li>
+<li>请求路径</li>
+<li>请求头</li>
+<li>请求体</li>
+<li>以及整体请求的详细内容</li>
+</ul>
+<p>项目当前的几个核心特点也在 README 里写得很清楚：</p>
+<ul>
+<li><strong>轻量且快速</strong>：实现简单，依赖极少</li>
+<li><strong>请求检查</strong>：可以查看传入 HTTP 请求的详细信息</li>
+<li><strong>Web 界面</strong>：通过浏览器查看捕获的请求</li>
+<li><strong>CLI 模式</strong>：也可以直接在终端打印请求内容</li>
+<li><strong>本地运行</strong>：所有数据都留在本机，无需依赖外部服务</li>
+</ul>
+<p>我自己很喜欢这类“功能边界清晰”的工具：不追求大而全，而是把“看请求”这件事做好。</p>
+<h2 id="安装方式很全"><a href="#安装方式很全" class="headerlink" title="安装方式很全"></a>安装方式很全</h2><p>tiny-requestbin 的仓库首页提供了几种常见安装方式，基本覆盖了本地调试和服务部署的主要场景。</p>
+<h3 id="1-Docker-方式"><a href="#1-Docker-方式" class="headerlink" title="1. Docker 方式"></a>1. Docker 方式</h3><p>如果只是想快速跑起来，README 推荐直接使用 Docker：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -p 8282:8282 knktc/tiny-requestbin</span><br></pre></td></tr></table></figure>
+
+<p>也可以带上自定义参数运行，例如自定义监听地址、端口和最大保存请求数：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -p 8282:8282 knktc/tiny-requestbin -port 8282 -listen 0.0.0.0 -max 1000</span><br></pre></td></tr></table></figure>
+
+<p>此外仓库里也提供了 <code>docker-compose.yml</code>，所以用 <code>docker-compose up -d</code> 也能直接启动。</p>
+<h3 id="2-Helm-安装"><a href="#2-Helm-安装" class="headerlink" title="2. Helm 安装"></a>2. Helm 安装</h3><p>如果你有 Kubernetes 环境，项目还提供了 Helm Chart，可以直接安装：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">helm install my-requestbin helm/tiny-requestbin/</span><br></pre></td></tr></table></figure>
+
+<p>README 里还给了自定义 <code>config.max</code>、<code>service.type</code> 和启用 HTTPRoute 的示例，对 K8s 用户来说很友好。</p>
+<h3 id="3-go-install"><a href="#3-go-install" class="headerlink" title="3. go install"></a>3. go install</h3><p>既然它本身就是 Go 项目，直接安装也很自然：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go install github.com/knktc/tiny-requestbin@latest</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-从源码构建"><a href="#4-从源码构建" class="headerlink" title="4. 从源码构建"></a>4. 从源码构建</h3><p>如果你想自己编译，也很简单：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/knktc/tiny-requestbin.git</span><br><span class="line"><span class="built_in">cd</span> tiny-requestbin</span><br><span class="line">go build</span><br></pre></td></tr></table></figure>
+
+<h2 id="怎么使用"><a href="#怎么使用" class="headerlink" title="怎么使用"></a>怎么使用</h2><p>项目默认启动方式非常直接：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tiny-requestbin</span><br></pre></td></tr></table></figure>
+
+<p>默认参数如下：</p>
+<ul>
+<li><code>-port</code>：监听端口，默认 <code>8282</code></li>
+<li><code>-listen</code>：监听地址，默认 <code>127.0.0.1</code></li>
+<li><code>-max</code>：最大保存请求数量，默认 <code>100</code></li>
+<li><code>-cli</code>：是否启用 CLI 输出模式，默认 <code>false</code></li>
+</ul>
+<p>比如下面这个命令，会把服务监听在 <code>0.0.0.0:9000</code>，最多保存 1000 条请求，同时把请求内容打印到终端：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tiny-requestbin -port 9000 -listen 0.0.0.0 -max 1000 -cli</span><br></pre></td></tr></table></figure>
+
+<p>它的工作流程也很简单：</p>
+<ol>
+<li>启动服务</li>
+<li>把请求发到 <code>http://[监听地址]:[端口]/任意路径</code></li>
+<li>在浏览器访问根路径查看已捕获请求</li>
+<li>如果开启了 <code>-cli</code>，终端里也会同步输出请求内容</li>
+</ol>
+<p>这意味着它既适合本地临时排查，也很适合作为内网环境中的一个“小型请求接收站”。</p>
+<h2 id="两种使用体验：终端和-Web"><a href="#两种使用体验：终端和-Web" class="headerlink" title="两种使用体验：终端和 Web"></a>两种使用体验：终端和 Web</h2><p>仓库首页给了两张截图，我也顺手放到这篇文章里，方便直接感受它的实际效果。</p>
+<h3 id="CLI-模式截图"><a href="#CLI-模式截图" class="headerlink" title="CLI 模式截图"></a>CLI 模式截图</h3><p>启用 <code>-cli</code> 后，收到的 HTTP 请求会直接以格式化后的方式打印在终端里：</p>
+<p><img src="run_in_cmd.png" alt="CLI 模式截图"></p>
+<p>这个模式特别适合在服务器、容器或远程终端里快速观察请求，不需要额外打开浏览器。</p>
+<h3 id="Web-界面截图"><a href="#Web-界面截图" class="headerlink" title="Web 界面截图"></a>Web 界面截图</h3><p>如果更喜欢图形化浏览方式，可以直接访问 Web 页面查看历史请求：</p>
+<p><img src="webpage.png" alt="Web 界面截图"></p>
+<p>从截图来看，界面风格非常克制，重点就是把请求内容清楚地展示出来，没有多余干扰。</p>
+<h2 id="适合哪些场景"><a href="#适合哪些场景" class="headerlink" title="适合哪些场景"></a>适合哪些场景</h2><p>结合仓库首页信息，我觉得 tiny-requestbin 很适合下面这些场景：</p>
+<ul>
+<li>调试第三方平台的 Webhook 回调</li>
+<li>验证某个服务到底发了什么 HTTP 请求</li>
+<li>本地开发时快速搭一个请求接收端</li>
+<li>在容器/Kubernetes 环境中临时观察请求流量</li>
+<li>在终端环境下通过 <code>-cli</code> 模式直接查看请求细节</li>
+</ul>
+<p>尤其是它强调 <strong>Local Only</strong>，所有数据都保留在本机，这一点对很多内部调试场景来说非常安心。</p>
+<h2 id="额外值得一提的几点"><a href="#额外值得一提的几点" class="headerlink" title="额外值得一提的几点"></a>额外值得一提的几点</h2><p>GitHub 页面里还有几个我觉得挺加分的信息：</p>
+<ul>
+<li>项目镜像支持 <strong>多架构</strong>，包括 <code>linux/amd64</code> 和 <code>linux/arm64</code></li>
+<li>多架构镜像会通过 GitHub Actions 自动构建发布</li>
+<li>仓库里同时提供了 Docker、Helm、源码构建几种入口</li>
+<li>项目采用 <strong>MIT License</strong>，使用和二次分发都比较友好</li>
+</ul>
+<p>另外，README 里还提到这个项目最开始由 Gemini 起步，后续由 GitHub Copilot 持续修改，这一点也挺符合这个项目本身“轻量、直接、快速迭代”的气质。</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>如果你正好在找一个 <strong>Go 写的、轻量、可本地运行、同时支持 Web 和 CLI 的 HTTP 请求调试工具</strong>，那我觉得 <a target="_blank" rel="noopener" href="https://github.com/knktc/tiny-requestbin">tiny-requestbin</a> 值得试一试。</p>
+<p>项目地址：</p>
+<ul>
+<li>GitHub: <a target="_blank" rel="noopener" href="https://github.com/knktc/tiny-requestbin">https://github.com/knktc/tiny-requestbin</a></li>
+</ul>
+<p>欢迎去点个 star，也欢迎提 Issue 或 PR，一起把这个小工具打磨得更顺手。</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>如果我的文字帮到了您，那么可不可以请我喝罐可乐？</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechat.png" alt="knktc 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="knktc 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-6959365962327411"
+     data-ad-slot="4588493450"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>knktc
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://knktc.com/2026/03/07/tiny-requestbin-introduction/" title="tiny-requestbin：一个用 Go 编写的轻量级 HTTP 请求调试工具">https://knktc.com/2026/03/07/tiny-requestbin-introduction/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/tiny-requestbin/" rel="tag"># tiny-requestbin</a>
+              <a href="/tags/requestbin/" rel="tag"># requestbin</a>
+              <a href="/tags/go/" rel="tag"># go</a>
+              <a href="/tags/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" rel="tag"># 开源项目</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/01/26/pymemcache-ignore-exc/" rel="prev" title="使用 pymemcache 别忘了设置 ignore_exc">
+      <i class="fa fa-chevron-left"></i> 使用 pymemcache 别忘了设置 ignore_exc
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%99%E4%B8%AA%E9%A1%B9%E7%9B%AE%E6%98%AF%E5%81%9A%E4%BB%80%E4%B9%88%E7%9A%84"><span class="nav-number">1.</span> <span class="nav-text">这个项目是做什么的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E6%96%B9%E5%BC%8F%E5%BE%88%E5%85%A8"><span class="nav-number">2.</span> <span class="nav-text">安装方式很全</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-Docker-%E6%96%B9%E5%BC%8F"><span class="nav-number">2.1.</span> <span class="nav-text">1. Docker 方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-Helm-%E5%AE%89%E8%A3%85"><span class="nav-number">2.2.</span> <span class="nav-text">2. Helm 安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-go-install"><span class="nav-number">2.3.</span> <span class="nav-text">3. go install</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E4%BB%8E%E6%BA%90%E7%A0%81%E6%9E%84%E5%BB%BA"><span class="nav-number">2.4.</span> <span class="nav-text">4. 从源码构建</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%8E%E4%B9%88%E4%BD%BF%E7%94%A8"><span class="nav-number">3.</span> <span class="nav-text">怎么使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%A4%E7%A7%8D%E4%BD%BF%E7%94%A8%E4%BD%93%E9%AA%8C%EF%BC%9A%E7%BB%88%E7%AB%AF%E5%92%8C-Web"><span class="nav-number">4.</span> <span class="nav-text">两种使用体验：终端和 Web</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CLI-%E6%A8%A1%E5%BC%8F%E6%88%AA%E5%9B%BE"><span class="nav-number">4.1.</span> <span class="nav-text">CLI 模式截图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Web-%E7%95%8C%E9%9D%A2%E6%88%AA%E5%9B%BE"><span class="nav-number">4.2.</span> <span class="nav-text">Web 界面截图</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%82%E5%90%88%E5%93%AA%E4%BA%9B%E5%9C%BA%E6%99%AF"><span class="nav-number">5.</span> <span class="nav-text">适合哪些场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%9D%E5%A4%96%E5%80%BC%E5%BE%97%E4%B8%80%E6%8F%90%E7%9A%84%E5%87%A0%E7%82%B9"><span class="nav-number">6.</span> <span class="nav-text">额外值得一提的几点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E5%90%8E"><span class="nav-number">7.</span> <span class="nav-text">最后</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="knktc"
+      src="/images/sonic_avatar.png">
+  <p class="site-author-name" itemprop="name">knktc</p>
+  <div class="site-description" itemprop="description">关注linux,云计算,python，杂乱之地...</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">71</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">218</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/knktc" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;knktc" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/knktc" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;knktc" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">鄂ICP备2021019593号-1 </a>
+      <img src="/images/beian.png" style="display: inline-block;"><a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=42018502005554" rel="noopener" target="_blank">鄂公网安备 42018502005554号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">knktc</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
