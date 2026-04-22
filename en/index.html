@@ -142,6 +142,13 @@
 
 
 
+<div class="site-lang-switch" aria-label="Language switcher">
+    <a class="site-lang-switch-link" href="/index.html">
+      <span class="site-lang-switch-eyebrow">Language</span>
+      <span class="site-lang-switch-label">查看中文版本</span>
+    </a>
+</div>
+
 </div>
     </header>
 
@@ -233,6 +240,77 @@
   
   
 
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://knktc.com/2025/01/26/pymemcache-ignore-exc/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/en/images/sonic_avatar.png">
+      <meta itemprop="name" content="knktc">
+      <meta itemprop="description" content="Notes on Python, Linux, and cloud infrastructure.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="knktc's Notes">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/en/2025/01/26/pymemcache-ignore-exc/" class="post-title-link" itemprop="url">Don't forget to set ignore_exc when using pymemcache</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2025-01-26 21:07:38" itemprop="dateCreated datePublished" datetime="2025-01-26T21:07:38+08:00">2025-01-26</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2026-04-22 09:03:52" itemprop="dateModified" datetime="2026-04-22T09:03:52+08:00">2026-04-22</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>After upgrading Django to 4.2, we started replacing <code>python-memcached</code> with <code>pymemcache</code>.</p>
+<p>Once the switch was done, we noticed that the default setup was no longer behaving well in a high-availability scenario. If multiple memcached backends were configured and one of them went down, any cache-related code could fail with an exception instead of degrading gracefully.</p>
+<p>After checking the official documentation, the reason became clear: by default, <code>pymemcache</code> raises exceptions on connection failures unless you explicitly set <code>ignore_exc = True</code>.</p>
+<p>So the fix is simply to add that option to your Django <code>CACHES</code> settings:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">CACHES = &#123;</span><br><span class="line">    <span class="string">&#x27;default&#x27;</span>: &#123;</span><br><span class="line">        <span class="string">&#x27;BACKEND&#x27;</span>: <span class="string">&#x27;django.core.cache.backends.memcached.PyMemcacheCache&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;LOCATION&#x27;</span>: [</span><br><span class="line">            <span class="string">&#x27;host1:11211&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;host2:11211&#x27;</span>,</span><br><span class="line">        ],</span><br><span class="line">        <span class="string">&#x27;OPTIONS&#x27;</span>: &#123;</span><br><span class="line">            <span class="string">&#x27;ignore_exc&#x27;</span>: <span class="literal">True</span>,</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>If you expect memcached nodes to fail independently and still want your application to continue running, this setting is easy to miss but important to have.</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
 
   
 
@@ -301,12 +379,12 @@
       <div class="site-state-item site-state-posts">
           <a href="/en/archives/">
         
-          <span class="site-state-item-count">1</span>
+          <span class="site-state-item-count">2</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">10</span>
         <span class="site-state-item-name">tags</span>
       </div>
   </nav>

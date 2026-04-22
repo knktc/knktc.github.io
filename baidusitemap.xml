@@ -145,99 +145,7 @@
     <lastmod>2019-07-06</lastmod>
   </url>
   <url>
-    <loc>https://knktc.com/2018/06/12/how-to-duplicate-kvm-snapshot/</loc>
-    <lastmod>2019-05-26</lastmod>
-  </url>
-  <url>
-    <loc>https://knktc.com/2018/06/22/docker-layer-doest-not-exist/</loc>
-    <lastmod>2019-05-26</lastmod>
-  </url>
-  <url>
-    <loc>https://knktc.com/2018/07/24/uwsgi-spooler-as-async-queue/</loc>
-    <lastmod>2019-05-26</lastmod>
-  </url>
-  <url>
-    <loc>https://knktc.com/2014/05/04/hello-hexo/</loc>
-    <lastmod>2019-05-26</lastmod>
-  </url>
-  <url>
-    <loc>https://knktc.com/2014/05/12/hive-in-not-in/</loc>
-    <lastmod>2019-05-26</lastmod>
-  </url>
-  <url>
-    <loc>https://knktc.com/2018/05/26/pyajs/</loc>
-    <lastmod>2019-05-26</lastmod>
-  </url>
-  <url>
-    <loc>https://knktc.com/2018/06/03/postman-set-token/</loc>
-    <lastmod>2019-05-26</lastmod>
-  </url>
-  <url>
-    <loc>https://knktc.com/2014/06/05/easy_install-google-protobuf/</loc>
-    <lastmod>2019-05-26</lastmod>
-  </url>
-  <url>
-    <loc>https://knktc.com/2015/02/21/pg_dump-password/</loc>
-    <lastmod>2019-05-26</lastmod>
-  </url>
-  <url>
-    <loc>https://knktc.com/2014/06/03/resulting-partition-is-not-properly-aligned-for-best-performance/</loc>
-    <lastmod>2019-05-26</lastmod>
-  </url>
-  <url>
-    <loc>https://knktc.com/2014/05/18/mapreduce-streaming-python-library/</loc>
-    <lastmod>2019-05-26</lastmod>
-  </url>
-  <url>
-    <loc>https://knktc.com/2014/05/24/python-get-process-pool-count/</loc>
-    <lastmod>2019-05-26</lastmod>
-  </url>
-  <url>
-    <loc>https://knktc.com/2014/06/14/remove-clean-dmraid/</loc>
-    <lastmod>2019-05-26</lastmod>
-  </url>
-  <url>
-    <loc>https://knktc.com/2014/08/09/docker-registry-install/</loc>
-    <lastmod>2019-05-26</lastmod>
-  </url>
-  <url>
-    <loc>https://knktc.com/2014/08/31/powershell-parallel-script/</loc>
-    <lastmod>2019-05-26</lastmod>
-  </url>
-  <url>
     <loc>https://knktc.com/2017/11/13/celery-python-bad-password/</loc>
-    <lastmod>2019-05-26</lastmod>
-  </url>
-  <url>
-    <loc>https://knktc.com/2017/04/19/fedora-no-network-docker-not-start/</loc>
-    <lastmod>2019-05-26</lastmod>
-  </url>
-  <url>
-    <loc>https://knktc.com/2015/05/10/kibana-could-not-contact-elasticsearch/</loc>
-    <lastmod>2019-05-26</lastmod>
-  </url>
-  <url>
-    <loc>https://knktc.com/2016/06/10/elasticsearch-multiple-instances/</loc>
-    <lastmod>2019-05-26</lastmod>
-  </url>
-  <url>
-    <loc>https://knktc.com/2014/05/17/python-segmentation-fault/</loc>
-    <lastmod>2019-05-26</lastmod>
-  </url>
-  <url>
-    <loc>https://knktc.com/2014/08/03/gpg-use-external-keyring/</loc>
-    <lastmod>2019-05-26</lastmod>
-  </url>
-  <url>
-    <loc>https://knktc.com/2014/05/11/linux-shell-traffic/</loc>
-    <lastmod>2019-05-26</lastmod>
-  </url>
-  <url>
-    <loc>https://knktc.com/2014/08/09/docker-cheat-sheet/</loc>
-    <lastmod>2019-05-26</lastmod>
-  </url>
-  <url>
-    <loc>https://knktc.com/2018/06/02/test-image/</loc>
     <lastmod>2019-05-26</lastmod>
   </url>
   <url>
@@ -245,7 +153,7 @@
     <lastmod>2019-05-26</lastmod>
   </url>
   <url>
-    <loc>https://knktc.com/2014/08/16/docker-use-dnsmasq-as-hosts/</loc>
+    <loc>https://knktc.com/2014/08/09/docker-cheat-sheet/</loc>
     <lastmod>2019-05-26</lastmod>
   </url>
   <url>
@@ -253,15 +161,99 @@
     <lastmod>2019-05-26</lastmod>
   </url>
   <url>
-    <loc>https://knktc.com/2014/05/15/insecure-pssh/</loc>
+    <loc>https://knktc.com/2014/08/16/docker-use-dnsmasq-as-hosts/</loc>
     <lastmod>2019-05-26</lastmod>
   </url>
   <url>
-    <loc>https://knktc.com/2014/06/29/use-python-to-control-hive-hiveserver2/</loc>
+    <loc>https://knktc.com/2016/06/10/elasticsearch-multiple-instances/</loc>
+    <lastmod>2019-05-26</lastmod>
+  </url>
+  <url>
+    <loc>https://knktc.com/2014/08/09/docker-registry-install/</loc>
+    <lastmod>2019-05-26</lastmod>
+  </url>
+  <url>
+    <loc>https://knktc.com/2017/04/19/fedora-no-network-docker-not-start/</loc>
+    <lastmod>2019-05-26</lastmod>
+  </url>
+  <url>
+    <loc>https://knktc.com/2018/06/22/docker-layer-doest-not-exist/</loc>
+    <lastmod>2019-05-26</lastmod>
+  </url>
+  <url>
+    <loc>https://knktc.com/2014/06/05/easy_install-google-protobuf/</loc>
     <lastmod>2019-05-26</lastmod>
   </url>
   <url>
     <loc>https://knktc.com/2014/05/12/gpg-crontab/</loc>
+    <lastmod>2019-05-26</lastmod>
+  </url>
+  <url>
+    <loc>https://knktc.com/2014/05/04/hello-world/</loc>
+    <lastmod>2019-05-26</lastmod>
+  </url>
+  <url>
+    <loc>https://knktc.com/2014/08/03/gpg-use-external-keyring/</loc>
+    <lastmod>2019-05-26</lastmod>
+  </url>
+  <url>
+    <loc>https://knktc.com/2014/05/12/hive-in-not-in/</loc>
+    <lastmod>2019-05-26</lastmod>
+  </url>
+  <url>
+    <loc>https://knktc.com/2018/06/12/how-to-duplicate-kvm-snapshot/</loc>
+    <lastmod>2019-05-26</lastmod>
+  </url>
+  <url>
+    <loc>https://knktc.com/2014/05/15/insecure-pssh/</loc>
+    <lastmod>2019-05-26</lastmod>
+  </url>
+  <url>
+    <loc>https://knktc.com/2018/06/07/install-android-x86-emulator-in-kvm/</loc>
+    <lastmod>2019-05-26</lastmod>
+  </url>
+  <url>
+    <loc>https://knktc.com/2015/05/10/kibana-could-not-contact-elasticsearch/</loc>
+    <lastmod>2019-05-26</lastmod>
+  </url>
+  <url>
+    <loc>https://knktc.com/2014/05/04/hello-hexo/</loc>
+    <lastmod>2019-05-26</lastmod>
+  </url>
+  <url>
+    <loc>https://knktc.com/2014/05/18/mapreduce-streaming-python-library/</loc>
+    <lastmod>2019-05-26</lastmod>
+  </url>
+  <url>
+    <loc>https://knktc.com/2014/05/11/linux-shell-traffic/</loc>
+    <lastmod>2019-05-26</lastmod>
+  </url>
+  <url>
+    <loc>https://knktc.com/2015/02/21/pg_dump-password/</loc>
+    <lastmod>2019-05-26</lastmod>
+  </url>
+  <url>
+    <loc>https://knktc.com/2014/08/31/powershell-parallel-script/</loc>
+    <lastmod>2019-05-26</lastmod>
+  </url>
+  <url>
+    <loc>https://knktc.com/2018/06/03/postman-set-token/</loc>
+    <lastmod>2019-05-26</lastmod>
+  </url>
+  <url>
+    <loc>https://knktc.com/2018/05/26/pyajs/</loc>
+    <lastmod>2019-05-26</lastmod>
+  </url>
+  <url>
+    <loc>https://knktc.com/2014/05/17/python-segmentation-fault/</loc>
+    <lastmod>2019-05-26</lastmod>
+  </url>
+  <url>
+    <loc>https://knktc.com/2014/06/14/remove-clean-dmraid/</loc>
+    <lastmod>2019-05-26</lastmod>
+  </url>
+  <url>
+    <loc>https://knktc.com/2014/05/24/python-get-process-pool-count/</loc>
     <lastmod>2019-05-26</lastmod>
   </url>
   <url>
@@ -273,15 +265,23 @@
     <lastmod>2019-05-26</lastmod>
   </url>
   <url>
-    <loc>https://knktc.com/2014/05/04/hello-world/</loc>
+    <loc>https://knktc.com/2014/06/03/resulting-partition-is-not-properly-aligned-for-best-performance/</loc>
     <lastmod>2019-05-26</lastmod>
   </url>
   <url>
-    <loc>https://knktc.com/2018/06/07/install-android-x86-emulator-in-kvm/</loc>
+    <loc>https://knktc.com/2018/06/02/test-image/</loc>
     <lastmod>2019-05-26</lastmod>
   </url>
   <url>
     <loc>https://knktc.com/2014/11/23/udf-hiveserver2-cloudera-manager-aux-jars/</loc>
+    <lastmod>2019-05-26</lastmod>
+  </url>
+  <url>
+    <loc>https://knktc.com/2014/06/29/use-python-to-control-hive-hiveserver2/</loc>
+    <lastmod>2019-05-26</lastmod>
+  </url>
+  <url>
+    <loc>https://knktc.com/2018/07/24/uwsgi-spooler-as-async-queue/</loc>
     <lastmod>2019-05-26</lastmod>
   </url>
 </urlset> 
