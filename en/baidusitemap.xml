@@ -1,6 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://knktc.com/en/2022/08/10/fix-python-memcached-3-8-syntax-warning/</loc>
+    <lastmod>2026-04-22</lastmod>
+  </url>
+  <url>
+    <loc>https://knktc.com/en/2022/08/10/nginx-not-found-log-off/</loc>
+    <lastmod>2026-04-22</lastmod>
+  </url>
+  <url>
+    <loc>https://knktc.com/en/2022/04/22/set-mirror-when-installing-poerty/</loc>
+    <lastmod>2026-04-22</lastmod>
+  </url>
+  <url>
+    <loc>https://knktc.com/en/2022/03/23/where-to-place-mib-files-in-ubuntu/</loc>
+    <lastmod>2026-04-22</lastmod>
+  </url>
+  <url>
+    <loc>https://knktc.com/en/2022/03/21/git-use-different-ssh-key/</loc>
+    <lastmod>2026-04-22</lastmod>
+  </url>
+  <url>
     <loc>https://knktc.com/en/2025/01/26/pymemcache-ignore-exc/</loc>
     <lastmod>2026-04-22</lastmod>
   </url>
