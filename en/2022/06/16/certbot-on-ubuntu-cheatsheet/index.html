@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/en/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/en/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/en/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/en/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/en/css/main.css">
+
+
+<link rel="stylesheet" href="/en/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"knktc.com","root":"/en/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="A practical walkthrough for issuing and renewing Let&#39;s Encrypt certificates on Ubuntu with Certbot, Cloudflare DNS, and Nginx.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Automating HTTPS certificates with Certbot on Ubuntu, Cloudflare, and Nginx">
+<meta property="og:url" content="https://knktc.com/en/2022/06/16/certbot-on-ubuntu-cheatsheet/index.html">
+<meta property="og:site_name" content="knktc&#39;s Notes">
+<meta property="og:description" content="A practical walkthrough for issuing and renewing Let&#39;s Encrypt certificates on Ubuntu with Certbot, Cloudflare DNS, and Nginx.">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-06-16T13:45:36.000Z">
+<meta property="article:modified_time" content="2026-04-22T02:02:38.195Z">
+<meta property="article:author" content="knktc">
+<meta property="article:tag" content="certbot">
+<meta property="article:tag" content="ubuntu">
+<meta property="article:tag" content="ssl">
+<meta property="article:tag" content="https">
+<meta property="article:tag" content="letsencrypt">
+<meta property="article:tag" content="cloudflare">
+<meta property="article:tag" content="nginx">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://knktc.com/en/2022/06/16/certbot-on-ubuntu-cheatsheet/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+<link rel="alternate" hreflang="en" href="&#x2F;en&#x2F;2022&#x2F;06&#x2F;16&#x2F;certbot-on-ubuntu-cheatsheet&#x2F;">
+<link rel="alternate" hreflang="zh-CN" href="&#x2F;2022&#x2F;06&#x2F;16&#x2F;certbot-on-ubuntu-cheatsheet&#x2F;">
+<link rel="alternate" hreflang="x-default" href="&#x2F;2022&#x2F;06&#x2F;16&#x2F;certbot-on-ubuntu-cheatsheet&#x2F;">
+
+  <title>Automating HTTPS certificates with Certbot on Ubuntu, Cloudflare, and Nginx | knktc's Notes</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a23b2d1c6159a3a6c798edbc7f9211f9";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/en/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">knktc's Notes</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">python, cloud, linux...</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/en/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/en/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/en/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+<div class="site-lang-switch" aria-label="Language switcher">
+    <a class="site-lang-switch-link" href="/2022/06/16/certbot-on-ubuntu-cheatsheet/">
+      <span class="site-lang-switch-eyebrow">Language</span>
+      <span class="site-lang-switch-label">查看中文版本</span>
+    </a>
+</div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://knktc.com/2022/06/16/certbot-on-ubuntu-cheatsheet/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/en/images/sonic_avatar.png">
+      <meta itemprop="name" content="knktc">
+      <meta itemprop="description" content="Notes on Python, Linux, and cloud infrastructure.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="knktc's Notes">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Automating HTTPS certificates with Certbot on Ubuntu, Cloudflare, and Nginx
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-06-16 21:45:36" itemprop="dateCreated datePublished" datetime="2022-06-16T21:45:36+08:00">2022-06-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2026-04-22 10:02:38" itemprop="dateModified" datetime="2026-04-22T10:02:38+08:00">2026-04-22</time>
+              </span>
+
+          
+            <div class="post-description">A practical walkthrough for issuing and renewing Let's Encrypt certificates on Ubuntu with Certbot, Cloudflare DNS, and Nginx.</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>There is already plenty of documentation online for generating Let’s Encrypt certificates with Certbot, but I still wanted to keep my own notes here for future reference.</p>
+<p>In this setup, the operating system is Ubuntu 20.04, DNS is managed with Cloudflare, and Nginx is used as the web server.</p>
+<p>Following the steps below is enough to get it working.</p>
+<span id="more"></span>
+
+<h2 id="Install-Certbot"><a href="#Install-Certbot" class="headerlink" title="Install Certbot"></a>Install Certbot</h2><p>You can install it with the following commands. In some environments, <code>snap install</code> can be slow and may need to be retried once or twice:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">apt install snapd</span><br><span class="line">snap install core</span><br><span class="line">snap refresh core</span><br><span class="line">snap install --classic certbot</span><br></pre></td></tr></table></figure>
+
+<p>After installation, run <code>certbot --version</code>. If it prints a version number, the installation is successful.</p>
+<h2 id="Install-the-Cloudflare-plugin"><a href="#Install-the-Cloudflare-plugin" class="headerlink" title="Install the Cloudflare plugin"></a>Install the Cloudflare plugin</h2><p>To renew certificates automatically, you also need the plugin for your DNS provider. Since I use Cloudflare for DNS, I installed the Cloudflare plugin like this:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">snap set certbot trust-plugin-with-root=ok</span><br><span class="line"></span><br><span class="line">snap install certbot-dns-cloudflare</span><br></pre></td></tr></table></figure>
+
+<h2 id="Create-a-Cloudflare-API-token"><a href="#Create-a-Cloudflare-API-token" class="headerlink" title="Create a Cloudflare API token"></a>Create a Cloudflare API token</h2><p>To use the Cloudflare plugin, first log in to Cloudflare and create an API token that is only allowed to manage DNS records.</p>
+<p>You can create it here after signing in:</p>
+<p><a target="_blank" rel="noopener" href="https://dash.cloudflare.com/profile/api-tokens">https://dash.cloudflare.com/profile/api-tokens</a></p>
+<p>Once the token is created, save it somewhere safe and then create the Certbot credentials file:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p ~/.secrets/certbot</span><br><span class="line"></span><br><span class="line">vim ~/.secrets/certbot/cloudflare.ini</span><br></pre></td></tr></table></figure>
+
+<p>The file should contain:</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">dns_cloudflare_api_token</span> = YOUR_API_TOKEN</span><br></pre></td></tr></table></figure>
+
+<p>After saving it, tighten the file permissions. Otherwise Certbot will warn that the credentials file is insecure:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chmod 600 ~/.secrets/certbot/cloudflare.ini</span><br></pre></td></tr></table></figure>
+
+<h2 id="Request-the-certificate"><a href="#Request-the-certificate" class="headerlink" title="Request the certificate"></a>Request the certificate</h2><p>Now you can generate the certificate Nginx will use:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">certbot certonly \</span><br><span class="line">  --dns-cloudflare \</span><br><span class="line">  --dns-cloudflare-credentials ~/.secrets/certbot/cloudflare.ini \</span><br><span class="line">  --dns-cloudflare-propagation-seconds 60 \</span><br><span class="line">  -d knktc.com</span><br></pre></td></tr></table></figure>
+
+<p>Note the use of <code>--dns-cloudflare-propagation-seconds 60</code>. I increased the wait time to 60 seconds because the default 10 seconds sometimes caused validation failures.</p>
+<p>The issued certificate and private key will be placed under:</p>
+<p><code>/etc/letsencrypt/live/YOUR_HOST/</code></p>
+<p>For reference, here is a related Nginx configuration snippet:</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">listen</span> <span class="number">443</span> ssl http2;</span><br><span class="line"><span class="attribute">server_name</span> knktc.com;</span><br><span class="line"><span class="attribute">ssl_certificate</span> /etc/letsencrypt/live/knktc.com/fullchain.pem; <span class="comment"># managed by Certbot</span></span><br><span class="line"><span class="attribute">ssl_certificate_key</span> /etc/letsencrypt/live/knktc.com/privkey.pem; <span class="comment"># managed by Certbot</span></span><br><span class="line"></span><br><span class="line"><span class="attribute">ssl_protocols</span>       TLSv1 TLSv1.<span class="number">1</span> TLSv1.<span class="number">2</span>;</span><br><span class="line"><span class="attribute">ssl_ciphers</span>         HIGH:!aNULL:!MD5;</span><br><span class="line"><span class="attribute">keepalive_timeout</span>   <span class="number">70</span>;</span><br><span class="line"><span class="attribute">ssl_session_timeout</span>  <span class="number">5m</span>;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Scheduled-renewal"><a href="#Scheduled-renewal" class="headerlink" title="Scheduled renewal"></a>Scheduled renewal</h2><p>You can verify whether Certbot’s scheduled renewal task has been added successfully with:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl list-timers</span><br></pre></td></tr></table></figure>
+
+<p>If you want Nginx to reload automatically whenever a new certificate is issued, add a renewal hook script:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/letsencrypt/renewal-hooks/post/reload-nginx</span><br></pre></td></tr></table></figure>
+
+<p>Put the following into the file:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/sh</span></span><br><span class="line"></span><br><span class="line">systemctl reload nginx</span><br></pre></td></tr></table></figure>
+
+<p>Then make it executable:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chmod +x /etc/letsencrypt/renewal-hooks/post/reload-nginx</span><br></pre></td></tr></table></figure>
+
+<p>With that in place, Nginx will automatically reload after every successful certificate renewal.</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>如果我的文字帮到了您，那么可不可以请我喝罐可乐？</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    Donate
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/en/images/wechat.png" alt="knktc WeChat Pay">
+        <p>WeChat Pay</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/en/images/alipay.jpg" alt="knktc Alipay">
+        <p>Alipay</p>
+      </div>
+
+  </div>
+</div>
+
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-6959365962327411"
+     data-ad-slot="4588493450"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>Post author:  </strong>knktc
+  </li>
+  <li class="post-copyright-link">
+    <strong>Post link: </strong>
+    <a href="https://knktc.com/2022/06/16/certbot-on-ubuntu-cheatsheet/" title="Automating HTTPS certificates with Certbot on Ubuntu, Cloudflare, and Nginx">https://knktc.com/2022/06/16/certbot-on-ubuntu-cheatsheet/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/en/tags/certbot/" rel="tag"># certbot</a>
+              <a href="/en/tags/ubuntu/" rel="tag"># ubuntu</a>
+              <a href="/en/tags/ssl/" rel="tag"># ssl</a>
+              <a href="/en/tags/https/" rel="tag"># https</a>
+              <a href="/en/tags/letsencrypt/" rel="tag"># letsencrypt</a>
+              <a href="/en/tags/cloudflare/" rel="tag"># cloudflare</a>
+              <a href="/en/tags/nginx/" rel="tag"># nginx</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/en/2022/04/22/set-mirror-when-installing-poerty/" rel="prev" title="Using a mirror to speed up Poetry installation">
+      <i class="fa fa-chevron-left"></i> Using a mirror to speed up Poetry installation
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/en/2022/08/10/nginx-not-found-log-off/" rel="next" title="Ignore 404 not found logs in Nginx">
+      Ignore 404 not found logs in Nginx <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Install-Certbot"><span class="nav-number">1.</span> <span class="nav-text">Install Certbot</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Install-the-Cloudflare-plugin"><span class="nav-number">2.</span> <span class="nav-text">Install the Cloudflare plugin</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Create-a-Cloudflare-API-token"><span class="nav-number">3.</span> <span class="nav-text">Create a Cloudflare API token</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Request-the-certificate"><span class="nav-number">4.</span> <span class="nav-text">Request the certificate</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Scheduled-renewal"><span class="nav-number">5.</span> <span class="nav-text">Scheduled renewal</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="knktc"
+      src="/en/images/sonic_avatar.png">
+  <p class="site-author-name" itemprop="name">knktc</p>
+  <div class="site-description" itemprop="description">Notes on Python, Linux, and cloud infrastructure.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/en/archives/">
+        
+          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">38</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/knktc" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;knktc" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/knktc" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;knktc" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/en/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">鄂ICP备2021019593号-1 </a>
+      <img src="/en/images/beian.png" style="display: inline-block;"><a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=42018502005554" rel="noopener" target="_blank">鄂公网安备 42018502005554号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">knktc</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/en/lib/anime.min.js"></script>
+
+<script src="/en/js/utils.js"></script>
+
+
+<script src="/en/js/schemes/pisces.js"></script>
+
+
+<script src="/en/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
