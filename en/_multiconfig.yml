@@ -1,0 +1,66 @@
+title: knktc's Notes
+subtitle: python, cloud, linux...
+description: Notes on Python, Linux, and cloud infrastructure.
+keywords: python, linux, cloud
+author: knktc
+language: en
+timezone: Asia/Shanghai
+url: https://knktc.com
+root: /en/
+permalink: ':year/:month/:day/:title/'
+permalink_defaults: null
+source_dir: source_en
+public_dir: public_en
+tag_dir: tags
+archive_dir: archives
+category_dir: categories
+code_dir: downloads/code
+i18n_dir: ':lang'
+skip_render:
+  - .github/**/**
+new_post_name: ':title.md'
+default_layout: post
+titlecase: false
+external_link:
+  enable: true
+filename_case: 0
+render_drafts: false
+post_asset_folder: true
+relative_link: false
+future: true
+highlight:
+  enable: true
+  line_number: true
+  auto_detect: false
+  tab_replace: null
+index_generator:
+  path: ''
+  per_page: 10
+  order_by: '-date'
+default_category: uncategorized
+category_map: null
+tag_map: null
+date_format: YYYY-MM-DD
+time_format: HH:mm:ss
+per_page: 10
+pagination_dir: page
+theme: next
+plugins: hexo-generator-sitemap
+disqus_enable: false
+disqus_shortname: knktc
+deploy:
+  - type: rsync
+    host: knktc.com
+    user: web
+    root: /home/web/knktc.com
+    port: 22022
+  - type: git
+    repository: git@github.com:knktc/knktc.github.io.git
+    branch: master
+    ignore_hidden: false
+include:
+  - .github/**/**
+sitemap:
+  path: sitemap.xml
+baidusitemap:
+  path: baidusitemap.xml
