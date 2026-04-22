@@ -43,6 +43,9 @@
     lang   : 'zh-CN'
   };
 </script>
+<link rel="alternate" hreflang="zh-CN" href="&#x2F;index.html">
+<link rel="alternate" hreflang="en" href="&#x2F;en&#x2F;index.html">
+<link rel="alternate" hreflang="x-default" href="&#x2F;index.html">
 
   <title>knktc的杂乱空间</title>
   
@@ -193,10 +196,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2026-03-07 12:25:23 / 修改时间：20:34:14" itemprop="dateCreated datePublished" datetime="2026-03-07T12:25:23+08:00">2026-03-07</time>
+              <time title="创建时间：2026-03-07 12:25:23" itemprop="dateCreated datePublished" datetime="2026-03-07T12:25:23+08:00">2026-03-07</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2026-04-22 09:14:27" itemprop="dateModified" datetime="2026-04-22T09:14:27+08:00">2026-04-22</time>
+              </span>
 
           
 
@@ -209,11 +218,10 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>最近整理自己的开源项目时，我重新看了一遍 <a target="_blank" rel="noopener" href="https://github.com/knktc/tiny-requestbin">tiny-requestbin</a> 的 GitHub 页面，发现它已经不只是一个“能收请求的小工具”，而是一个非常适合本地调试、Webhook 联调和临时排查 HTTP 请求问题的轻量级工具。这个项目使用 Go 编写，目标非常明确：<strong>尽量少的依赖、尽量快地启动、尽量直观地查看收到的请求内容</strong>。</p>
-<p>如果你经常需要验证第三方回调、调试自建服务的入站请求，或者只是想临时抓一把 HTTP 请求看看内容，那它应该会很顺手。</p>
+          <p>一个适合本地调试、Webhook 联调和临时排查 HTTP 请求问题的轻量级 Go 工具，支持 Web 界面和 CLI 两种查看方式。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2026/03/07/tiny-requestbin-introduction/#more" rel="contents">
+              <a class="btn" href="/2026/03/07/tiny-requestbin-introduction/">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -260,10 +268,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2025-01-26 21:07:38 / 修改时间：21:19:53" itemprop="dateCreated datePublished" datetime="2025-01-26T21:07:38+08:00">2025-01-26</time>
+              <time title="创建时间：2025-01-26 21:07:38" itemprop="dateCreated datePublished" datetime="2025-01-26T21:07:38+08:00">2025-01-26</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2026-04-22 09:14:27" itemprop="dateModified" datetime="2026-04-22T09:14:27+08:00">2026-04-22</time>
+              </span>
 
           
 
@@ -276,13 +290,15 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>我们在把 Django 升级到 4.2 版本以后，开始把 python-memcached 给换成 pymemcache。结果换完之后，发现怎么默认配置情况下不能高可用了，如果配置了多个 memcached 的后端，挂了一个后，使用缓存相关的代码直接会报错。</p>
-<p>查了下官方文档才发现，pymemcache 默认情况下遇到连接失败就是会抛出异常，除非是手动指定下 ignore_exc = True。</p>
-<p>于是，将 Django CACHES 的配置修改成这样，在 OPTION 中加入相关配置就好了：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">CACHES &#x3D; &#123;</span><br><span class="line">    &#39;default&#39;: &#123;</span><br><span class="line">        &#39;BACKEND&#39;: &#39;django.core.cache.backends.memcached.PyMemcacheCache&#39;,</span><br><span class="line">        &#39;LOCATION&#39;: [</span><br><span class="line">            &#39;host1:11211&#39;,</span><br><span class="line">            &#39;host2&#39;:11211,</span><br><span class="line">        ],</span><br><span class="line">        &#39;OPTIONS&#39;: &#123;</span><br><span class="line">            &#39;ignore_exc&#39;: True,  # 设置成 True</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-
-
+          <p>Django 从 python-memcached 切换到 pymemcache 后，如果希望 memcached 节点故障时不直接抛异常，记得设置 ignore_exc=True。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2025/01/26/pymemcache-ignore-exc/">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
