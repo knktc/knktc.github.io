@@ -1,6 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://knktc.com/en/2014/06/03/resulting-partition-is-not-properly-aligned-for-best-performance/</loc>
+    <lastmod>2026-04-29</lastmod>
+  </url>
+  <url>
+    <loc>https://knktc.com/en/2014/06/14/remove-clean-dmraid/</loc>
+    <lastmod>2026-04-29</lastmod>
+  </url>
+  <url>
+    <loc>https://knktc.com/en/2018/06/10/python3-uwsgi-no-python-application-found/</loc>
+    <lastmod>2026-04-29</lastmod>
+  </url>
+  <url>
+    <loc>https://knktc.com/en/2022/02/26/nginx-etag-different-in-2-nodes/</loc>
+    <lastmod>2026-04-29</lastmod>
+  </url>
+  <url>
+    <loc>https://knktc.com/en/2014/05/11/linux-shell-traffic/</loc>
+    <lastmod>2026-04-29</lastmod>
+  </url>
+  <url>
     <loc>https://knktc.com/en/2014/05/15/insecure-pssh/</loc>
     <lastmod>2026-04-29</lastmod>
   </url>
