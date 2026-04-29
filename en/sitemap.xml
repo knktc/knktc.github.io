@@ -2,6 +2,55 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://knktc.com/2018/07/24/uwsgi-spooler-as-async-queue/</loc>
+    
+    <lastmod>2026-04-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/2014/06/29/use-python-to-control-hive-hiveserver2/</loc>
+    
+    <lastmod>2026-04-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/2014/11/23/udf-hiveserver2-cloudera-manager-aux-jars/</loc>
+    
+    <lastmod>2026-04-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/2021/09/11/the-request-session-was-deleted-before-the-request-completed/</loc>
+    
+    <lastmod>2026-04-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/2018/06/02/test-image/</loc>
+    
+    <lastmod>2026-04-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/2019/07/06/ssh-run-python-script-UnicodeDecodeError/</loc>
+    
+    <lastmod>2026-04-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/2021/04/04/python-trust-self-signed-ssl-certicates/</loc>
+    
+    <lastmod>2026-04-29</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://knktc.com/2014/05/17/python-segmentation-fault/</loc>
     
     <lastmod>2026-04-29</lastmod>
@@ -501,6 +550,27 @@
   </url>
   
   <url>
+    <loc>https://knktc.com/tags/bulk/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/disable/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/selenium/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://knktc.com/tags/audit/</loc>
     <lastmod>2026-04-29</lastmod>
     <changefreq>daily</changefreq>
@@ -543,34 +613,6 @@
   </url>
   
   <url>
-    <loc>https://knktc.com/tags/beat/</loc>
-    <lastmod>2026-04-29</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://knktc.com/tags/standby/</loc>
-    <lastmod>2026-04-29</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://knktc.com/tags/monkey/</loc>
-    <lastmod>2026-04-29</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://knktc.com/tags/patch/</loc>
-    <lastmod>2026-04-29</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://knktc.com/tags/rabbitmq/</loc>
     <lastmod>2026-04-29</lastmod>
     <changefreq>daily</changefreq>
@@ -599,21 +641,49 @@
   </url>
   
   <url>
-    <loc>https://knktc.com/tags/bulk/</loc>
+    <loc>https://knktc.com/tags/broker/</loc>
     <lastmod>2026-04-29</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://knktc.com/tags/disable/</loc>
+    <loc>https://knktc.com/tags/redis/</loc>
     <lastmod>2026-04-29</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://knktc.com/tags/selenium/</loc>
+    <loc>https://knktc.com/tags/stuck/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/beat/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/standby/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/monkey/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/patch/</loc>
     <lastmod>2026-04-29</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -669,27 +739,6 @@
   </url>
   
   <url>
-    <loc>https://knktc.com/tags/broker/</loc>
-    <lastmod>2026-04-29</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://knktc.com/tags/redis/</loc>
-    <lastmod>2026-04-29</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://knktc.com/tags/stuck/</loc>
-    <lastmod>2026-04-29</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://knktc.com/tags/crontab/</loc>
     <lastmod>2026-04-29</lastmod>
     <changefreq>daily</changefreq>
@@ -705,34 +754,6 @@
   
   <url>
     <loc>https://knktc.com/tags/failed/</loc>
-    <lastmod>2026-04-29</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://knktc.com/tags/chrome/</loc>
-    <lastmod>2026-04-29</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://knktc.com/tags/youtube/</loc>
-    <lastmod>2026-04-29</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://knktc.com/tags/music/</loc>
-    <lastmod>2026-04-29</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://knktc.com/tags/extension/</loc>
     <lastmod>2026-04-29</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -767,14 +788,28 @@
   </url>
   
   <url>
-    <loc>https://knktc.com/tags/choices/</loc>
+    <loc>https://knktc.com/tags/chrome/</loc>
     <lastmod>2026-04-29</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://knktc.com/tags/dynamic/</loc>
+    <loc>https://knktc.com/tags/youtube/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/music/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/extension/</loc>
     <lastmod>2026-04-29</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -802,7 +837,49 @@
   </url>
   
   <url>
+    <loc>https://knktc.com/tags/choices/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/dynamic/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/docker/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/cheatsheet/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://knktc.com/tags/script/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/layer/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/startup/</loc>
     <lastmod>2026-04-29</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -844,34 +921,6 @@
   </url>
   
   <url>
-    <loc>https://knktc.com/tags/docker/</loc>
-    <lastmod>2026-04-29</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://knktc.com/tags/cheatsheet/</loc>
-    <lastmod>2026-04-29</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://knktc.com/tags/layer/</loc>
-    <lastmod>2026-04-29</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://knktc.com/tags/startup/</loc>
-    <lastmod>2026-04-29</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://knktc.com/tags/docker-registry/</loc>
     <lastmod>2026-04-29</lastmod>
     <changefreq>daily</changefreq>
@@ -900,27 +949,6 @@
   </url>
   
   <url>
-    <loc>https://knktc.com/tags/docusaurus/</loc>
-    <lastmod>2026-04-29</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://knktc.com/tags/docs/</loc>
-    <lastmod>2026-04-29</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://knktc.com/tags/javascript/</loc>
-    <lastmod>2026-04-29</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://knktc.com/tags/easy-install/</loc>
     <lastmod>2026-04-29</lastmod>
     <changefreq>daily</changefreq>
@@ -942,6 +970,41 @@
   </url>
   
   <url>
+    <loc>https://knktc.com/tags/docusaurus/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/docs/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/javascript/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/elasticsearch/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/operations/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://knktc.com/tags/fedora/</loc>
     <lastmod>2026-04-29</lastmod>
     <changefreq>daily</changefreq>
@@ -950,20 +1013,6 @@
   
   <url>
     <loc>https://knktc.com/tags/network-manager/</loc>
-    <lastmod>2026-04-29</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://knktc.com/tags/memcached/</loc>
-    <lastmod>2026-04-29</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://knktc.com/tags/SyntaxWarning/</loc>
     <lastmod>2026-04-29</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -1012,34 +1061,6 @@
   </url>
   
   <url>
-    <loc>https://knktc.com/tags/hello/</loc>
-    <lastmod>2026-04-29</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://knktc.com/tags/first/</loc>
-    <lastmod>2026-04-29</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://knktc.com/tags/elasticsearch/</loc>
-    <lastmod>2026-04-29</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://knktc.com/tags/operations/</loc>
-    <lastmod>2026-04-29</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://knktc.com/tags/private/</loc>
     <lastmod>2026-04-29</lastmod>
     <changefreq>daily</changefreq>
@@ -1075,7 +1096,42 @@
   </url>
   
   <url>
-    <loc>https://knktc.com/tags/encryption/</loc>
+    <loc>https://knktc.com/tags/memcached/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/SyntaxWarning/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/hive/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/in/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/not-in/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/sql/</loc>
     <lastmod>2026-04-29</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -1104,6 +1160,34 @@
   
   <url>
     <loc>https://knktc.com/tags/qcow2/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/encryption/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/pssh/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/batch/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/parallel/</loc>
     <lastmod>2026-04-29</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -1152,77 +1236,14 @@
   </url>
   
   <url>
-    <loc>https://knktc.com/tags/hive/</loc>
+    <loc>https://knktc.com/tags/hello/</loc>
     <lastmod>2026-04-29</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://knktc.com/tags/in/</loc>
-    <lastmod>2026-04-29</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://knktc.com/tags/not-in/</loc>
-    <lastmod>2026-04-29</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://knktc.com/tags/sql/</loc>
-    <lastmod>2026-04-29</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://knktc.com/tags/pssh/</loc>
-    <lastmod>2026-04-29</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://knktc.com/tags/batch/</loc>
-    <lastmod>2026-04-29</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://knktc.com/tags/parallel/</loc>
-    <lastmod>2026-04-29</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://knktc.com/tags/bosch/</loc>
-    <lastmod>2026-04-29</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://knktc.com/tags/water-heater/</loc>
-    <lastmod>2026-04-29</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://knktc.com/tags/pressure-relief/</loc>
-    <lastmod>2026-04-29</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://knktc.com/tags/leak/</loc>
+    <loc>https://knktc.com/tags/first/</loc>
     <lastmod>2026-04-29</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -1271,7 +1292,56 @@
   </url>
   
   <url>
-    <loc>https://knktc.com/tags/headless/</loc>
+    <loc>https://knktc.com/tags/kibana/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/bosch/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/water-heater/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/pressure-relief/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/leak/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/lftp/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/ftps/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/solution/</loc>
     <lastmod>2026-04-29</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -1320,42 +1390,7 @@
   </url>
   
   <url>
-    <loc>https://knktc.com/tags/kibana/</loc>
-    <lastmod>2026-04-29</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://knktc.com/tags/lftp/</loc>
-    <lastmod>2026-04-29</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://knktc.com/tags/ftps/</loc>
-    <lastmod>2026-04-29</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://knktc.com/tags/solution/</loc>
-    <lastmod>2026-04-29</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://knktc.com/tags/traffic/</loc>
-    <lastmod>2026-04-29</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://knktc.com/tags/shell/</loc>
+    <loc>https://knktc.com/tags/etag/</loc>
     <lastmod>2026-04-29</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -1383,7 +1418,21 @@
   </url>
   
   <url>
-    <loc>https://knktc.com/tags/etag/</loc>
+    <loc>https://knktc.com/tags/traffic/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/shell/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/headless/</loc>
     <lastmod>2026-04-29</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -1398,69 +1447,6 @@
   
   <url>
     <loc>https://knktc.com/tags/json/</loc>
-    <lastmod>2026-04-29</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://knktc.com/tags/postgresql/</loc>
-    <lastmod>2026-04-29</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://knktc.com/tags/postman/</loc>
-    <lastmod>2026-04-29</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://knktc.com/tags/csrf/</loc>
-    <lastmod>2026-04-29</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://knktc.com/tags/bearer/</loc>
-    <lastmod>2026-04-29</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://knktc.com/tags/token/</loc>
-    <lastmod>2026-04-29</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://knktc.com/tags/authorization/</loc>
-    <lastmod>2026-04-29</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://knktc.com/tags/pyajs/</loc>
-    <lastmod>2026-04-29</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://knktc.com/tags/community/</loc>
-    <lastmod>2026-04-29</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://knktc.com/tags/powershell/</loc>
     <lastmod>2026-04-29</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -1495,6 +1481,48 @@
   </url>
   
   <url>
+    <loc>https://knktc.com/tags/postgresql/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/pyajs/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/community/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/powershell/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/c/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/segmentation-fault/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://knktc.com/tags/multiprocess/</loc>
     <lastmod>2026-04-29</lastmod>
     <changefreq>daily</changefreq>
@@ -1516,14 +1544,21 @@
   </url>
   
   <url>
-    <loc>https://knktc.com/tags/c/</loc>
+    <loc>https://knktc.com/tags/requests/</loc>
     <lastmod>2026-04-29</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://knktc.com/tags/segmentation-fault/</loc>
+    <loc>https://knktc.com/tags/self-signed/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/trust/</loc>
     <lastmod>2026-04-29</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -1552,6 +1587,20 @@
   
   <url>
     <loc>https://knktc.com/tags/centos7/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/parted/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/partition/</loc>
     <lastmod>2026-04-29</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -1600,35 +1649,7 @@
   </url>
   
   <url>
-    <loc>https://knktc.com/tags/parted/</loc>
-    <lastmod>2026-04-29</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://knktc.com/tags/partition/</loc>
-    <lastmod>2026-04-29</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://knktc.com/tags/mirror/</loc>
-    <lastmod>2026-04-29</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://knktc.com/tags/poetry/</loc>
-    <lastmod>2026-04-29</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://knktc.com/tags/pip/</loc>
     <lastmod>2026-04-29</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -1656,6 +1677,20 @@
   </url>
   
   <url>
+    <loc>https://knktc.com/tags/mac/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/UnicodeDecodeError/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://knktc.com/tags/openvpn/</loc>
     <lastmod>2026-04-29</lastmod>
     <changefreq>daily</changefreq>
@@ -1671,6 +1706,69 @@
   
   <url>
     <loc>https://knktc.com/tags/route/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/mirror/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/pip/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/postman/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/csrf/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/bearer/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/token/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/authorization/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/baidu/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/seo/</loc>
     <lastmod>2026-04-29</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -1705,6 +1803,62 @@
   </url>
   
   <url>
+    <loc>https://knktc.com/tags/image/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/400/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/error/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/cdh/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/cloudera-manager/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/hiveserver2/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/udf/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/pyhs2/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://knktc.com/tags/broadcast/</loc>
     <lastmod>2026-04-29</lastmod>
     <changefreq>daily</changefreq>
@@ -1712,14 +1866,7 @@
   </url>
   
   <url>
-    <loc>https://knktc.com/tags/baidu/</loc>
-    <lastmod>2026-04-29</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://knktc.com/tags/seo/</loc>
+    <loc>https://knktc.com/tags/expiry/</loc>
     <lastmod>2026-04-29</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -1754,6 +1901,20 @@
   </url>
   
   <url>
+    <loc>https://knktc.com/tags/spooler/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://knktc.com/tags/async/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://knktc.com/tags/yapi/</loc>
     <lastmod>2026-04-29</lastmod>
     <changefreq>daily</changefreq>
@@ -1769,13 +1930,6 @@
   
   <url>
     <loc>https://knktc.com/tags/role/</loc>
-    <lastmod>2026-04-29</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://knktc.com/tags/expiry/</loc>
     <lastmod>2026-04-29</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
