@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/en/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/en/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/en/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/en/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/en/css/main.css">
+
+
+<link rel="stylesheet" href="/en/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"knktc.com","root":"/en/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="A practical guide for running two Elasticsearch instances on a single host by separating ports, paths, and per-instance config files.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Run Multiple Elasticsearch Instances on One Server">
+<meta property="og:url" content="https://knktc.com/en/2016/06/10/elasticsearch-multiple-instances/index.html">
+<meta property="og:site_name" content="knktc&#39;s Notes">
+<meta property="og:description" content="A practical guide for running two Elasticsearch instances on a single host by separating ports, paths, and per-instance config files.">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2016-06-10T12:27:08.000Z">
+<meta property="article:modified_time" content="2026-04-29T01:04:56.729Z">
+<meta property="article:author" content="knktc">
+<meta property="article:tag" content="elasticsearch">
+<meta property="article:tag" content="operations">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://knktc.com/en/2016/06/10/elasticsearch-multiple-instances/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+<link rel="alternate" hreflang="en" href="&#x2F;en&#x2F;2016&#x2F;06&#x2F;10&#x2F;elasticsearch-multiple-instances&#x2F;">
+<link rel="alternate" hreflang="zh-CN" href="&#x2F;2016&#x2F;06&#x2F;10&#x2F;elasticsearch-multiple-instances&#x2F;">
+<link rel="alternate" hreflang="x-default" href="&#x2F;2016&#x2F;06&#x2F;10&#x2F;elasticsearch-multiple-instances&#x2F;">
+
+  <title>Run Multiple Elasticsearch Instances on One Server | knktc's Notes</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a23b2d1c6159a3a6c798edbc7f9211f9";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/en/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">knktc's Notes</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">python, cloud, linux...</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/en/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/en/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/en/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+<div class="site-lang-switch" aria-label="Language switcher">
+    <a class="site-lang-switch-link" href="/2016/06/10/elasticsearch-multiple-instances/">
+      <span class="site-lang-switch-eyebrow">Language</span>
+      <span class="site-lang-switch-label">查看中文版本</span>
+    </a>
+</div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://knktc.com/2016/06/10/elasticsearch-multiple-instances/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/en/images/sonic_avatar.png">
+      <meta itemprop="name" content="knktc">
+      <meta itemprop="description" content="Notes on Python, Linux, and cloud infrastructure.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="knktc's Notes">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Run Multiple Elasticsearch Instances on One Server
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2016-06-10 20:27:08" itemprop="dateCreated datePublished" datetime="2016-06-10T20:27:08+08:00">2016-06-10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2026-04-29 09:04:56" itemprop="dateModified" datetime="2026-04-29T09:04:56+08:00">2026-04-29</time>
+              </span>
+
+          
+            <div class="post-description">A practical guide for running two Elasticsearch instances on a single host by separating ports, paths, and per-instance config files.</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>Several official Elasticsearch documents recommend not assigning more than 32 GB of heap to a single instance. But memory is relatively cheap now, and limiting a physical server to a single 32 GB Elasticsearch node can feel wasteful. One practical way to use the hardware better is to run multiple Elasticsearch instances on the same server.</p>
+<p>This post summarizes the key points for running two Elasticsearch instances on one machine. The same idea can be extended to even more instances.</p>
+<span id="more"></span>
+
+<h2 id="Why-stay-under-32-GB"><a href="#Why-stay-under-32-GB" class="headerlink" title="Why stay under 32 GB?"></a>Why stay under 32 GB?</h2><p>The Elasticsearch documentation has long warned users not to cross the 32 GB heap boundary, for example in the well-known article <a target="_blank" rel="noopener" href="https://www.elastic.co/guide/en/elasticsearch/guide/current/heap-sizing.html#compressed_oops">Don’t Cross 32 GB!</a>.</p>
+<p>Because of that recommendation, running multiple instances on one host can sometimes make better use of a large-memory server.</p>
+<h2 id="Configuration-changes"><a href="#Configuration-changes" class="headerlink" title="Configuration changes"></a>Configuration changes</h2><p>To run multiple instances on a single host, the default configuration needs a few adjustments.</p>
+<h3 id="node-max-local-storage-nodes"><a href="#node-max-local-storage-nodes" class="headerlink" title="node.max_local_storage_nodes"></a><code>node.max_local_storage_nodes</code></h3><p>This setting limits how many local storage nodes can run on the same machine. Since we want multiple instances, it should be set to <code>2</code> or higher.</p>
+<h3 id="http-port"><a href="#http-port" class="headerlink" title="http.port"></a><code>http.port</code></h3><p>This is the HTTP port Elasticsearch exposes to clients. By default, Elasticsearch will try ports in the <code>9200</code> to <code>9299</code> range. If <code>9200</code> is in use, it will move to <code>9201</code> automatically.</p>
+<p>Technically you do not have to set this manually, but for clearer configuration management and easier compatibility with older setups, it is better to assign fixed ports. For example:</p>
+<ul>
+<li>instance 1: <code>9200</code></li>
+<li>instance 2: <code>9201</code></li>
+</ul>
+<h3 id="transport-tcp-port"><a href="#transport-tcp-port" class="headerlink" title="transport.tcp.port"></a><code>transport.tcp.port</code></h3><p>This is the port used for inter-node cluster communication. By default it starts from <code>9300</code>, and just like the HTTP port, Elasticsearch will move to the next available port if needed.</p>
+<p>Again, fixed values are easier to manage:</p>
+<ul>
+<li>instance 1: <code>9300</code></li>
+<li>instance 2: <code>9301</code></li>
+</ul>
+<h3 id="discovery-zen-ping-unicast-hosts"><a href="#discovery-zen-ping-unicast-hosts" class="headerlink" title="discovery.zen.ping.unicast.hosts"></a><code>discovery.zen.ping.unicast.hosts</code></h3><p>From Elasticsearch 2.x onward, the old multicast discovery mode is gone, so you need to specify master discovery targets explicitly.</p>
+<p>This is especially important when running multiple instances on one host. If an instance uses <code>transport.tcp.port: 9301</code> and you only specify a hostname without a port in <code>discovery.zen.ping.unicast.hosts</code>, the node may assume the peer is also on <code>9301</code>, which can prevent it from discovering the master correctly.</p>
+<p>So include the master’s transport port explicitly:</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">discovery.zen.ping.unicast.hosts:</span> [<span class="string">&quot;testes.mydomain:9300&quot;</span>]</span><br></pre></td></tr></table></figure>
+
+<h3 id="Other-settings"><a href="#Other-settings" class="headerlink" title="Other settings"></a>Other settings</h3><ul>
+<li><code>node.name</code>: two instances on the same host must have different node names</li>
+<li><code>path.data</code>: each instance needs its own data directory</li>
+<li><code>path.logs</code>: separate log directories are strongly recommended</li>
+</ul>
+<h2 id="Example-configurations"><a href="#Example-configurations" class="headerlink" title="Example configurations"></a>Example configurations</h2><h3 id="Instance-1"><a href="#Instance-1" class="headerlink" title="Instance 1"></a>Instance 1</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">cluster.name:</span> <span class="string">testes</span></span><br><span class="line"><span class="attr">node.name:</span> <span class="string">$&#123;HOSTNAME&#125;</span></span><br><span class="line"><span class="attr">node.box_type:</span> <span class="string">M</span></span><br><span class="line"><span class="attr">node.master:</span> <span class="literal">false</span></span><br><span class="line"><span class="attr">node.data:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">path.data:</span> <span class="string">/data/disk01</span></span><br><span class="line"><span class="attr">path.logs:</span> <span class="string">/home/centos/elasticsearch/logs/instance1</span></span><br><span class="line"><span class="attr">network.host:</span> <span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span></span><br><span class="line"><span class="attr">http.port:</span> <span class="number">9200</span></span><br><span class="line"><span class="attr">transport.tcp.port:</span> <span class="number">9300</span></span><br><span class="line"><span class="attr">discovery.zen.ping.unicast.hosts:</span> [<span class="string">&quot;testes.mydomain:9300&quot;</span>]</span><br><span class="line"><span class="attr">node.max_local_storage_nodes:</span> <span class="number">2</span></span><br><span class="line"><span class="attr">threadpool.index.queue_size:</span> <span class="number">400</span></span><br><span class="line"><span class="attr">threadpool.bulk.queue_size:</span> <span class="number">5000</span></span><br><span class="line"><span class="attr">bootstrap.mlockall:</span> <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Instance-2"><a href="#Instance-2" class="headerlink" title="Instance 2"></a>Instance 2</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">cluster.name:</span> <span class="string">testes</span></span><br><span class="line"><span class="attr">node.name:</span> <span class="string">$&#123;HOSTNAME&#125;-2</span></span><br><span class="line"><span class="attr">node.box_type:</span> <span class="string">M</span></span><br><span class="line"><span class="attr">node.master:</span> <span class="literal">false</span></span><br><span class="line"><span class="attr">node.data:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">path.data:</span> <span class="string">/data/disk02</span></span><br><span class="line"><span class="attr">path.logs:</span> <span class="string">/home/centos/elasticsearch/logs/instance2</span></span><br><span class="line"><span class="attr">network.host:</span> <span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span></span><br><span class="line"><span class="attr">http.port:</span> <span class="number">9201</span></span><br><span class="line"><span class="attr">transport.tcp.port:</span> <span class="number">9301</span></span><br><span class="line"><span class="attr">discovery.zen.ping.unicast.hosts:</span> [<span class="string">&quot;testes.mydomain:9300&quot;</span>]</span><br><span class="line"><span class="attr">node.max_local_storage_nodes:</span> <span class="number">2</span></span><br><span class="line"><span class="attr">threadpool.index.queue_size:</span> <span class="number">400</span></span><br><span class="line"><span class="attr">threadpool.bulk.queue_size:</span> <span class="number">5000</span></span><br><span class="line"><span class="attr">bootstrap.mlockall:</span> <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Deploying-the-configs"><a href="#Deploying-the-configs" class="headerlink" title="Deploying the configs"></a>Deploying the configs</h2><p>By default, Elasticsearch reads <code>config/elasticsearch.yml</code> and <code>config/logging.yml</code> from the installation directory.</p>
+<p>To start two instances separately, create two subdirectories such as:</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">config/instance1</span><br><span class="line">config/instance2</span><br></pre></td></tr></table></figure>
+
+<p>Each directory should contain its own <code>elasticsearch.yml</code> and <code>logging.yml</code>.</p>
+<p>The main config file must still be named <code>elasticsearch.yml</code>, so separate directories are the easiest approach.</p>
+<h2 id="Starting-the-instances"><a href="#Starting-the-instances" class="headerlink" title="Starting the instances"></a>Starting the instances</h2><h3 id="Instance-1-1"><a href="#Instance-1-1" class="headerlink" title="Instance 1"></a>Instance 1</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/elasticsearch -Des.path.conf=config/instance1 -d -p /tmp/elasticsearch_1.pid</span><br></pre></td></tr></table></figure>
+
+<h3 id="Instance-2-1"><a href="#Instance-2-1" class="headerlink" title="Instance 2"></a>Instance 2</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/elasticsearch -Des.path.conf=config/instance2 -d -p /tmp/elasticsearch_2.pid</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>如果我的文字帮到了您，那么可不可以请我喝罐可乐？</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    Donate
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/en/images/wechat.png" alt="knktc WeChat Pay">
+        <p>WeChat Pay</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/en/images/alipay.jpg" alt="knktc Alipay">
+        <p>Alipay</p>
+      </div>
+
+  </div>
+</div>
+
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-6959365962327411"
+     data-ad-slot="4588493450"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>Post author:  </strong>knktc
+  </li>
+  <li class="post-copyright-link">
+    <strong>Post link: </strong>
+    <a href="https://knktc.com/2016/06/10/elasticsearch-multiple-instances/" title="Run Multiple Elasticsearch Instances on One Server">https://knktc.com/2016/06/10/elasticsearch-multiple-instances/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/en/tags/elasticsearch/" rel="tag"># elasticsearch</a>
+              <a href="/en/tags/operations/" rel="tag"># operations</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/en/2015/05/10/kibana-could-not-contact-elasticsearch/" rel="prev" title="Fix "Could not contact Elasticsearch" in Kibana 3">
+      <i class="fa fa-chevron-left"></i> Fix "Could not contact Elasticsearch" in Kibana 3
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/en/2017/04/19/fedora-no-network-docker-not-start/" rel="next" title="Fix Docker Not Starting on Fedora 25 Without a Network Connection">
+      Fix Docker Not Starting on Fedora 25 Without a Network Connection <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Why-stay-under-32-GB"><span class="nav-number">1.</span> <span class="nav-text">Why stay under 32 GB?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Configuration-changes"><span class="nav-number">2.</span> <span class="nav-text">Configuration changes</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#node-max-local-storage-nodes"><span class="nav-number">2.1.</span> <span class="nav-text">node.max_local_storage_nodes</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#http-port"><span class="nav-number">2.2.</span> <span class="nav-text">http.port</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#transport-tcp-port"><span class="nav-number">2.3.</span> <span class="nav-text">transport.tcp.port</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#discovery-zen-ping-unicast-hosts"><span class="nav-number">2.4.</span> <span class="nav-text">discovery.zen.ping.unicast.hosts</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Other-settings"><span class="nav-number">2.5.</span> <span class="nav-text">Other settings</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Example-configurations"><span class="nav-number">3.</span> <span class="nav-text">Example configurations</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Instance-1"><span class="nav-number">3.1.</span> <span class="nav-text">Instance 1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Instance-2"><span class="nav-number">3.2.</span> <span class="nav-text">Instance 2</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Deploying-the-configs"><span class="nav-number">4.</span> <span class="nav-text">Deploying the configs</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Starting-the-instances"><span class="nav-number">5.</span> <span class="nav-text">Starting the instances</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Instance-1-1"><span class="nav-number">5.1.</span> <span class="nav-text">Instance 1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Instance-2-1"><span class="nav-number">5.2.</span> <span class="nav-text">Instance 2</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="knktc"
+      src="/en/images/sonic_avatar.png">
+  <p class="site-author-name" itemprop="name">knktc</p>
+  <div class="site-description" itemprop="description">Notes on Python, Linux, and cloud infrastructure.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/en/archives/">
+        
+          <span class="site-state-item-count">49</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">144</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/knktc" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;knktc" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/knktc" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;knktc" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/en/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">鄂ICP备2021019593号-1 </a>
+      <img src="/en/images/beian.png" style="display: inline-block;"><a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=42018502005554" rel="noopener" target="_blank">鄂公网安备 42018502005554号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">knktc</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/en/lib/anime.min.js"></script>
+
+<script src="/en/js/utils.js"></script>
+
+
+<script src="/en/js/schemes/pisces.js"></script>
+
+
+<script src="/en/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

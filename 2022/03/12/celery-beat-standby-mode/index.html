@@ -28,7 +28,7 @@
 <meta property="og:description" content="我一直用Celery Beat来做定时任务，Beat这东西简单易用，但一直有个问题就是同时启动多个Beat实例时任务就会重复发起。我们之前用uwsgi的legion模式来控制同一时间只能有一个beat实例运行，这个其实依赖于一个靠谱的网络连接。最近遇到一个问题：两个跑beat的节点的网络连接可能不稳定，那uwsgi legion可能就不太稳妥了。对此只好看看如何手动来设置，让celery beat">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-03-12T09:24:03.000Z">
-<meta property="article:modified_time" content="2022-03-12T09:52:26.000Z">
+<meta property="article:modified_time" content="2022-03-12T09:52:26.503Z">
 <meta property="article:author" content="knktc">
 <meta property="article:tag" content="celery">
 <meta property="article:tag" content="beat">
@@ -50,6 +50,8 @@
   };
 </script>
 <link rel="alternate" hreflang="zh-CN" href="&#x2F;2022&#x2F;03&#x2F;12&#x2F;celery-beat-standby-mode&#x2F;">
+<link rel="alternate" hreflang="en" href="&#x2F;en&#x2F;2022&#x2F;03&#x2F;12&#x2F;celery-beat-standby-mode&#x2F;">
+<link rel="alternate" hreflang="x-default" href="&#x2F;2022&#x2F;03&#x2F;12&#x2F;celery-beat-standby-mode&#x2F;">
 
   <title>使用Monkey Patch让Celery Beat支持“待命”模式 | knktc的杂乱空间</title>
   
