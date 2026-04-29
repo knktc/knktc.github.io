@@ -1,6 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://knktc.com/en/2018/06/07/install-android-x86-emulator-in-kvm/</loc>
+    <lastmod>2026-04-29</lastmod>
+  </url>
+  <url>
+    <loc>https://knktc.com/en/2022/10/27/fix-mac-os-13-ventura-git-ssh-permission-denied/</loc>
+    <lastmod>2026-04-29</lastmod>
+  </url>
+  <url>
+    <loc>https://knktc.com/en/2021/05/27/docusaurus-disable-edit-url/</loc>
+    <lastmod>2026-04-29</lastmod>
+  </url>
+  <url>
+    <loc>https://knktc.com/en/2014/08/16/docker-use-dnsmasq-as-hosts/</loc>
+    <lastmod>2026-04-29</lastmod>
+  </url>
+  <url>
+    <loc>https://knktc.com/en/2014/08/09/docker-registry-install/</loc>
+    <lastmod>2026-04-29</lastmod>
+  </url>
+  <url>
+    <loc>https://knktc.com/en/2018/06/22/docker-layer-doest-not-exist/</loc>
+    <lastmod>2026-04-29</lastmod>
+  </url>
+  <url>
+    <loc>https://knktc.com/en/2014/08/09/docker-cheat-sheet/</loc>
+    <lastmod>2026-04-29</lastmod>
+  </url>
+  <url>
+    <loc>https://knktc.com/en/2020/10/01/django-run-script/</loc>
+    <lastmod>2026-04-29</lastmod>
+  </url>
+  <url>
+    <loc>https://knktc.com/en/2018/06/05/django-rest-framework-dynamic-fields/</loc>
+    <lastmod>2026-04-29</lastmod>
+  </url>
+  <url>
+    <loc>https://knktc.com/en/2019/12/21/django-pgpool2-client-idle-limit-unable-to-read-data/</loc>
+    <lastmod>2026-04-29</lastmod>
+  </url>
+  <url>
     <loc>https://knktc.com/en/2020/05/02/django-dynamic-choices/</loc>
     <lastmod>2026-04-29</lastmod>
   </url>

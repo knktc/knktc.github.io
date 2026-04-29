@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/en/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/en/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/en/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/en/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/en/css/main.css">
+
+
+<link rel="stylesheet" href="/en/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"knktc.com","root":"/en/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Use nested KVM and host-passthrough CPU settings to run an Android x86 emulator with acceleration inside a KVM guest.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Install an Android x86 Emulator Inside a KVM Virtual Machine">
+<meta property="og:url" content="https://knktc.com/en/2018/06/07/install-android-x86-emulator-in-kvm/index.html">
+<meta property="og:site_name" content="knktc&#39;s Notes">
+<meta property="og:description" content="Use nested KVM and host-passthrough CPU settings to run an Android x86 emulator with acceleration inside a KVM guest.">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://knktc.com/Users/knktc/Documents/blog/www.knktc.com/source_en/_posts/install-android-x86-emulator-in-kvm/android_x86_02.png">
+<meta property="og:image" content="https://knktc.com/Users/knktc/Documents/blog/www.knktc.com/source_en/_posts/install-android-x86-emulator-in-kvm/android_x86_03.png">
+<meta property="og:image" content="https://knktc.com/Users/knktc/Documents/blog/www.knktc.com/source_en/_posts/install-android-x86-emulator-in-kvm/android_x86_01.png">
+<meta property="article:published_time" content="2018-06-07T14:03:38.000Z">
+<meta property="article:modified_time" content="2026-04-29T01:41:14.890Z">
+<meta property="article:author" content="knktc">
+<meta property="article:tag" content="kvm">
+<meta property="article:tag" content="nested">
+<meta property="article:tag" content="x86">
+<meta property="article:tag" content="android">
+<meta property="article:tag" content="emulator">
+<meta property="article:tag" content="vm">
+<meta property="article:tag" content="cli">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://knktc.com/Users/knktc/Documents/blog/www.knktc.com/source_en/_posts/install-android-x86-emulator-in-kvm/android_x86_02.png">
+
+<link rel="canonical" href="https://knktc.com/en/2018/06/07/install-android-x86-emulator-in-kvm/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+<link rel="alternate" hreflang="en" href="&#x2F;en&#x2F;2018&#x2F;06&#x2F;07&#x2F;install-android-x86-emulator-in-kvm&#x2F;">
+<link rel="alternate" hreflang="zh-CN" href="&#x2F;2018&#x2F;06&#x2F;07&#x2F;install-android-x86-emulator-in-kvm&#x2F;">
+<link rel="alternate" hreflang="x-default" href="&#x2F;2018&#x2F;06&#x2F;07&#x2F;install-android-x86-emulator-in-kvm&#x2F;">
+
+  <title>Install an Android x86 Emulator Inside a KVM Virtual Machine | knktc's Notes</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a23b2d1c6159a3a6c798edbc7f9211f9";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/en/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">knktc's Notes</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">python, cloud, linux...</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/en/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/en/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/en/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+<div class="site-lang-switch" aria-label="Language switcher">
+    <a class="site-lang-switch-link" href="/2018/06/07/install-android-x86-emulator-in-kvm/">
+      <span class="site-lang-switch-eyebrow">Language</span>
+      <span class="site-lang-switch-label">查看中文版本</span>
+    </a>
+</div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://knktc.com/2018/06/07/install-android-x86-emulator-in-kvm/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/en/images/sonic_avatar.png">
+      <meta itemprop="name" content="knktc">
+      <meta itemprop="description" content="Notes on Python, Linux, and cloud infrastructure.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="knktc's Notes">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Install an Android x86 Emulator Inside a KVM Virtual Machine
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2018-06-07 22:03:38" itemprop="dateCreated datePublished" datetime="2018-06-07T22:03:38+08:00">2018-06-07</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2026-04-29 09:41:14" itemprop="dateModified" datetime="2026-04-29T09:41:14+08:00">2026-04-29</time>
+              </span>
+
+          
+            <div class="post-description">Use nested KVM and host-passthrough CPU settings to run an Android x86 emulator with acceleration inside a KVM guest.</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>In general, Android ARM emulators work reasonably well for compatibility, but they are slow. Sometimes starting one can take several minutes. If you can use an x86 emulator with acceleration enabled, the user experience improves dramatically.</p>
+<p>The difficulty is that x86 emulator acceleration depends on CPU virtualization support, and when you are already inside a KVM guest, the guest CPU does not expose that capability by default. That is where nested KVM comes in.</p>
+<span id="more"></span>
+
+<p>Note:</p>
+<p>Android x86 emulators are less compatible than ARM images, so some apps may still crash.</p>
+<h2 id="Enable-nested-KVM"><a href="#Enable-nested-KVM" class="headerlink" title="Enable nested KVM"></a>Enable nested KVM</h2><p>Nested KVM means KVM is allowed to expose virtualization support from the host CPU into the guest VM.</p>
+<p>On the physical host, check whether nested KVM is already enabled:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat /sys/module/kvm_intel/parameters/nested</span><br></pre></td></tr></table></figure>
+
+<p>If the result is <code>Y</code>, it is already enabled. If it is <code>N</code>, add the following configuration:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;options kvm_intel nested=1&quot;</span> &gt;&gt; /etc/modprobe.d/kvm-nested.conf</span><br></pre></td></tr></table></figure>
+
+<p>Then reboot the server and check again.</p>
+<h2 id="Configure-the-virtual-machine"><a href="#Configure-the-virtual-machine" class="headerlink" title="Configure the virtual machine"></a>Configure the virtual machine</h2><p>To let a guest use nested KVM, add the following to the guest’s libvirt XML:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">cpu</span> <span class="attr">mode</span>=<span class="string">&#x27;host-passthrough&#x27;</span> <span class="attr">check</span>=<span class="string">&#x27;none&#x27;</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>After updating the XML, reboot the virtual machine.</p>
+<p>You can compare the CPU flags before and after the change:</p>
+<p><img src="/Users/knktc/Documents/blog/www.knktc.com/source_en/_posts/install-android-x86-emulator-in-kvm/android_x86_02.png" alt="Before host-passthrough"></p>
+<p><img src="/Users/knktc/Documents/blog/www.knktc.com/source_en/_posts/install-android-x86-emulator-in-kvm/android_x86_03.png" alt="After host-passthrough"></p>
+<p>After the change, the guest CPU exposes more flags, including virtualization support.</p>
+<h2 id="Install-the-emulator"><a href="#Install-the-emulator" class="headerlink" title="Install the emulator"></a>Install the emulator</h2><p>Once nested KVM is working, you can install an x86 emulator inside the guest.</p>
+<p>I usually prefer the command-line tools. Download them from:</p>
+<p><a target="_blank" rel="noopener" href="https://developer.android.com/studio/">https://developer.android.com/studio/</a></p>
+<p>Look for the “Command line tools only” section and download the version for your platform.</p>
+<p><img src="/Users/knktc/Documents/blog/www.knktc.com/source_en/_posts/install-android-x86-emulator-in-kvm/android_x86_01.png" alt="Android command-line tools"></p>
+<p>After unpacking the tools in the guest, a simplified installation flow looks like this:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> tools/bin</span><br><span class="line"></span><br><span class="line">./sdkmanager <span class="string">&quot;tools&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> ..</span><br><span class="line"><span class="built_in">cd</span> bin</span><br><span class="line"></span><br><span class="line">./sdkmanager emulator</span><br><span class="line">./sdkmanager <span class="string">&quot;system-images;android-19;default;x86&quot;</span></span><br><span class="line">./sdkmanager <span class="string">&quot;platforms;android-19&quot;</span></span><br><span class="line"></span><br><span class="line">./avdmanager create avd -k <span class="string">&quot;system-images;android-19;default;x86&quot;</span> -n android4.4</span><br></pre></td></tr></table></figure>
+
+<p>At this point, the emulator image is installed and an AVD named <code>android4.4</code> has been created.</p>
+<h2 id="Start-the-emulator"><a href="#Start-the-emulator" class="headerlink" title="Start the emulator"></a>Start the emulator</h2><p>Because the VM does not have a real hardware GPU, use:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./emulator -avd android4.4 -gpu swiftshader_indirect</span><br></pre></td></tr></table></figure>
+
+<h2 id="Enjoy-the-speed"><a href="#Enjoy-the-speed" class="headerlink" title="Enjoy the speed"></a>Enjoy the speed</h2><p>With an x86 emulator, performance is much smoother. It also supports quick boot, which means it can restore the previous runtime state after startup. Combined with KVM snapshots, that opens up some useful workflows.</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>如果我的文字帮到了您，那么可不可以请我喝罐可乐？</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    Donate
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/en/images/wechat.png" alt="knktc WeChat Pay">
+        <p>WeChat Pay</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/en/images/alipay.jpg" alt="knktc Alipay">
+        <p>Alipay</p>
+      </div>
+
+  </div>
+</div>
+
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-6959365962327411"
+     data-ad-slot="4588493450"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>Post author:  </strong>knktc
+  </li>
+  <li class="post-copyright-link">
+    <strong>Post link: </strong>
+    <a href="https://knktc.com/2018/06/07/install-android-x86-emulator-in-kvm/" title="Install an Android x86 Emulator Inside a KVM Virtual Machine">https://knktc.com/2018/06/07/install-android-x86-emulator-in-kvm/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/en/tags/kvm/" rel="tag"># kvm</a>
+              <a href="/en/tags/nested/" rel="tag"># nested</a>
+              <a href="/en/tags/x86/" rel="tag"># x86</a>
+              <a href="/en/tags/android/" rel="tag"># android</a>
+              <a href="/en/tags/emulator/" rel="tag"># emulator</a>
+              <a href="/en/tags/vm/" rel="tag"># vm</a>
+              <a href="/en/tags/cli/" rel="tag"># cli</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/en/2018/06/05/django-rest-framework-dynamic-fields/" rel="prev" title="Dynamic Fields in Django REST Framework">
+      <i class="fa fa-chevron-left"></i> Dynamic Fields in Django REST Framework
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/en/2018/06/10/python3-uwsgi-no-python-application-found/" rel="next" title="Fix uWSGI "no python application found" on Python 3 and CentOS 7">
+      Fix uWSGI "no python application found" on Python 3 and CentOS 7 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Enable-nested-KVM"><span class="nav-number">1.</span> <span class="nav-text">Enable nested KVM</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Configure-the-virtual-machine"><span class="nav-number">2.</span> <span class="nav-text">Configure the virtual machine</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Install-the-emulator"><span class="nav-number">3.</span> <span class="nav-text">Install the emulator</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Start-the-emulator"><span class="nav-number">4.</span> <span class="nav-text">Start the emulator</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Enjoy-the-speed"><span class="nav-number">5.</span> <span class="nav-text">Enjoy the speed</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="knktc"
+      src="/en/images/sonic_avatar.png">
+  <p class="site-author-name" itemprop="name">knktc</p>
+  <div class="site-description" itemprop="description">Notes on Python, Linux, and cloud infrastructure.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/en/archives/">
+        
+          <span class="site-state-item-count">59</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">172</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/knktc" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;knktc" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/knktc" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;knktc" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/en/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">鄂ICP备2021019593号-1 </a>
+      <img src="/en/images/beian.png" style="display: inline-block;"><a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=42018502005554" rel="noopener" target="_blank">鄂公网安备 42018502005554号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">knktc</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/en/lib/anime.min.js"></script>
+
+<script src="/en/js/utils.js"></script>
+
+
+<script src="/en/js/schemes/pisces.js"></script>
+
+
+<script src="/en/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
