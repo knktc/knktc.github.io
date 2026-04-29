@@ -1,6 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://knktc.com/en/2014/05/24/python-get-process-pool-count/</loc>
+    <lastmod>2026-04-29</lastmod>
+  </url>
+  <url>
+    <loc>https://knktc.com/en/2014/05/25/rabbitmq-guest-cannot-login/</loc>
+    <lastmod>2026-04-29</lastmod>
+  </url>
+  <url>
+    <loc>https://knktc.com/en/2015/02/21/pg_dump-password/</loc>
+    <lastmod>2026-04-29</lastmod>
+  </url>
+  <url>
+    <loc>https://knktc.com/en/2014/05/12/gpg-crontab/</loc>
+    <lastmod>2026-04-29</lastmod>
+  </url>
+  <url>
+    <loc>https://knktc.com/en/2014/05/10/crontab-not-working/</loc>
+    <lastmod>2026-04-29</lastmod>
+  </url>
+  <url>
+    <loc>https://knktc.com/en/2021/12/22/yapi-change-user-role/</loc>
+    <lastmod>2026-04-29</lastmod>
+  </url>
+  <url>
+    <loc>https://knktc.com/en/2022/02/27/submit-baidu-sitemap-by-github-actions/</loc>
+    <lastmod>2026-04-29</lastmod>
+  </url>
+  <url>
+    <loc>https://knktc.com/en/2021/06/11/run-script-on-openvpn-connected/</loc>
+    <lastmod>2026-04-29</lastmod>
+  </url>
+  <url>
+    <loc>https://knktc.com/en/2022/02/09/shorten-prompt-ps1-of-poetry-env/</loc>
+    <lastmod>2026-04-29</lastmod>
+  </url>
+  <url>
     <loc>https://knktc.com/en/2021/06/20/use-python-to-check-ssl-expiry-date/</loc>
     <lastmod>2026-04-22</lastmod>
   </url>
