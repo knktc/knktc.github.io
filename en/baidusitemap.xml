@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://knktc.com/en/2018/06/07/install-android-x86-emulator-in-kvm/</loc>
+    <lastmod>2026-05-12</lastmod>
+  </url>
+  <url>
     <loc>https://knktc.com/en/2026/05/06/disable-vscode-copilot-ai-coauthor/</loc>
     <lastmod>2026-05-06</lastmod>
   </url>
@@ -50,10 +54,6 @@
   </url>
   <url>
     <loc>https://knktc.com/en/2023/05/06/install-pandas-on-kylin-v10-with-sw64-cpu/</loc>
-    <lastmod>2026-04-29</lastmod>
-  </url>
-  <url>
-    <loc>https://knktc.com/en/2018/06/07/install-android-x86-emulator-in-kvm/</loc>
     <lastmod>2026-04-29</lastmod>
   </url>
   <url>

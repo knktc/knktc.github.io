@@ -23,15 +23,15 @@
   <meta name="description" content="Use nested KVM and host-passthrough CPU settings to run an Android x86 emulator with acceleration inside a KVM guest.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Install an Android x86 Emulator Inside a KVM Virtual Machine">
-<meta property="og:url" content="https://knktc.com/en/2018/06/07/install-android-x86-emulator-in-kvm/index.html">
+<meta property="og:url" content="https://knktc.com/en/2018/06/07/install-android-x86-emulator-in-kvm/">
 <meta property="og:site_name" content="knktc&#39;s Notes">
 <meta property="og:description" content="Use nested KVM and host-passthrough CPU settings to run an Android x86 emulator with acceleration inside a KVM guest.">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://knktc.com/Users/knktc/Documents/blog/www.knktc.com/source_en/_posts/install-android-x86-emulator-in-kvm/android_x86_02.png">
-<meta property="og:image" content="https://knktc.com/Users/knktc/Documents/blog/www.knktc.com/source_en/_posts/install-android-x86-emulator-in-kvm/android_x86_03.png">
-<meta property="og:image" content="https://knktc.com/Users/knktc/Documents/blog/www.knktc.com/source_en/_posts/install-android-x86-emulator-in-kvm/android_x86_01.png">
+<meta property="og:image" content="https://knktc.com/en/2018/06/07/install-android-x86-emulator-in-kvm/android_x86_02.png">
+<meta property="og:image" content="https://knktc.com/en/2018/06/07/install-android-x86-emulator-in-kvm/android_x86_03.png">
+<meta property="og:image" content="https://knktc.com/en/2018/06/07/install-android-x86-emulator-in-kvm/android_x86_01.png">
 <meta property="article:published_time" content="2018-06-07T14:03:38.000Z">
-<meta property="article:modified_time" content="2026-04-29T01:41:14.890Z">
+<meta property="article:modified_time" content="2026-05-12T00:17:25.718Z">
 <meta property="article:author" content="knktc">
 <meta property="article:tag" content="kvm">
 <meta property="article:tag" content="nested">
@@ -41,7 +41,7 @@
 <meta property="article:tag" content="vm">
 <meta property="article:tag" content="cli">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://knktc.com/Users/knktc/Documents/blog/www.knktc.com/source_en/_posts/install-android-x86-emulator-in-kvm/android_x86_02.png">
+<meta name="twitter:image" content="https://knktc.com/en/2018/06/07/install-android-x86-emulator-in-kvm/android_x86_02.png">
 
 <link rel="canonical" href="https://knktc.com/en/2018/06/07/install-android-x86-emulator-in-kvm/">
 
@@ -216,7 +216,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2026-04-29 09:41:14" itemprop="dateModified" datetime="2026-04-29T09:41:14+08:00">2026-04-29</time>
+                <time title="Modified: 2026-05-12 08:17:25" itemprop="dateModified" datetime="2026-05-12T08:17:25+08:00">2026-05-12</time>
               </span>
 
           
@@ -250,14 +250,14 @@
 
 <p>After updating the XML, reboot the virtual machine.</p>
 <p>You can compare the CPU flags before and after the change:</p>
-<p><img src="/Users/knktc/Documents/blog/www.knktc.com/source_en/_posts/install-android-x86-emulator-in-kvm/android_x86_02.png" alt="Before host-passthrough"></p>
-<p><img src="/Users/knktc/Documents/blog/www.knktc.com/source_en/_posts/install-android-x86-emulator-in-kvm/android_x86_03.png" alt="After host-passthrough"></p>
+<p><img src="android_x86_02.png" alt="Before host-passthrough"></p>
+<p><img src="android_x86_03.png" alt="After host-passthrough"></p>
 <p>After the change, the guest CPU exposes more flags, including virtualization support.</p>
 <h2 id="Install-the-emulator"><a href="#Install-the-emulator" class="headerlink" title="Install the emulator"></a>Install the emulator</h2><p>Once nested KVM is working, you can install an x86 emulator inside the guest.</p>
 <p>I usually prefer the command-line tools. Download them from:</p>
 <p><a target="_blank" rel="noopener" href="https://developer.android.com/studio/">https://developer.android.com/studio/</a></p>
 <p>Look for the “Command line tools only” section and download the version for your platform.</p>
-<p><img src="/Users/knktc/Documents/blog/www.knktc.com/source_en/_posts/install-android-x86-emulator-in-kvm/android_x86_01.png" alt="Android command-line tools"></p>
+<p><img src="android_x86_01.png" alt="Android command-line tools"></p>
 <p>After unpacking the tools in the guest, a simplified installation flow looks like this:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> tools/bin</span><br><span class="line"></span><br><span class="line">./sdkmanager <span class="string">&quot;tools&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> ..</span><br><span class="line"><span class="built_in">cd</span> bin</span><br><span class="line"></span><br><span class="line">./sdkmanager emulator</span><br><span class="line">./sdkmanager <span class="string">&quot;system-images;android-19;default;x86&quot;</span></span><br><span class="line">./sdkmanager <span class="string">&quot;platforms;android-19&quot;</span></span><br><span class="line"></span><br><span class="line">./avdmanager create avd -k <span class="string">&quot;system-images;android-19;default;x86&quot;</span> -n android4.4</span><br></pre></td></tr></table></figure>
 
