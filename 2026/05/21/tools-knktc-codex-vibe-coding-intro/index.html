@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"knktc.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="前段时间我一直有个很朴素的念头：平时排查问题时，总会反复打开一堆“小而碎”的在线工具。查一下出口 IP，转一下时间戳，看一下浏览器时区，顺手再格式化一段 JSON。每个需求都不大，但凑在一起，就很像在浏览器里打零工。 于是这次我换了个思路：不如直接用 Codex 来一把 vibe coding，把这些高频小工具收拢成一个自己看着顺眼、用起来顺手的小站。 它现在就在这里： https:&#x2F;&#x2F;tools">
+<meta property="og:type" content="article">
+<meta property="og:title" content="我用 Codex vibe coding 搓了一个顺手的工具站：tools.knktc.com">
+<meta property="og:url" content="https://knktc.com/2026/05/21/tools-knktc-codex-vibe-coding-intro/">
+<meta property="og:site_name" content="knktc的杂乱空间">
+<meta property="og:description" content="前段时间我一直有个很朴素的念头：平时排查问题时，总会反复打开一堆“小而碎”的在线工具。查一下出口 IP，转一下时间戳，看一下浏览器时区，顺手再格式化一段 JSON。每个需求都不大，但凑在一起，就很像在浏览器里打零工。 于是这次我换了个思路：不如直接用 Codex 来一把 vibe coding，把这些高频小工具收拢成一个自己看着顺眼、用起来顺手的小站。 它现在就在这里： https:&#x2F;&#x2F;tools">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://knktc.com/2026/05/21/tools-knktc-codex-vibe-coding-intro/home-zh.png">
+<meta property="og:image" content="https://knktc.com/2026/05/21/tools-knktc-codex-vibe-coding-intro/clock-skew.png">
+<meta property="og:image" content="https://knktc.com/2026/05/21/tools-knktc-codex-vibe-coding-intro/browser-info.png">
+<meta property="article:published_time" content="2026-05-21T06:05:00.000Z">
+<meta property="article:modified_time" content="2026-05-21T05:58:46.287Z">
+<meta property="article:author" content="knktc">
+<meta property="article:tag" content="codex">
+<meta property="article:tag" content="vibe-coding">
+<meta property="article:tag" content="tools">
+<meta property="article:tag" content="nextjs">
+<meta property="article:tag" content="golang">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://knktc.com/2026/05/21/tools-knktc-codex-vibe-coding-intro/home-zh.png">
+
+<link rel="canonical" href="https://knktc.com/2026/05/21/tools-knktc-codex-vibe-coding-intro/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+<link rel="alternate" hreflang="zh-CN" href="&#x2F;2026&#x2F;05&#x2F;21&#x2F;tools-knktc-codex-vibe-coding-intro&#x2F;">
+<link rel="alternate" hreflang="en" href="&#x2F;en&#x2F;2026&#x2F;05&#x2F;21&#x2F;tools-knktc-codex-vibe-coding-intro&#x2F;">
+<link rel="alternate" hreflang="x-default" href="&#x2F;2026&#x2F;05&#x2F;21&#x2F;tools-knktc-codex-vibe-coding-intro&#x2F;">
+
+  <title>我用 Codex vibe coding 搓了一个顺手的工具站：tools.knktc.com | knktc的杂乱空间</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a23b2d1c6159a3a6c798edbc7f9211f9";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">knktc的杂乱空间</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">python,cloud,linux...</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://knktc.com/2026/05/21/tools-knktc-codex-vibe-coding-intro/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/sonic_avatar.png">
+      <meta itemprop="name" content="knktc">
+      <meta itemprop="description" content="关注linux,云计算,python，杂乱之地...">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="knktc的杂乱空间">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          我用 Codex vibe coding 搓了一个顺手的工具站：tools.knktc.com
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2026-05-21 14:05:00 / 修改时间：13:58:46" itemprop="dateCreated datePublished" datetime="2026-05-21T14:05:00+08:00">2026-05-21</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>前段时间我一直有个很朴素的念头：平时排查问题时，总会反复打开一堆“小而碎”的在线工具。查一下出口 IP，转一下时间戳，看一下浏览器时区，顺手再格式化一段 JSON。每个需求都不大，但凑在一起，就很像在浏览器里打零工。</p>
+<p>于是这次我换了个思路：不如直接用 Codex 来一把 vibe coding，把这些高频小工具收拢成一个自己看着顺眼、用起来顺手的小站。</p>
+<p>它现在就在这里：</p>
+<p><a target="_blank" rel="noopener" href="https://tools.knktc.com/">https://tools.knktc.com</a></p>
+<span id="more"></span>
+
+<p>先放一张首页截图：</p>
+<p><img src="home-zh.png" alt="tools.knktc.com 首页"></p>
+<p>这个站目前不追求“大而全”，更像一个我自己会长期开着用的工具抽屉。思路很简单：</p>
+<ol>
+<li>常用的小工具尽量放在一个页面里，少跳转，少找书签。</li>
+<li>能在浏览器本地完成的事情，就尽量本地完成。</li>
+<li>少一点花里胡哨，多一点“打开就能用”。</li>
+</ol>
+<p>现在已经放进去的工具，基本都是平时开发和排查时最容易顺手掏出来的那些，比如：</p>
+<ul>
+<li>客户端 IP</li>
+<li>IP 与掩码检查</li>
+<li>Base64 转换</li>
+<li>JSON Pretty</li>
+<li>URL 编解码</li>
+<li>时间戳转换</li>
+<li>本地时间检测</li>
+<li>浏览器信息与时区</li>
+<li>UUID 生成器</li>
+</ul>
+<p>其中有几个我自己还挺喜欢。</p>
+<p>先说“本地时间检测”。这个工具是拿浏览器当前时间去和服务端标准时间做对比，适合排查一些看起来莫名其妙、实际上和时间有关的问题，比如登录异常、接口签名失效、证书时间不对之类。</p>
+<p><img src="clock-skew.png" alt="本地时间检测工具"></p>
+<p>这种工具的乐趣就在于：平时你未必天天用，但真碰上问题的时候，它能帮你少绕两圈。</p>
+<p>另一个我挺常用的是“浏览器信息与时区”。有时候用户反馈“我这里时间不对”“页面显示怪怪的”“怎么跟你那边不一样”，很多时候先看一下浏览器时区、语言、UA、屏幕尺寸，心里就会有底。</p>
+<p><img src="browser-info.png" alt="浏览器信息与时区工具"></p>
+<p>而且这块我顺手把 <code>Clock drift</code> 也塞进去了。也就是说，不只是看浏览器报了什么，还能顺便看一下它和服务端参考时间差了多少毫秒。这个细节很小，但排查起来挺省心。</p>
+<p>这次用 Codex 来做，体验也挺有意思。和传统那种“先列个很完整的需求文档，再慢慢开工”的方式相比，vibe coding 更像是：</p>
+<ul>
+<li>先把想法说清楚；</li>
+<li>再让 Codex 一边写，一边改，一边对齐细节；</li>
+<li>不满意就继续调，直到页面、交互和功能都顺眼为止。</li>
+</ul>
+<p>整个过程有点像和一个不会喊累的搭子结对编程。你负责提出“这个地方应该再顺一点”“这里应该更直观”，它负责快速把想法变成能跑的东西。节奏对了以后，推进速度确实很舒服。</p>
+<p>当然，这个站现在也还远没到“完成体”。我更愿意把它当成一个会持续长大的小工具箱：谁知道后面还会不会继续往里面塞一些更奇怪但又真的有用的小玩意。</p>
+<p>如果你也刚好经常要查这些东西，可以直接收藏一下：</p>
+<p><a target="_blank" rel="noopener" href="https://tools.knktc.com/">https://tools.knktc.com</a></p>
+<p>至少以后想查个 IP、转个时间戳、看下本地时间是不是飘了，不用再满世界翻页面了。</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>如果我的文字帮到了您，那么可不可以请我喝罐可乐？</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechat.png" alt="knktc 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="knktc 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-6959365962327411"
+     data-ad-slot="4588493450"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>knktc
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://knktc.com/2026/05/21/tools-knktc-codex-vibe-coding-intro/" title="我用 Codex vibe coding 搓了一个顺手的工具站：tools.knktc.com">https://knktc.com/2026/05/21/tools-knktc-codex-vibe-coding-intro/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/codex/" rel="tag"># codex</a>
+              <a href="/tags/vibe-coding/" rel="tag"># vibe-coding</a>
+              <a href="/tags/tools/" rel="tag"># tools</a>
+              <a href="/tags/nextjs/" rel="tag"># nextjs</a>
+              <a href="/tags/golang/" rel="tag"># golang</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2026/05/06/disable-vscode-copilot-ai-coauthor/" rel="prev" title="关闭 VS Code 中 GitHub Copilot 自动添加 Co-authored-by">
+      <i class="fa fa-chevron-left"></i> 关闭 VS Code 中 GitHub Copilot 自动添加 Co-authored-by
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="knktc"
+      src="/images/sonic_avatar.png">
+  <p class="site-author-name" itemprop="name">knktc</p>
+  <div class="site-description" itemprop="description">关注linux,云计算,python，杂乱之地...</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">73</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">225</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/knktc" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;knktc" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/knktc" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;knktc" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">鄂ICP备2021019593号-1 </a>
+      <img src="/images/beian.png" style="display: inline-block;"><a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=42018502005554" rel="noopener" target="_blank">鄂公网安备 42018502005554号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">knktc</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
