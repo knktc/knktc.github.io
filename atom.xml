@@ -1,0 +1,573 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>knktc的杂乱空间</title>
+  
+  <subtitle>python,cloud,linux...</subtitle>
+  <link href="https://knktc.com/atom.xml" rel="self"/>
+  
+  <link href="https://knktc.com/"/>
+  <updated>2026-05-22T14:54:00.263Z</updated>
+  <id>https://knktc.com/</id>
+  
+  <author>
+    <name>knktc</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>如何注册一个可用的美区 Apple 账号</title>
+    <link href="https://knktc.com/2026/05/22/register-us-apple-id/"/>
+    <id>https://knktc.com/2026/05/22/register-us-apple-id/</id>
+    <published>2026-05-22T03:30:00.000Z</published>
+    <updated>2026-05-22T14:54:00.263Z</updated>
+    
+    <content type="html"><![CDATA[<p>最近 Codex 已经支持远程控制了，但 ChatGPT App 在国区还是没有上架。类似 Gemini 这种应用，在国区 App Store 里也不太好下。</p><p>如果你用的是 iPhone，那准备一个美区 Apple 账号，基本就成了绕不过去的事。</p><p>我这次用下来，比较省事的一条路不是直接注册美区账号，而是先搞一个全新的国区账号，再把地区切到美国。这样至少不用一上来就想办法找美国手机号接码，整体会顺不少。</p><span id="more"></span><p>先说两个前提：</p><ol><li>Apple 这类策略变得挺快的，今天能走通，不代表之后一直都能走通。</li><li>最好直接用新号折腾。老号如果挂着订阅、余额或者购买记录，换区的时候往往会很麻烦。</li></ol><p>Apple 账号注册地址：</p><p><a href="https://account.apple.com/account">https://account.apple.com/account</a></p><h2 id="先注册一个新的国区账号"><a href="#先注册一个新的国区账号" class="headerlink" title="先注册一个新的国区账号"></a>先注册一个新的国区账号</h2><p>不要一开始就直接选美国地区注册。现在如果这么干，很多时候会要求你用美国手机号验证，门槛一下就上去了。</p><p>所以更稳一点的办法，是先正常注册一个国区账号，用自己的手机号完成验证。</p><p><img src="appleaccount_1.png" alt="Apple 账号注册页面"></p><h2 id="在-iPhone-上登录这个新账号"><a href="#在-iPhone-上登录这个新账号" class="headerlink" title="在 iPhone 上登录这个新账号"></a>在 iPhone 上登录这个新账号</h2><p>注册完之后，打开 iPhone 上的 App Store，点右上角头像进去。</p><p>先把当前正在用的账号退出掉，再登录刚注册的这个新账号。</p><p><img src="logout.png" alt="退出当前 App Store 账号"></p><p>登进去之后可以先看一眼区域，这时候正常还是中国区。</p><p><img src="region-cn-1.png" alt="当前账号区域仍为中国"></p><h2 id="再把地区切到美国"><a href="#再把地区切到美国" class="headerlink" title="再把地区切到美国"></a>再把地区切到美国</h2><p>这一步才是关键。</p><p>切之前，一定注意要让手机全局翻墙到美国 IP，然后再进入账号设置里的“国家/地区”，把地区改成“美国”。</p><p>这里最重要的是“付款方式”这一项。如果你能看到“无”，直接选“无”就行，这样就不用填信用卡或者 PayPal 了。</p><p>如果没有看到“无”，那就表明你的 IP 还没翻到美国，可以检查下当前的网络，不行重启试试。</p><p><img src="choose_none.png" alt="付款方式选择“无”"></p><p>另外有几个细节也顺手注意一下：</p><ol><li>账单地址可以找个美国地址生成器随便生成一个能用的。</li><li>最好选免税州，比如俄勒冈州，后面真要付费会省一点事。</li><li>名字也尽量写成英文，能少掉一些奇怪的校验问题。</li></ol><p>把这些都填完保存，如果没报错，基本就已经切到美区了。</p><h2 id="看下是不是已经变成美区了"><a href="#看下是不是已经变成美区了" class="headerlink" title="看下是不是已经变成美区了"></a>看下是不是已经变成美区了</h2><p>切完以后再回到 App Store 搜一下，一般就能看到国区里没有的应用了，比如 ChatGPT 和 Gemini。</p><p><img src="chatgpt_and_gemini.png" alt="美区可搜索到 ChatGPT 和 Gemini"></p><p>像 Apple Arcade 这种内容，这时候通常也已经能看到了。</p><p><img src="arcade.png" alt="Apple Arcade 已可用"></p><p>顺便说一句，应用下载的时候一般不需要一直全局代理，所以也不用太担心流量问题。</p><h2 id="最后补几句"><a href="#最后补几句" class="headerlink" title="最后补几句"></a>最后补几句</h2><ol><li>这个美区账号的密码一定要记好，后面更新应用时大概率还会让你重新登录。</li><li>这种口子什么时候被 Apple 收紧不好说，能注册的时候尽早注册。</li><li>如果你只是为了下载少数几个应用，平时把主账号和这个外区账号分开用，会省心很多。</li></ol><p>如果你的目的就是装个 ChatGPT、Gemini 之类的应用，这套办法现在看下来还是比较直接的。</p>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;最近 Codex 已经支持远程控制了，但 ChatGPT App 在国区还是没有上架。类似 Gemini 这种应用，在国区 App Store 里也不太好下。&lt;/p&gt;
+&lt;p&gt;如果你用的是 iPhone，那准备一个美区 Apple 账号，基本就成了绕不过去的事。&lt;/p&gt;
+&lt;p&gt;我这次用下来，比较省事的一条路不是直接注册美区账号，而是先搞一个全新的国区账号，再把地区切到美国。这样至少不用一上来就想办法找美国手机号接码，整体会顺不少。&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="apple" scheme="https://knktc.com/tags/apple/"/>
+    
+    <category term="apple-id" scheme="https://knktc.com/tags/apple-id/"/>
+    
+    <category term="app-store" scheme="https://knktc.com/tags/app-store/"/>
+    
+    <category term="ios" scheme="https://knktc.com/tags/ios/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>我用 Codex vibe coding 搓了一个顺手的工具站：tools.knktc.com</title>
+    <link href="https://knktc.com/2026/05/21/tools-knktc-codex-vibe-coding-intro/"/>
+    <id>https://knktc.com/2026/05/21/tools-knktc-codex-vibe-coding-intro/</id>
+    <published>2026-05-21T06:05:00.000Z</published>
+    <updated>2026-05-21T05:58:46.287Z</updated>
+    
+    <content type="html"><![CDATA[<p>前段时间我一直有个很朴素的念头：平时排查问题时，总会反复打开一堆“小而碎”的在线工具。查一下出口 IP，转一下时间戳，看一下浏览器时区，顺手再格式化一段 JSON。每个需求都不大，但凑在一起，就很像在浏览器里打零工。</p><p>于是这次我换了个思路：不如直接用 Codex 来一把 vibe coding，把这些高频小工具收拢成一个自己看着顺眼、用起来顺手的小站。</p><p>它现在就在这里：</p><p><a href="https://tools.knktc.com/">https://tools.knktc.com</a></p><span id="more"></span><p>先放一张首页截图：</p><p><img src="home-zh.png" alt="tools.knktc.com 首页"></p><p>这个站目前不追求“大而全”，更像一个我自己会长期开着用的工具抽屉。思路很简单：</p><ol><li>常用的小工具尽量放在一个页面里，少跳转，少找书签。</li><li>能在浏览器本地完成的事情，就尽量本地完成。</li><li>少一点花里胡哨，多一点“打开就能用”。</li></ol><p>现在已经放进去的工具，基本都是平时开发和排查时最容易顺手掏出来的那些，比如：</p><ul><li>客户端 IP</li><li>IP 与掩码检查</li><li>Base64 转换</li><li>JSON Pretty</li><li>URL 编解码</li><li>时间戳转换</li><li>本地时间检测</li><li>浏览器信息与时区</li><li>UUID 生成器</li></ul><p>其中有几个我自己还挺喜欢。</p><p>先说“本地时间检测”。这个工具是拿浏览器当前时间去和服务端标准时间做对比，适合排查一些看起来莫名其妙、实际上和时间有关的问题，比如登录异常、接口签名失效、证书时间不对之类。</p><p><img src="clock-skew.png" alt="本地时间检测工具"></p><p>这种工具的乐趣就在于：平时你未必天天用，但真碰上问题的时候，它能帮你少绕两圈。</p><p>另一个我挺常用的是“浏览器信息与时区”。有时候用户反馈“我这里时间不对”“页面显示怪怪的”“怎么跟你那边不一样”，很多时候先看一下浏览器时区、语言、UA、屏幕尺寸，心里就会有底。</p><p><img src="browser-info.png" alt="浏览器信息与时区工具"></p><p>而且这块我顺手把 <code>Clock drift</code> 也塞进去了。也就是说，不只是看浏览器报了什么，还能顺便看一下它和服务端参考时间差了多少毫秒。这个细节很小，但排查起来挺省心。</p><p>这次用 Codex 来做，体验也挺有意思。和传统那种“先列个很完整的需求文档，再慢慢开工”的方式相比，vibe coding 更像是：</p><ul><li>先把想法说清楚；</li><li>再让 Codex 一边写，一边改，一边对齐细节；</li><li>不满意就继续调，直到页面、交互和功能都顺眼为止。</li></ul><p>整个过程有点像和一个不会喊累的搭子结对编程。你负责提出“这个地方应该再顺一点”“这里应该更直观”，它负责快速把想法变成能跑的东西。节奏对了以后，推进速度确实很舒服。</p><p>当然，这个站现在也还远没到“完成体”。我更愿意把它当成一个会持续长大的小工具箱：谁知道后面还会不会继续往里面塞一些更奇怪但又真的有用的小玩意。</p><p>如果你也刚好经常要查这些东西，可以直接收藏一下：</p><p><a href="https://tools.knktc.com/">https://tools.knktc.com</a></p><p>至少以后想查个 IP、转个时间戳、看下本地时间是不是飘了，不用再满世界翻页面了。</p>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;前段时间我一直有个很朴素的念头：平时排查问题时，总会反复打开一堆“小而碎”的在线工具。查一下出口 IP，转一下时间戳，看一下浏览器时区，顺手再格式化一段 JSON。每个需求都不大，但凑在一起，就很像在浏览器里打零工。&lt;/p&gt;
+&lt;p&gt;于是这次我换了个思路：不如直接用 Codex 来一把 vibe coding，把这些高频小工具收拢成一个自己看着顺眼、用起来顺手的小站。&lt;/p&gt;
+&lt;p&gt;它现在就在这里：&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://tools.knktc.com/&quot;&gt;https://tools.knktc.com&lt;/a&gt;&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="codex" scheme="https://knktc.com/tags/codex/"/>
+    
+    <category term="vibe-coding" scheme="https://knktc.com/tags/vibe-coding/"/>
+    
+    <category term="tools" scheme="https://knktc.com/tags/tools/"/>
+    
+    <category term="nextjs" scheme="https://knktc.com/tags/nextjs/"/>
+    
+    <category term="golang" scheme="https://knktc.com/tags/golang/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>关闭 VS Code 中 GitHub Copilot 自动添加 Co-authored-by</title>
+    <link href="https://knktc.com/2026/05/06/disable-vscode-copilot-ai-coauthor/"/>
+    <id>https://knktc.com/2026/05/06/disable-vscode-copilot-ai-coauthor/</id>
+    <published>2026-05-06T14:00:00.000Z</published>
+    <updated>2026-05-06T04:16:22.923Z</updated>
+    
+    <content type="html"><![CDATA[<p>最近发现一个有点微妙的小变化：通过 VS Code + GitHub Copilot 提交代码以后，提交信息里多了一行：</p><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Co-authored-by: Copilot &lt;copilot@github.com&gt;</span><br></pre></td></tr></table></figure><span id="more"></span><p>现象大概是这样：</p><p><img src="info_info_commint.png" alt="提交信息中自动添加了 Copilot co-author"></p><p>我第一反应是：原来微软又偷偷搞了点小动作。</p><p>这个设置的意思是，当你使用 VS Code 里的 Copilot Chat 或 Agent 参与代码修改并提交时，VS Code 会自动给 commit message 加上 AI co-author 信息。对于某些协作场景，这也许算是一种透明披露；但对于日常个人提交来说，它很容易让提交历史变得有点吵，而且这个行为默认开启时并不算特别显眼。</p><p>关闭方法也很简单：</p><ol><li>打开 VS Code Settings。</li><li>搜索 <code>Add AI Co Author</code>。</li><li>找到 <code>Git: Add AI Co Author</code>。</li><li>将默认的 <code>chatAndAgent</code> 改成 <code>off</code>。</li></ol><p>配置界面如下：</p><p><img src="turnoffaicoauthor.png" alt="关闭 VS Code Git Add AI Co Author 设置"></p><p>改完以后，再通过 VS Code 提交代码，就不会继续自动追加这行：</p><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Co-authored-by: Copilot &lt;copilot@github.com&gt;</span><br></pre></td></tr></table></figure><p>如果团队本来就希望保留 AI 参与痕迹，那可以继续开着；如果只是想保持提交信息干净一点，把它关掉就好。</p>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;最近发现一个有点微妙的小变化：通过 VS Code + GitHub Copilot 提交代码以后，提交信息里多了一行：&lt;/p&gt;
+&lt;figure class=&quot;highlight text&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;Co-authored-by: Copilot &amp;lt;copilot@github.com&amp;gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;</summary>
+    
+    
+    
+    
+    <category term="github" scheme="https://knktc.com/tags/github/"/>
+    
+    <category term="git" scheme="https://knktc.com/tags/git/"/>
+    
+    <category term="vscode" scheme="https://knktc.com/tags/vscode/"/>
+    
+    <category term="copilot" scheme="https://knktc.com/tags/copilot/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>tiny-requestbin：一个用 Go 编写的轻量级 HTTP 请求调试工具</title>
+    <link href="https://knktc.com/2026/03/07/tiny-requestbin-introduction/"/>
+    <id>https://knktc.com/2026/03/07/tiny-requestbin-introduction/</id>
+    <published>2026-03-07T04:25:23.000Z</published>
+    <updated>2026-04-22T01:14:27.689Z</updated>
+    
+    <content type="html"><![CDATA[<p>最近整理自己的开源项目时，我重新看了一遍 <a href="https://github.com/knktc/tiny-requestbin">tiny-requestbin</a> 的 GitHub 页面，发现它已经不只是一个“能收请求的小工具”，而是一个非常适合本地调试、Webhook 联调和临时排查 HTTP 请求问题的轻量级工具。这个项目使用 Go 编写，目标非常明确：<strong>尽量少的依赖、尽量快地启动、尽量直观地查看收到的请求内容</strong>。</p><p>如果你经常需要验证第三方回调、调试自建服务的入站请求，或者只是想临时抓一把 HTTP 请求看看内容，那它应该会很顺手。</p><span id="more"></span><h2 id="这个项目是做什么的"><a href="#这个项目是做什么的" class="headerlink" title="这个项目是做什么的"></a>这个项目是做什么的</h2><p>tiny-requestbin 是一个 <strong>轻量级 HTTP 请求检查与调试工具</strong>。启动之后，它会捕获发往当前服务的 HTTP 请求，并把这些请求展示出来，方便开发者查看：</p><ul><li>请求方法</li><li>请求路径</li><li>请求头</li><li>请求体</li><li>以及整体请求的详细内容</li></ul><p>项目当前的几个核心特点也在 README 里写得很清楚：</p><ul><li><strong>轻量且快速</strong>：实现简单，依赖极少</li><li><strong>请求检查</strong>：可以查看传入 HTTP 请求的详细信息</li><li><strong>Web 界面</strong>：通过浏览器查看捕获的请求</li><li><strong>CLI 模式</strong>：也可以直接在终端打印请求内容</li><li><strong>本地运行</strong>：所有数据都留在本机，无需依赖外部服务</li></ul><p>我自己很喜欢这类“功能边界清晰”的工具：不追求大而全，而是把“看请求”这件事做好。</p><h2 id="安装方式很全"><a href="#安装方式很全" class="headerlink" title="安装方式很全"></a>安装方式很全</h2><p>tiny-requestbin 的仓库首页提供了几种常见安装方式，基本覆盖了本地调试和服务部署的主要场景。</p><h3 id="1-Docker-方式"><a href="#1-Docker-方式" class="headerlink" title="1. Docker 方式"></a>1. Docker 方式</h3><p>如果只是想快速跑起来，README 推荐直接使用 Docker：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -p 8282:8282 knktc/tiny-requestbin</span><br></pre></td></tr></table></figure><p>也可以带上自定义参数运行，例如自定义监听地址、端口和最大保存请求数：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -p 8282:8282 knktc/tiny-requestbin -port 8282 -listen 0.0.0.0 -max 1000</span><br></pre></td></tr></table></figure><p>此外仓库里也提供了 <code>docker-compose.yml</code>，所以用 <code>docker-compose up -d</code> 也能直接启动。</p><h3 id="2-Helm-安装"><a href="#2-Helm-安装" class="headerlink" title="2. Helm 安装"></a>2. Helm 安装</h3><p>如果你有 Kubernetes 环境，项目还提供了 Helm Chart，可以直接安装：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">helm install my-requestbin helm/tiny-requestbin/</span><br></pre></td></tr></table></figure><p>README 里还给了自定义 <code>config.max</code>、<code>service.type</code> 和启用 HTTPRoute 的示例，对 K8s 用户来说很友好。</p><h3 id="3-go-install"><a href="#3-go-install" class="headerlink" title="3. go install"></a>3. go install</h3><p>既然它本身就是 Go 项目，直接安装也很自然：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go install github.com/knktc/tiny-requestbin@latest</span><br></pre></td></tr></table></figure><h3 id="4-从源码构建"><a href="#4-从源码构建" class="headerlink" title="4. 从源码构建"></a>4. 从源码构建</h3><p>如果你想自己编译，也很简单：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/knktc/tiny-requestbin.git</span><br><span class="line"><span class="built_in">cd</span> tiny-requestbin</span><br><span class="line">go build</span><br></pre></td></tr></table></figure><h2 id="怎么使用"><a href="#怎么使用" class="headerlink" title="怎么使用"></a>怎么使用</h2><p>项目默认启动方式非常直接：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tiny-requestbin</span><br></pre></td></tr></table></figure><p>默认参数如下：</p><ul><li><code>-port</code>：监听端口，默认 <code>8282</code></li><li><code>-listen</code>：监听地址，默认 <code>127.0.0.1</code></li><li><code>-max</code>：最大保存请求数量，默认 <code>100</code></li><li><code>-cli</code>：是否启用 CLI 输出模式，默认 <code>false</code></li></ul><p>比如下面这个命令，会把服务监听在 <code>0.0.0.0:9000</code>，最多保存 1000 条请求，同时把请求内容打印到终端：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tiny-requestbin -port 9000 -listen 0.0.0.0 -max 1000 -cli</span><br></pre></td></tr></table></figure><p>它的工作流程也很简单：</p><ol><li>启动服务</li><li>把请求发到 <code>http://[监听地址]:[端口]/任意路径</code></li><li>在浏览器访问根路径查看已捕获请求</li><li>如果开启了 <code>-cli</code>，终端里也会同步输出请求内容</li></ol><p>这意味着它既适合本地临时排查，也很适合作为内网环境中的一个“小型请求接收站”。</p><h2 id="两种使用体验：终端和-Web"><a href="#两种使用体验：终端和-Web" class="headerlink" title="两种使用体验：终端和 Web"></a>两种使用体验：终端和 Web</h2><p>仓库首页给了两张截图，我也顺手放到这篇文章里，方便直接感受它的实际效果。</p><h3 id="CLI-模式截图"><a href="#CLI-模式截图" class="headerlink" title="CLI 模式截图"></a>CLI 模式截图</h3><p>启用 <code>-cli</code> 后，收到的 HTTP 请求会直接以格式化后的方式打印在终端里：</p><p><img src="run_in_cmd.png" alt="CLI 模式截图"></p><p>这个模式特别适合在服务器、容器或远程终端里快速观察请求，不需要额外打开浏览器。</p><h3 id="Web-界面截图"><a href="#Web-界面截图" class="headerlink" title="Web 界面截图"></a>Web 界面截图</h3><p>如果更喜欢图形化浏览方式，可以直接访问 Web 页面查看历史请求：</p><p><img src="webpage.png" alt="Web 界面截图"></p><p>从截图来看，界面风格非常克制，重点就是把请求内容清楚地展示出来，没有多余干扰。</p><h2 id="适合哪些场景"><a href="#适合哪些场景" class="headerlink" title="适合哪些场景"></a>适合哪些场景</h2><p>结合仓库首页信息，我觉得 tiny-requestbin 很适合下面这些场景：</p><ul><li>调试第三方平台的 Webhook 回调</li><li>验证某个服务到底发了什么 HTTP 请求</li><li>本地开发时快速搭一个请求接收端</li><li>在容器/Kubernetes 环境中临时观察请求流量</li><li>在终端环境下通过 <code>-cli</code> 模式直接查看请求细节</li></ul><p>尤其是它强调 <strong>Local Only</strong>，所有数据都保留在本机，这一点对很多内部调试场景来说非常安心。</p><h2 id="额外值得一提的几点"><a href="#额外值得一提的几点" class="headerlink" title="额外值得一提的几点"></a>额外值得一提的几点</h2><p>GitHub 页面里还有几个我觉得挺加分的信息：</p><ul><li>项目镜像支持 <strong>多架构</strong>，包括 <code>linux/amd64</code> 和 <code>linux/arm64</code></li><li>多架构镜像会通过 GitHub Actions 自动构建发布</li><li>仓库里同时提供了 Docker、Helm、源码构建几种入口</li><li>项目采用 <strong>MIT License</strong>，使用和二次分发都比较友好</li></ul><p>另外，README 里还提到这个项目最开始由 Gemini 起步，后续由 GitHub Copilot 持续修改，这一点也挺符合这个项目本身“轻量、直接、快速迭代”的气质。</p><h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>如果你正好在找一个 <strong>Go 写的、轻量、可本地运行、同时支持 Web 和 CLI 的 HTTP 请求调试工具</strong>，那我觉得 <a href="https://github.com/knktc/tiny-requestbin">tiny-requestbin</a> 值得试一试。</p><p>项目地址：</p><ul><li>GitHub: <a href="https://github.com/knktc/tiny-requestbin">https://github.com/knktc/tiny-requestbin</a></li></ul><p>欢迎去点个 star，也欢迎提 Issue 或 PR，一起把这个小工具打磨得更顺手。</p>]]></content>
+    
+    
+    <summary type="html">一个适合本地调试、Webhook 联调和临时排查 HTTP 请求问题的轻量级 Go 工具，支持 Web 界面和 CLI 两种查看方式。</summary>
+    
+    
+    
+    
+    <category term="tiny-requestbin" scheme="https://knktc.com/tags/tiny-requestbin/"/>
+    
+    <category term="requestbin" scheme="https://knktc.com/tags/requestbin/"/>
+    
+    <category term="go" scheme="https://knktc.com/tags/go/"/>
+    
+    <category term="开源项目" scheme="https://knktc.com/tags/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>使用 pymemcache 别忘了设置 ignore_exc</title>
+    <link href="https://knktc.com/2025/01/26/pymemcache-ignore-exc/"/>
+    <id>https://knktc.com/2025/01/26/pymemcache-ignore-exc/</id>
+    <published>2025-01-26T13:07:38.000Z</published>
+    <updated>2026-04-22T01:14:27.744Z</updated>
+    
+    <content type="html"><![CDATA[<p>我们在把 Django 升级到 4.2 版本以后，开始把 python-memcached 给换成 pymemcache。结果换完之后，发现怎么默认配置情况下不能高可用了，如果配置了多个 memcached 的后端，挂了一个后，使用缓存相关的代码直接会报错。</p><p>查了下官方文档才发现，pymemcache 默认情况下遇到连接失败就是会抛出异常，除非是手动指定下 ignore_exc = True。</p><p>于是，将 Django CACHES 的配置修改成这样，在 OPTION 中加入相关配置就好了：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">CACHES &#x3D; &#123;</span><br><span class="line">    &#39;default&#39;: &#123;</span><br><span class="line">        &#39;BACKEND&#39;: &#39;django.core.cache.backends.memcached.PyMemcacheCache&#39;,</span><br><span class="line">        &#39;LOCATION&#39;: [</span><br><span class="line">            &#39;host1:11211&#39;,</span><br><span class="line">            &#39;host2&#39;:11211,</span><br><span class="line">        ],</span><br><span class="line">        &#39;OPTIONS&#39;: &#123;</span><br><span class="line">            &#39;ignore_exc&#39;: True,  # 设置成 True</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+    <summary type="html">Django 从 python-memcached 切换到 pymemcache 后，如果希望 memcached 节点故障时不直接抛异常，记得设置 ignore_exc=True。</summary>
+    
+    
+    
+    
+    <category term="python" scheme="https://knktc.com/tags/python/"/>
+    
+    <category term="django" scheme="https://knktc.com/tags/django/"/>
+    
+    <category term="memcache" scheme="https://knktc.com/tags/memcache/"/>
+    
+    <category term="pymemcache" scheme="https://knktc.com/tags/pymemcache/"/>
+    
+    <category term="ignore_exc" scheme="https://knktc.com/tags/ignore-exc/"/>
+    
+    <category term="异常" scheme="https://knktc.com/tags/%E5%BC%82%E5%B8%B8/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>申威架构(sw_64)的Kylin V10系统上安装pandas</title>
+    <link href="https://knktc.com/2023/05/06/install-pandas-on-kylin-v10-with-sw64-cpu/"/>
+    <id>https://knktc.com/2023/05/06/install-pandas-on-kylin-v10-with-sw64-cpu/</id>
+    <published>2023-05-06T06:08:14.000Z</published>
+    <updated>2023-05-11T01:22:29.284Z</updated>
+    
+    <content type="html"><![CDATA[<p>最近在做一些国产化适配的工作，让自己的系统能跑在申威架构的CPU上。这几年国产CPU如雨后春笋一般涌现出来，感慨一下，放我刚工作的那几年真是想都不敢想。</p><p>申威架构的CPU与ARM架构的CPU不同，更加小众，国内也就UOS和Kylin对其有支持。客户提供的操作系统是Kylin V10的SW_64版本，本文就记录下在这个架构CPU+Kylin V10环境下装Pandas遇到的问题。</p><span id="more"></span><h2 id="创建venv"><a href="#创建venv" class="headerlink" title="创建venv"></a>创建venv</h2><p>Kylin V10自带的python3版本是3.7.4，先创建个venv:</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">python3 -m venv --copies knktc-env</span><br><span class="line">source knktc-env&#x2F;bin&#x2F;active</span><br></pre></td></tr></table></figure><h2 id="安装numpy"><a href="#安装numpy" class="headerlink" title="安装numpy"></a>安装numpy</h2><p>下意识地直接用pip来安装numpy: </p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install numpy</span><br></pre></td></tr></table></figure><p>一顿输出后，报错了：</p><blockquote><p>error: #error Unknown CPU, please report this to numpy maintainers with information about your platform (OS, CPU and compiler)</p></blockquote><p>果然有够小众的，识别不出来这个CPU，所以编译无法进行。</p><p>网上查了半天，在UOS的论坛上发现有人讨论过，说无法用pip来编译，只能下载UOS预编译好的包。然后在Kylin这个系统上也搜索了下，果然有：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">yum search numpy</span><br><span class="line"></span><br><span class="line">输出：</span><br><span class="line">Last metadata expiration check: 5 days, 16:43:36 ago on Fri 05 May 2023 04:06:16 PM CST.</span><br><span class="line">&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; Name Matched: numpy &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</span><br><span class="line">python3-numpy.sw_64 : A fast multidimensional array facility for Python</span><br></pre></td></tr></table></figure><p>于是先装下这个系统厂商提供的包：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install python3-numpy</span><br></pre></td></tr></table></figure><p>装好后需要手动拷贝下，把装到系统目录中的numpy给拷到venv中：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp -r &#x2F;usr&#x2F;lib&#x2F;python3.7&#x2F;site-packages&#x2F;numpy* knktc-env&#x2F;lib&#x2F;python3.7&#x2F;site-packages</span><br></pre></td></tr></table></figure><p>尝试看下版本:</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; import numpy</span><br><span class="line">&gt;&gt;&gt; numpy.__version__</span><br><span class="line">&#39;1.16.5&#39;</span><br></pre></td></tr></table></figure><p>好了，先把numpy的问题给解决了。</p><h2 id="安装Pandas"><a href="#安装Pandas" class="headerlink" title="安装Pandas"></a>安装Pandas</h2><p>要安装Pandas的话，这一步只好使用源码来编译了。</p><p>先把依赖给装下：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">pip install setuptools --upgrade -i https:&#x2F;&#x2F;pypi.tuna.tsinghua.edu.cn&#x2F;simple</span><br><span class="line">pip install wheel --upgrade -i https:&#x2F;&#x2F;pypi.tuna.tsinghua.edu.cn&#x2F;simple</span><br><span class="line">pip install Cython --upgrade -i https:&#x2F;&#x2F;pypi.tuna.tsinghua.edu.cn&#x2F;simple</span><br><span class="line">pip install pytz&#x3D;&#x3D;2018.7 -i https:&#x2F;&#x2F;pypi.tuna.tsinghua.edu.cn&#x2F;simple</span><br><span class="line">pip install python-dateutil -i https:&#x2F;&#x2F;pypi.tuna.tsinghua.edu.cn&#x2F;simple</span><br></pre></td></tr></table></figure><p>然后去以下地址下载源码包：</p><p><a href="https://github.com/pandas-dev/pandas/releases">https://github.com/pandas-dev/pandas/releases</a></p><p>我们还在用1.1.5版本，就用这个地址来下载：</p><p><a href="https://github.com/pandas-dev/pandas/releases/download/v1.1.5/pandas-1.1.5.tar.gz">https://github.com/pandas-dev/pandas/releases/download/v1.1.5/pandas-1.1.5.tar.gz</a></p><p>下载后解压，随后进入到目录用最传统的方式安装即可：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd pandas-1.1.5&#x2F;</span><br><span class="line">python setup.py install</span><br></pre></td></tr></table></figure><p>注意，这个过程有点漫长，建议开个screen来进行编译安装。</p><p>虽然过程漫长，但居然没啥报错地就完成了。</p><p>最后再试试panda的版本：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; import pandas</span><br><span class="line">&gt;&gt;&gt; pandas.__version__</span><br><span class="line">&#39;1.1.5&#39;</span><br></pre></td></tr></table></figure><p>嗯，应该可以了。</p>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;最近在做一些国产化适配的工作，让自己的系统能跑在申威架构的CPU上。这几年国产CPU如雨后春笋一般涌现出来，感慨一下，放我刚工作的那几年真是想都不敢想。&lt;/p&gt;
+&lt;p&gt;申威架构的CPU与ARM架构的CPU不同，更加小众，国内也就UOS和Kylin对其有支持。客户提供的操作系统是Kylin V10的SW_64版本，本文就记录下在这个架构CPU+Kylin V10环境下装Pandas遇到的问题。&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="申威" scheme="https://knktc.com/tags/%E7%94%B3%E5%A8%81/"/>
+    
+    <category term="国产化" scheme="https://knktc.com/tags/%E5%9B%BD%E4%BA%A7%E5%8C%96/"/>
+    
+    <category term="sw64" scheme="https://knktc.com/tags/sw64/"/>
+    
+    <category term="麒麟" scheme="https://knktc.com/tags/%E9%BA%92%E9%BA%9F/"/>
+    
+    <category term="kylin" scheme="https://knktc.com/tags/kylin/"/>
+    
+    <category term="pandas" scheme="https://knktc.com/tags/pandas/"/>
+    
+    <category term="numpy" scheme="https://knktc.com/tags/numpy/"/>
+    
+    <category term="sw_64" scheme="https://knktc.com/tags/sw-64/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>修复升级Macos 13 Ventura后Git报Pemission Denied的问题</title>
+    <link href="https://knktc.com/2022/10/27/fix-mac-os-13-ventura-git-ssh-permission-denied/"/>
+    <id>https://knktc.com/2022/10/27/fix-mac-os-13-ventura-git-ssh-permission-denied/</id>
+    <published>2022-10-27T04:41:08.000Z</published>
+    <updated>2022-10-27T13:18:29.822Z</updated>
+    
+    <content type="html"><![CDATA[<p>最近尝鲜升级了mac os 13 ventura，结果发现git push代码的时候怎么都不行，直接报了个错误: </p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Permission denied (publickey).</span><br><span class="line">fatal: Could not read from remote repository.</span><br><span class="line"></span><br><span class="line">Please make sure you have the correct access rights</span><br></pre></td></tr></table></figure><span id="more"></span><p>在反复确认自己的公钥已经放到gitlab上后，开始google，参考了下网上的讨论：<a href="https://superuser.com/questions/1749364/git-ssh-permission-denied-in-macos-13-ventura">https://superuser.com/questions/1749364/git-ssh-permission-denied-in-macos-13-ventura</a></p><p>应该是因为mac os 13中自带的OpenSSH_9.0p1默认禁止了RSA/SHA-1算法导致的。</p><p>解决方法的话，要么是生成一个新的ssh密钥，替换下（成本可能有点高）：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t ed25519</span><br></pre></td></tr></table></figure><p>要么就是编辑 ~/.ssh/config配置文件，在文件中加入以下的配置即可(还可以应对服务端太老不支持新的加密算法的情况)：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Host *</span><br><span class="line">    HostkeyAlgorithms +ssh-rsa</span><br><span class="line">    PubkeyAcceptedAlgorithms +ssh-rsa</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;最近尝鲜升级了mac os 13 ventura，结果发现git push代码的时候怎么都不行，直接报了个错误: &lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;Permission denied (publickey).&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;fatal: Could not read from remote repository.&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;Please make sure you have the correct access rights&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;</summary>
+    
+    
+    
+    
+    <category term="ssh" scheme="https://knktc.com/tags/ssh/"/>
+    
+    <category term="git" scheme="https://knktc.com/tags/git/"/>
+    
+    <category term="macos" scheme="https://knktc.com/tags/macos/"/>
+    
+    <category term="ventura" scheme="https://knktc.com/tags/ventura/"/>
+    
+    <category term="permission" scheme="https://knktc.com/tags/permission/"/>
+    
+    <category term="denied" scheme="https://knktc.com/tags/denied/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>修复python-memcached在python3.8环境中报SyntaxWarning的问题</title>
+    <link href="https://knktc.com/2022/08/10/fix-python-memcached-3-8-syntax-warning/"/>
+    <id>https://knktc.com/2022/08/10/fix-python-memcached-3-8-syntax-warning/</id>
+    <published>2022-08-10T13:57:45.000Z</published>
+    <updated>2022-08-10T14:21:21.405Z</updated>
+    
+    <content type="html"><![CDATA[<p>我们一直使用python-memcached库来操作memcached，最近发现在python3.8的环境中，代码会报类似这样的警告：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">memcache.py:1303: SyntaxWarning: &quot;is&quot; with a literal. Did you mean &quot;&#x3D;&#x3D;&quot;?</span><br><span class="line">  if key is &#39;&#39;:</span><br><span class="line">memcache.py:1304: SyntaxWarning: &quot;is&quot; with a literal. Did you mean &quot;&#x3D;&#x3D;&quot;?</span><br><span class="line">  if key_extra_len is 0:</span><br></pre></td></tr></table></figure><span id="more"></span><p>查了下python-memcached的源码(其实也就一个文件)，定位到1303和1304行，代码如下：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">if key is &#39;&#39;:</span><br><span class="line">    if key_extra_len is 0:</span><br></pre></td></tr></table></figure><p>看来这样的使用方法在python3.8里面是不被接受的。</p><p>虽然只是warning，但日志中打印这些信息总归让人感觉很不爽，所以得想法修复下。</p><p>查到官方的github仓库，发现这个库已经有年头没有人管了，即使有人提出了修改的PR(<a href="https://github.com/linsomniac/python-memcached/issues/176">https://github.com/linsomniac/python-memcached/issues/176</a>)，也没有人来合并。</p><p>于是两条路：</p><ol><li>在项目中直接修改memcache.py文件，改掉这两行的问题，把is改成==就可以了。</li><li>因为我们会发个requirements.txt，所以我自己做了个修改的版本，放到了pypi上(<a href="https://pypi.org/project/python-memcached-py38fix/">https://pypi.org/project/python-memcached-py38fix/</a>)，如果有需要的可以直接下载：</li></ol><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install python-memcached-py38fix</span><br></pre></td></tr></table></figure><p>看来下一步必须得考虑换成pymemcache了，毕竟Django都抛弃了对python-memcached的支持了。</p>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;我们一直使用python-memcached库来操作memcached，最近发现在python3.8的环境中，代码会报类似这样的警告：&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;memcache.py:1303: SyntaxWarning: &amp;quot;is&amp;quot; with a literal. Did you mean &amp;quot;&amp;#x3D;&amp;#x3D;&amp;quot;?&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  if key is &amp;#39;&amp;#39;:&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;memcache.py:1304: SyntaxWarning: &amp;quot;is&amp;quot; with a literal. Did you mean &amp;quot;&amp;#x3D;&amp;#x3D;&amp;quot;?&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  if key_extra_len is 0:&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;</summary>
+    
+    
+    
+    
+    <category term="python" scheme="https://knktc.com/tags/python/"/>
+    
+    <category term="memcached" scheme="https://knktc.com/tags/memcached/"/>
+    
+    <category term="SyntaxWarning" scheme="https://knktc.com/tags/SyntaxWarning/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Nginx忽略404错误日志</title>
+    <link href="https://knktc.com/2022/08/10/nginx-not-found-log-off/"/>
+    <id>https://knktc.com/2022/08/10/nginx-not-found-log-off/</id>
+    <published>2022-08-10T13:42:44.000Z</published>
+    <updated>2022-08-10T13:52:07.712Z</updated>
+    
+    <content type="html"><![CDATA[<p>最近尝试使用nginx来提供一些静态的json文件来作为配置，最为简单的做法就是提供下面这样的配置了：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">location ~ ^&#x2F;myconf&#x2F;(?&lt;filename&gt;.*)$ &#123;</span><br><span class="line">    alias &#x2F;home&#x2F;knktc&#x2F;myconf&#x2F;$filename;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><span id="more"></span><p>但是问题来了，如果匹配不到配置文件的话，直接返回的是nginx的404页面，为了能让前端代码更容易地处理下这种情况，可以加点配置，让文件找不到的时候直接返回空的json对象，于是配置可以改成下面的这样:</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">location ~ ^&#x2F;myconf&#x2F;(?&lt;filename&gt;.*)$ &#123;</span><br><span class="line">    alias &#x2F;home&#x2F;knktc&#x2F;myconf&#x2F;$filename;</span><br><span class="line">    error_page 404 &#x3D; @not_found_fallback;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">location @not_found_fallback &#123;</span><br><span class="line">        add_header Content-Type text&#x2F;plain;</span><br><span class="line">        return 200 &quot;&#123;&#125;&quot;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>现在的话，如果文件不存在的话，就可以返回一个空的json对象了。</p><p>但是问题又来了：这种情况下nginx的error.log里面又记录了一次404的错误事件，于是还需要继续改下配置，把not found的日志给关掉：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">location ~ ^&#x2F;myconf&#x2F;(?&lt;filename&gt;.*)$ &#123;</span><br><span class="line">    alias &#x2F;home&#x2F;knktc&#x2F;myconf&#x2F;$filename;</span><br><span class="line">    error_page 404 &#x3D; @not_found_fallback;</span><br><span class="line">    log_not_found off;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">location @not_found_fallback &#123;</span><br><span class="line">        add_header Content-Type text&#x2F;plain;</span><br><span class="line">        return 200 &quot;&#123;&#125;&quot;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>这下就OK了。使用Nginx静态文件能力来做一些简单的接口还是很方便的。</p>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;最近尝试使用nginx来提供一些静态的json文件来作为配置，最为简单的做法就是提供下面这样的配置了：&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;location ~ ^&amp;#x2F;myconf&amp;#x2F;(?&amp;lt;filename&amp;gt;.*)$ &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    alias &amp;#x2F;home&amp;#x2F;knktc&amp;#x2F;myconf&amp;#x2F;$filename;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;</summary>
+    
+    
+    
+    
+    <category term="nginx" scheme="https://knktc.com/tags/nginx/"/>
+    
+    <category term="404" scheme="https://knktc.com/tags/404/"/>
+    
+    <category term="log" scheme="https://knktc.com/tags/log/"/>
+    
+    <category term="json" scheme="https://knktc.com/tags/json/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>使用Certbot自动化生成https证书(ubuntu系统+cloudflare+nginx)</title>
+    <link href="https://knktc.com/2022/06/16/certbot-on-ubuntu-cheatsheet/"/>
+    <id>https://knktc.com/2022/06/16/certbot-on-ubuntu-cheatsheet/</id>
+    <published>2022-06-16T13:45:36.000Z</published>
+    <updated>2022-06-16T14:21:53.791Z</updated>
+    
+    <content type="html"><![CDATA[<p>用Certbot来自动生成Let’s Encrypt证书这件事儿，虽然官方和网上已经有了很详实的文档了，但是我还是想自己记录下，留作以后备查吧。</p><p>本文用的操作系统是ubuntu 20.04，DNS的话用的是Cloudflare的服务，web服务使用nginx来提供。然后，按照以下步骤进行就可以了。</p><span id="more"></span><h2 id="安装Certbot"><a href="#安装Certbot" class="headerlink" title="安装Certbot"></a>安装Certbot</h2><p>用以下命令安装就可以了，某些时候snap install的时候可能比较慢，有时候还可能需要重试几次：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">apt install snapd</span><br><span class="line">snap install core</span><br><span class="line">snap refresh core</span><br><span class="line">snap install --classic certbot</span><br></pre></td></tr></table></figure><p>安装完成后，运行下<code>certbot --version</code>命令，如果有版本号输出，就表明安装成功了。</p><h2 id="安装Cloudflare插件"><a href="#安装Cloudflare插件" class="headerlink" title="安装Cloudflare插件"></a>安装Cloudflare插件</h2><p>为了实现自动化地续签证书，需要安装下对应DNS服务商的插件才可以。我使用Cloudflare来做DNS解析，所以可以使用以下的命令来安装Cloudflare插件：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">snap set certbot trust-plugin-with-root=ok</span><br><span class="line"></span><br><span class="line">snap install certbot-dns-cloudflare</span><br></pre></td></tr></table></figure><h2 id="设置Cloudflare-API令牌"><a href="#设置Cloudflare-API令牌" class="headerlink" title="设置Cloudflare API令牌"></a>设置Cloudflare API令牌</h2><p>要使用Cloudflare插件，需要先登录到Cloudflare控制台来生成一个仅可操作DNS解析的API 令牌。可在登录Cloudflare后，跳转到这个地址来进行创建：<a href="">https://dash.cloudflare.com/profile/api-tokens</a></p><p>以下是操作过程的简单演示：</p><p><a href="https://imgtu.com/i/XHvupd"><img src="https://s1.ax1x.com/2022/06/16/XHvupd.png" alt="XHvupd.png"></a></p><p><a href="https://imgtu.com/i/XHvmfH"><img src="https://s1.ax1x.com/2022/06/16/XHvmfH.png" alt="XHvmfH.png"></a></p><p><a href="https://imgtu.com/i/XHvete"><img src="https://s1.ax1x.com/2022/06/16/XHvete.png" alt="XHvete.png"></a></p><p>创建完成后记得将出现的令牌复制下来。然后使用以下命令来创建配置文件：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p ~/.secrets/certbot</span><br><span class="line"></span><br><span class="line">vim ~/.secrets/certbot/cloudflare.ini</span><br></pre></td></tr></table></figure><p>填入如下格式的配置就可以了：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dns_cloudflare_api_token &#x3D; 刚才获取到的API令牌</span><br></pre></td></tr></table></figure><p>编辑完成后，可以修改下这个文件的权限，否则执行certbot命令时会报一个警告说文件权限不安全：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chmod 600 ~/.secrets/certbot/cloudflare.ini</span><br></pre></td></tr></table></figure><h2 id="获取证书"><a href="#获取证书" class="headerlink" title="获取证书"></a>获取证书</h2><p>现在通过运行以下的命令就可以生成nginx所需的证书了：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">certbot certonly \</span><br><span class="line">  --dns-cloudflare \</span><br><span class="line">  --dns-cloudflare-credentials ~/.secrets/certbot/cloudflare.ini \</span><br><span class="line">  --dns-cloudflare-propagation-seconds 60 \</span><br><span class="line">  -d knktc.com</span><br></pre></td></tr></table></figure><p>注意，这里用了<code>--dns-cloudflare-propagation-seconds 60</code>把等待时间延长到了60秒，否则默认的10秒有些时候会导致校验失败。</p><p>生成的证书和私钥会放到/etc/letsencrypt/live/YOUR_HOST目录下。</p><p>贴一段nginx相关配置，备查：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">listen 443 ssl http2;</span><br><span class="line">server_name knktc.com;</span><br><span class="line">ssl_certificate /etc/letsencrypt/live/knktc.com/fullchain.pem; # managed by Certbot</span><br><span class="line">ssl_certificate_key /etc/letsencrypt/live/knktc.com/privkey.pem; # managed by Certbot</span><br><span class="line"></span><br><span class="line">ssl_protocols       TLSv1 TLSv1.1 TLSv1.2;</span><br><span class="line">ssl_ciphers         HIGH:!aNULL:!MD5;</span><br><span class="line">keepalive_timeout   70;</span><br><span class="line">ssl_session_timeout  5m;</span><br></pre></td></tr></table></figure><h2 id="定时任务"><a href="#定时任务" class="headerlink" title="定时任务"></a>定时任务</h2><p>通过以下命令可以查看certbot的定时任务是否添加成功了：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl list-timers</span><br></pre></td></tr></table></figure><p>如果要在每次生成新的证书后自动reload下nginx，可以加个hook脚本：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim &#x2F;etc&#x2F;letsencrypt&#x2F;renewal-hooks&#x2F;post&#x2F;reload-nginx</span><br></pre></td></tr></table></figure><p>加入以下的脚本：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#!&#x2F;bin&#x2F;sh</span><br><span class="line"></span><br><span class="line">systemctl reload nginx</span><br></pre></td></tr></table></figure><p>然后给这个脚本文件加上权限：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chmod +x &#x2F;etc&#x2F;letsencrypt&#x2F;renewal-hooks&#x2F;post&#x2F;reload-nginx</span><br></pre></td></tr></table></figure><p>这样的话，每次生成新的证书后，就会自动reload下nginx让新的证书生效了。</p>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;用Certbot来自动生成Let’s Encrypt证书这件事儿，虽然官方和网上已经有了很详实的文档了，但是我还是想自己记录下，留作以后备查吧。&lt;/p&gt;
+&lt;p&gt;本文用的操作系统是ubuntu 20.04，DNS的话用的是Cloudflare的服务，web服务使用nginx来提供。然后，按照以下步骤进行就可以了。&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="ubuntu" scheme="https://knktc.com/tags/ubuntu/"/>
+    
+    <category term="ssl" scheme="https://knktc.com/tags/ssl/"/>
+    
+    <category term="https" scheme="https://knktc.com/tags/https/"/>
+    
+    <category term="nginx" scheme="https://knktc.com/tags/nginx/"/>
+    
+    <category term="certbot" scheme="https://knktc.com/tags/certbot/"/>
+    
+    <category term="letsencrypt" scheme="https://knktc.com/tags/letsencrypt/"/>
+    
+    <category term="cloudflare" scheme="https://knktc.com/tags/cloudflare/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>使用镜像来加快Poetry的安装</title>
+    <link href="https://knktc.com/2022/04/22/set-mirror-when-installing-poerty/"/>
+    <id>https://knktc.com/2022/04/22/set-mirror-when-installing-poerty/</id>
+    <published>2022-04-22T05:52:52.000Z</published>
+    <updated>2022-04-25T05:03:15.678Z</updated>
+    
+    <content type="html"><![CDATA[<p>首先添加下全局的pip代理：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip config --user setglobal.index-url https:&#x2F;&#x2F;pypi.tuna.tsinghua.edu.cn&#x2F;simple</span><br></pre></td></tr></table></figure><p>然后下载安装脚本到本地(比如保存成install-poetry.py文件)：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -sSL https:&#x2F;&#x2F;install.python-poetry.org -o install-poetry.py</span><br></pre></td></tr></table></figure><p>打开脚本进行编辑，找到如下这段代码：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">def pip(self, *args, **kwargs) -&gt; subprocess.CompletedProcess:</span><br><span class="line">        return self.python(&quot;-m&quot;, &quot;pip&quot;, &quot;--isolated&quot;, *args, **kwargs)</span><br></pre></td></tr></table></figure><p>把里面的”–isolated”删除掉，然后安装脚本使用pip时就会自动使用之前配置好的镜像了:</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 install install-poetry.py</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;首先添加下全局的pip代理：&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;pip config --user setglobal.</summary>
+      
+    
+    
+    
+    
+    <category term="poetry" scheme="https://knktc.com/tags/poetry/"/>
+    
+    <category term="镜像" scheme="https://knktc.com/tags/%E9%95%9C%E5%83%8F/"/>
+    
+    <category term="pip" scheme="https://knktc.com/tags/pip/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>使用Celery来广播任务</title>
+    <link href="https://knktc.com/2022/03/26/use-celery-broadcast-queue/"/>
+    <id>https://knktc.com/2022/03/26/use-celery-broadcast-queue/</id>
+    <published>2022-03-26T13:35:13.000Z</published>
+    <updated>2022-03-26T15:15:15.944Z</updated>
+    
+    <content type="html"><![CDATA[<p>最近琢磨给自己的系统加上个Agent来实现配置变更和监控信息采集等任务，因为这个系统是多实例部署的，所以这些Agent可能需要同时运行相同的任务。因为我们正好在用celery，celery支持广播任务，所有的worker都能收到相同的任务，正好就能用这个特性来实现Agent的功能了。</p><span id="more"></span><p>为了测试下广播任务的效果，先写个示例任务：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># filename: agent.py</span></span><br><span class="line"><span class="keyword">import</span> datetime</span><br><span class="line"><span class="keyword">from</span> celery <span class="keyword">import</span> shared_task</span><br><span class="line"></span><br><span class="line"><span class="meta">@shared_task(<span class="params">bind=<span class="literal">True</span></span>)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">test</span>(<span class="params">self</span>):</span></span><br><span class="line">    name = self.request.hostname</span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">f&#x27;/tmp/<span class="subst">&#123;name&#125;</span>&#x27;</span>, <span class="string">&#x27;w&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">        f.write(<span class="built_in">str</span>(datetime.datetime.now()))</span><br></pre></td></tr></table></figure><p>稍微解释下，test这个任务会获取执行该任务的worker的hostname，然后以该hostname为文件名在/tmp目录下创建出来文件，文件中包含有执行任务的时间。</p><p>也就是说，如果测试ok的话，在这个test任务执行的时候，在/tmp目录下应该会同时生成多个文件：有几个worker绑定到这个队列就会有几个文件。</p><p>然后在celery的app配置代码中加入以下的代码：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> kombu.common <span class="keyword">import</span> Broadcast</span><br><span class="line"></span><br><span class="line">app.conf.task_queues = (Broadcast(<span class="string">&#x27;broadcast_tasks&#x27;</span>),)</span><br><span class="line">app.conf.task_routes = &#123;</span><br><span class="line">    <span class="string">&#x27;agent.test&#x27;</span>: &#123;</span><br><span class="line">        <span class="string">&#x27;queue&#x27;</span>: <span class="string">&#x27;broadcast_tasks&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;exchange&#x27;</span>: <span class="string">&#x27;broadcast_tasks&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>这里定义了一个名为broadcast_tasks的队列，然后agent.test的任务都会通过broadcast_tasks这个exchange来发出。</p><p>在celery worker方面，试着启动这么两个worker绑定broadcast_tasks队列，这两个worker一个叫agent1，一个叫agent2：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">celery -A boss2_manager worker --pidfile=/var/run/celeryworker_agent1.pid -Q broadcast_tasks -n agent1@%h</span><br><span class="line">celery -A boss2_manager worker --pidfile=/var/run/celeryworker_agent2.pid -Q broadcast_tasks -n agent2@%h</span><br></pre></td></tr></table></figure><p>celery worker启动后，如果使用了RabbitMQ作为broker的话，可以在管理界面中看到，广播类型的队列对于RabbitMQ来说就是一个fanout类型的exchange外加多个队列：启动一个worker就创建一个队列绑定到这个fanout exchange上。</p><p>试着直接用delay方法调用下这个test任务：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> agent <span class="keyword">import</span> test</span><br><span class="line"></span><br><span class="line">test.delay()</span><br></pre></td></tr></table></figure><p>然后去/tmp目录下看看，发现已经出现了两个文件，命名分别为：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">agent1@knktc-rmbp.local</span><br><span class="line">agent2@knktc-rmbp.local</span><br></pre></td></tr></table></figure><p>打开文件看看内容，两个文件中记录的时间相差不大。</p><p>OK，就用这个方法来做Agent吧。</p><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul><li>Celery Broadcast的官方文档(吐槽下，最近官方把原来的celeryproject.org域名给搞丢了，最后只好搞了个新的~)：<a href="https://docs.celeryq.dev/en/stable/userguide/routing.html#broadcast">https://docs.celeryq.dev/en/stable/userguide/routing.html#broadcast</a></li></ul>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;最近琢磨给自己的系统加上个Agent来实现配置变更和监控信息采集等任务，因为这个系统是多实例部署的，所以这些Agent可能需要同时运行相同的任务。因为我们正好在用celery，celery支持广播任务，所有的worker都能收到相同的任务，正好就能用这个特性来实现Agent的功能了。&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="celery" scheme="https://knktc.com/tags/celery/"/>
+    
+    <category term="rabbitmq" scheme="https://knktc.com/tags/rabbitmq/"/>
+    
+    <category term="广播" scheme="https://knktc.com/tags/%E5%B9%BF%E6%92%AD/"/>
+    
+    <category term="broadcast" scheme="https://knktc.com/tags/broadcast/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Ubuntu系统中如何导入SNMP MIB库文件</title>
+    <link href="https://knktc.com/2022/03/23/where-to-place-mib-files-in-ubuntu/"/>
+    <id>https://knktc.com/2022/03/23/where-to-place-mib-files-in-ubuntu/</id>
+    <published>2022-03-23T14:39:41.000Z</published>
+    <updated>2022-03-23T15:10:08.805Z</updated>
+    
+    <content type="html"><![CDATA[<p>我这边的一个系统用了telegraf的snmp_trap插件来采集snmp trap告警，然后再转换为http格式吐出进入下一个环节。这个插件配置起来倒是简单，但是其中对于OID的翻译依赖于snmptranslate命令的结果，而如果让snmptranslate命令能正常翻译，又依赖于MIB库文件的正确放置和配置。最近在用这套东西来采集H3C交换机设备的告警，正好记录下在ubuntu环境下导入MIB库文件的方法。</p><span id="more"></span><h1 id="配置前"><a href="#配置前" class="headerlink" title="配置前"></a>配置前</h1><p>在进行配置前，可以先尝试运行下snmptranslate命令(注意，这里的-L n参数可以忽略输出的错误信息)：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">snmptranslate -L n .1.3.6.1.4.1.25506.2.38.1.6.3.0.1</span><br></pre></td></tr></table></figure><p>这个示例中的OID来自H3C的交换机设备，如果没导入MIB库的话，结果只会是：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SNMPv2-SMI::enterprises.25506.2.38.1.6.3.0.1</span><br></pre></td></tr></table></figure><p>很明显，光看这个还是没法知道设备发了个啥信息过来。</p><h1 id="导入和配置"><a href="#导入和配置" class="headerlink" title="导入和配置"></a>导入和配置</h1><p>先从H3C官方搞到MIB库文件，然后把这些mib文件解压到一个目录中。在这个示例中，我们把这些mib文件都放置到/usr/share/mibs/h3c_mibs目录下。</p><p>放好MIB库文件后，就可以开始配置snmp.conf这个配置文件了：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim &#x2F;etc&#x2F;snmp&#x2F;snmp.conf</span><br></pre></td></tr></table></figure><p>(如果没有这个文件，可能需要先使用apt install snmp命令来安装下相关的组件。)</p><p>配置文件中原始的配置内容是这样的：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># As the snmp packages come without MIB files due to license reasons, loading</span><br><span class="line"># of MIBs is disabled by default. If you added the MIBs you can reenable</span><br><span class="line"># loading them by commenting out the following line.</span><br><span class="line">mibs :</span><br></pre></td></tr></table></figure><p>为了能让新加的MIB库生效，需要做下修改：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># mibs :</span><br><span class="line"></span><br><span class="line">mibdirs +&#x2F;usr&#x2F;share&#x2F;mibs&#x2F;h3c_mibs</span><br><span class="line">mibdirs +&#x2F;usr&#x2F;share&#x2F;mibs&#x2F;another_mib_dir  # for example</span><br><span class="line"></span><br><span class="line">mibs +ALL</span><br></pre></td></tr></table></figure><p>稍微解释下：</p><ul><li>注释掉了原有的mib : 这行，让系统可以加载第三方的库；</li><li>mibdirs参数用于指定加载的MIB库路径，如果有多个MIB库的目录，可以多次使用这个参数</li><li>mibs +ALL参数指定了在所有的mib文件中来进行查找。</li></ul><p>配置文件修改完成后，保存退出即可，无需重启啥服务。</p><h1 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h1><p>再次测试翻译OID，在正确放置mib文件和正确配置的情况下，是可以成功翻译出结果的：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">root@knktc.com:&#x2F;root# snmptranslate -L n .1.3.6.1.4.1.25506.2.38.1.6.3.0.1</span><br><span class="line">HH3C-TRAP-MIB::hh3cPeriodicalTrap</span><br></pre></td></tr></table></figure><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul><li>telegraf的snmp trap插件官网是：<a href="https://github.com/influxdata/telegraf/tree/master/plugins/inputs/snmp_trap">https://github.com/influxdata/telegraf/tree/master/plugins/inputs/snmp_trap</a></li><li>snmp.conf配置文件的更多内容可参考man page的帮助：<a href="https://linux.die.net/man/5/snmp.conf">https://linux.die.net/man/5/snmp.conf</a></li></ul>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;我这边的一个系统用了telegraf的snmp_trap插件来采集snmp trap告警，然后再转换为http格式吐出进入下一个环节。这个插件配置起来倒是简单，但是其中对于OID的翻译依赖于snmptranslate命令的结果，而如果让snmptranslate命令能正常翻译，又依赖于MIB库文件的正确放置和配置。最近在用这套东西来采集H3C交换机设备的告警，正好记录下在ubuntu环境下导入MIB库文件的方法。&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="ubuntu" scheme="https://knktc.com/tags/ubuntu/"/>
+    
+    <category term="mib" scheme="https://knktc.com/tags/mib/"/>
+    
+    <category term="snmp" scheme="https://knktc.com/tags/snmp/"/>
+    
+    <category term="mibs" scheme="https://knktc.com/tags/mibs/"/>
+    
+    <category term="telegraf" scheme="https://knktc.com/tags/telegraf/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Git命令使用不同的SSH密钥</title>
+    <link href="https://knktc.com/2022/03/21/git-use-different-ssh-key/"/>
+    <id>https://knktc.com/2022/03/21/git-use-different-ssh-key/</id>
+    <published>2022-03-21T14:55:38.000Z</published>
+    <updated>2022-03-23T14:34:28.150Z</updated>
+    
+    <content type="html"><![CDATA[<p>最近要在自动构建中加入个打tag的操作，却发现可能是gitlab的bug，之前加过的默认deploy key怎么都找不到了。没办法，只好在打包服务器上再创建一个SSH密钥对，让执行git命令时使用这个新的SSH密钥。</p><span id="more"></span><p>以下的示例假设我们要访问的git服务器地址为：gitlab.knktc.com 。</p><p>首先使用以下命令创建一个新的SSH密钥对：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p &#x2F;home&#x2F;knktc&#x2F;gitlab_ssh_keys</span><br><span class="line">ssh-keygen -f &#x2F;home&#x2F;knktc&#x2F;gitlab_ssh_keys&#x2F;id_rsa</span><br></pre></td></tr></table></figure><p>这个示例中，新的SSH私钥已经存储到了/home/knktc/gitlab_ssh_keys/id_rsa这个路径了。</p><p>然后在当前用户的根目录下创建ssh config文件：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim ~&#x2F;ssh&#x2F;config</span><br></pre></td></tr></table></figure><p>填入以下的配置：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Host gitlab.knktc.com</span><br><span class="line">    IdentityFile &#x2F;home&#x2F;knktc&#x2F;gitlab_ssh_keys&#x2F;id_rsa</span><br></pre></td></tr></table></figure><p>这个配置的意思是：如果使用ssh访问主机名为gitlab.knktc.com，则使用刚才新创建的密钥。</p><p>最后测试下clone项目：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone git@gitlab.knktc.com:blog&#x2F;knktc-com.git</span><br></pre></td></tr></table></figure><p>OK，已经成功了。</p><p>更多关于ssh config配置文件的细节，可参考：<a href="https://linux.die.net/man/5/ssh_config">https://linux.die.net/man/5/ssh_config</a></p>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;最近要在自动构建中加入个打tag的操作，却发现可能是gitlab的bug，之前加过的默认deploy key怎么都找不到了。没办法，只好在打包服务器上再创建一个SSH密钥对，让执行git命令时使用这个新的SSH密钥。&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="ssh" scheme="https://knktc.com/tags/ssh/"/>
+    
+    <category term="git" scheme="https://knktc.com/tags/git/"/>
+    
+    <category term="private" scheme="https://knktc.com/tags/private/"/>
+    
+    <category term="public" scheme="https://knktc.com/tags/public/"/>
+    
+    <category term="key" scheme="https://knktc.com/tags/key/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>使用Monkey Patch让Celery Beat支持“待命”模式</title>
+    <link href="https://knktc.com/2022/03/12/celery-beat-standby-mode/"/>
+    <id>https://knktc.com/2022/03/12/celery-beat-standby-mode/</id>
+    <published>2022-03-12T09:24:03.000Z</published>
+    <updated>2022-03-12T09:52:26.503Z</updated>
+    
+    <content type="html"><![CDATA[<p>我一直用Celery Beat来做定时任务，Beat这东西简单易用，但一直有个问题就是同时启动多个Beat实例时任务就会重复发起。我们之前用uwsgi的legion模式来控制同一时间只能有一个beat实例运行，这个其实依赖于一个靠谱的网络连接。最近遇到一个问题：两个跑beat的节点的网络连接可能不稳定，那uwsgi legion可能就不太稳妥了。对此只好看看如何手动来设置，让celery beat能进入待命的模式：虽然服务在跑，但是不生成定时任务。</p><span id="more"></span><p>阅读了下celery beat的源码，使用celery命令行工具启动beat worker的时候，调用的是celery.beat下的Service类中的start方法，应该只需要修改下这里，让beat空跑起来就可以了。</p><p>简单写了下Monkey Patch相关的代码，贴出来如下：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">from</span> celery.beat <span class="keyword">import</span> info, debug, humanize_seconds, signals, platforms</span><br><span class="line"></span><br><span class="line">STANDBY_CHECK_INTERVAL = <span class="number">5</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">is_standby</span>():</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">True</span> <span class="keyword">if</span> os.path.isfile(<span class="string">&#x27;/tmp/standby.flag&#x27;</span>) <span class="keyword">else</span> <span class="literal">False</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">patched_start</span>(<span class="params">self, embedded_process=<span class="literal">False</span></span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot; monkey patched start method, will skip tasks when standby flag is setted &quot;&quot;&quot;</span></span><br><span class="line">    info(<span class="string">&#x27;beat: Starting...&#x27;</span>)</span><br><span class="line">    debug(<span class="string">&#x27;beat: Ticking with max interval-&gt;%s&#x27;</span>,</span><br><span class="line">          humanize_seconds(self.scheduler.max_interval))</span><br><span class="line"></span><br><span class="line">    signals.beat_init.send(sender=self)</span><br><span class="line">    <span class="keyword">if</span> embedded_process:</span><br><span class="line">        signals.beat_embedded_init.send(sender=self)</span><br><span class="line">        platforms.set_process_title(<span class="string">&#x27;celery beat&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="keyword">while</span> <span class="keyword">not</span> self._is_shutdown.is_set():</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># patch starts from here</span></span><br><span class="line">            <span class="keyword">if</span> is_standby():</span><br><span class="line">                debug(<span class="string">f&#x27;beat: in standby mode, all tasks will be skipped, &#x27;</span></span><br><span class="line">                      <span class="string">f&#x27;will check in [<span class="subst">&#123;STANDBY_CHECK_INTERVAL&#125;</span>] seconds&#x27;</span>)</span><br><span class="line">                time.sleep(STANDBY_CHECK_INTERVAL)</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">            <span class="comment"># patch ends</span></span><br><span class="line">            </span><br><span class="line">            interval = self.scheduler.tick()</span><br><span class="line">            <span class="keyword">if</span> interval <span class="keyword">and</span> interval &gt; <span class="number">0.0</span>:</span><br><span class="line">                debug(<span class="string">&#x27;beat: Waking up %s.&#x27;</span>,</span><br><span class="line">                      humanize_seconds(interval, prefix=<span class="string">&#x27;in &#x27;</span>))</span><br><span class="line">                time.sleep(interval)</span><br><span class="line">                <span class="keyword">if</span> self.scheduler.should_sync():</span><br><span class="line">                    self.scheduler._do_sync()</span><br><span class="line">    <span class="keyword">except</span> (KeyboardInterrupt, SystemExit):</span><br><span class="line">        self._is_shutdown.<span class="built_in">set</span>()</span><br><span class="line">    <span class="keyword">finally</span>:</span><br><span class="line">        self.sync()</span><br></pre></td></tr></table></figure><p>简单说明下：</p><ul><li>这个示例中检查了/tmp目录中是否有standby.flag文件，如果有的话就算是进入了待命的状态；</li><li>在while循环中先检查了这个文件是否存在，如果存在，则sleep 5秒钟，然后再次检查。</li></ul><p>在使用的时候只需要在代码入口处应用这个patch就可以了，例如：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> celery.beat <span class="keyword">import</span> Service</span><br><span class="line"></span><br><span class="line">Service.start = patched_start</span><br></pre></td></tr></table></figure><p>测试运行下，当celery beat启动后，只需要touch /tmp/standby.flag，创建标志文件，可以看到celery beat进入待命模式，不再生成定时任务。删除这个文件后，等待几秒钟，celery beat将会继续开始生成定时任务。</p>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;我一直用Celery Beat来做定时任务，Beat这东西简单易用，但一直有个问题就是同时启动多个Beat实例时任务就会重复发起。我们之前用uwsgi的legion模式来控制同一时间只能有一个beat实例运行，这个其实依赖于一个靠谱的网络连接。最近遇到一个问题：两个跑beat的节点的网络连接可能不稳定，那uwsgi legion可能就不太稳妥了。对此只好看看如何手动来设置，让celery beat能进入待命的模式：虽然服务在跑，但是不生成定时任务。&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="celery" scheme="https://knktc.com/tags/celery/"/>
+    
+    <category term="beat" scheme="https://knktc.com/tags/beat/"/>
+    
+    <category term="standby" scheme="https://knktc.com/tags/standby/"/>
+    
+    <category term="monkey" scheme="https://knktc.com/tags/monkey/"/>
+    
+    <category term="patch" scheme="https://knktc.com/tags/patch/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Hexo博客使用GitHub Actions自动提交百度Sitemap</title>
+    <link href="https://knktc.com/2022/02/27/submit-baidu-sitemap-by-github-actions/"/>
+    <id>https://knktc.com/2022/02/27/submit-baidu-sitemap-by-github-actions/</id>
+    <published>2022-02-27T13:35:07.000Z</published>
+    <updated>2022-02-28T15:20:14.100Z</updated>
+    
+    <content type="html"><![CDATA[<p>当我看到我的博客可怜的PV时，我开始学习SEO，这才第一次登陆<a href="https://ziyuan.baidu.com/">https://ziyuan.baidu.com/</a>，然后发现我的博客在百度的索引量仅仅只有8个！</p><p>怪不得我的blog来源基本都是google和bing，合着百度完全没收录过我的文章~那就只好主动提交咯，但是查了半天，百度也没有google这种主动提交sitemap的接口，只有一个接口来接收url。只好边吐槽百度资源站的原始，边写点东西，让这个博客可以通过github actions来给百度提交sitemap。</p><span id="more"></span><h1 id="准备脚本"><a href="#准备脚本" class="headerlink" title="准备脚本"></a>准备脚本</h1><p>先使用python编写一个脚本，可以解析指定的sitemap.xml文件，提取其中的url，然后发送给百度：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python3</span></span><br><span class="line"></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">向百度提交sitemap的脚本</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">visit: https://knktc.com</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">@author:knktc</span></span><br><span class="line"><span class="string">@contact:me@knktc.com</span></span><br><span class="line"><span class="string">@create:2022-02-12 22:49</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> argparse</span><br><span class="line"><span class="keyword">from</span> urllib <span class="keyword">import</span> request</span><br><span class="line"><span class="keyword">from</span> urllib.parse <span class="keyword">import</span> urljoin</span><br><span class="line"><span class="keyword">import</span> xml.etree.ElementTree <span class="keyword">as</span> ET</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">chunker</span>(<span class="params">seq, size</span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot; iterate list by chunk &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">return</span> (seq[pos:pos + size] <span class="keyword">for</span> pos <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, <span class="built_in">len</span>(seq), size))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BaiduSubmitter</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, site: <span class="built_in">str</span>, token: <span class="built_in">str</span>, sitemap: <span class="built_in">str</span></span>):</span></span><br><span class="line">        self.submit_url = self.gen_submit_url(site, token)</span><br><span class="line">        self.sitemap_url = self.gen_sitemap_url(site, sitemap)</span><br><span class="line"></span><br><span class="line"><span class="meta">    @staticmethod</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">gen_submit_url</span>(<span class="params">site: <span class="built_in">str</span>, token: <span class="built_in">str</span></span>) -&gt; <span class="built_in">str</span>:</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot; generate url to submit to &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> <span class="string">f&#x27;http://data.zz.baidu.com/urls?site=<span class="subst">&#123;site&#125;</span>&amp;token=<span class="subst">&#123;token&#125;</span>&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="meta">    @staticmethod</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">gen_sitemap_url</span>(<span class="params">site: <span class="built_in">str</span>, sitemap: <span class="built_in">str</span></span>) -&gt; <span class="built_in">str</span>:</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot; generate url path to get sitemap &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> urljoin(site, sitemap)</span><br><span class="line"></span><br><span class="line"><span class="meta">    @staticmethod</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_links_from_sitemap</span>(<span class="params">sitemap_url</span>) -&gt; <span class="built_in">list</span>:</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot; download sitemap, parse and get urls &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">with</span> request.urlopen(sitemap_url) <span class="keyword">as</span> resp:</span><br><span class="line">            data = resp.read()</span><br><span class="line"></span><br><span class="line">        root = ET.fromstring(data)</span><br><span class="line">        <span class="keyword">return</span> [_.text <span class="keyword">for</span></span><br><span class="line">                _ <span class="keyword">in</span> root.findall(<span class="string">&#x27;./&#123;http://www.sitemaps.org/schemas/sitemap/0.9&#125;url/&#123;http://www.sitemaps.org/schemas/sitemap/0.9&#125;loc&#x27;</span>)]</span><br><span class="line"></span><br><span class="line"><span class="meta">    @staticmethod</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">submit</span>(<span class="params">submit_url: <span class="built_in">str</span>, links: <span class="built_in">list</span></span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot; submit to baidu &quot;&quot;&quot;</span></span><br><span class="line">        data = <span class="string">&#x27;\n&#x27;</span>.join(links).encode(<span class="string">&#x27;utf8&#x27;</span>)</span><br><span class="line">        req = request.Request(submit_url, data=data)</span><br><span class="line">        <span class="keyword">return</span> request.urlopen(req).read().decode()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">run</span>(<span class="params">self, chunk_size=<span class="number">20</span>, sleep_time=<span class="number">0.1</span></span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot; submit process &quot;&quot;&quot;</span></span><br><span class="line">        links = self.get_links_from_sitemap(self.sitemap_url)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&#x27;Get <span class="subst">&#123;<span class="built_in">len</span>(links)&#125;</span> links from sitemap: [<span class="subst">&#123;self.sitemap_url&#125;</span>]&#x27;</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> chunk <span class="keyword">in</span> chunker(links, chunk_size):</span><br><span class="line">            resp = self.submit(self.submit_url, chunk)</span><br><span class="line">            <span class="built_in">print</span>(resp)</span><br><span class="line">            <span class="keyword">if</span> sleep_time:</span><br><span class="line">                time.sleep(sleep_time)</span><br><span class="line"></span><br><span class="line">            time.sleep(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_args</span>():</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot; get cli args &quot;&quot;&quot;</span></span><br><span class="line">    parser = argparse.ArgumentParser(description=<span class="string">&#x27;Submit sitemap to Baidu&#x27;</span>)</span><br><span class="line">    parser.add_argument(<span class="string">&#x27;--site&#x27;</span>, <span class="string">&#x27;-s&#x27;</span>, <span class="built_in">type</span>=<span class="built_in">str</span>, dest=<span class="string">&#x27;site&#x27;</span>, required=<span class="literal">True</span>,</span><br><span class="line">                        <span class="built_in">help</span>=<span class="string">&#x27;your site, eg: https://knktc.com&#x27;</span>)</span><br><span class="line">    parser.add_argument(<span class="string">&#x27;--token&#x27;</span>, <span class="string">&#x27;-t&#x27;</span>, <span class="built_in">type</span>=<span class="built_in">str</span>, dest=<span class="string">&#x27;token&#x27;</span>, required=<span class="literal">True</span>,</span><br><span class="line">                        <span class="built_in">help</span>=<span class="string">&#x27;baidu ziyuan token, you may find your token in https://ziyuan.baidu.com/linksubmit&#x27;</span>)</span><br><span class="line">    parser.add_argument(<span class="string">&#x27;--sitemap&#x27;</span>, <span class="string">&#x27;-p&#x27;</span>, <span class="built_in">type</span>=<span class="built_in">str</span>, dest=<span class="string">&#x27;sitemap&#x27;</span>, default=<span class="string">&#x27;sitemap.xml&#x27;</span>,</span><br><span class="line">                        <span class="built_in">help</span>=<span class="string">&#x27;url path to get sitemap.xml file, default: sitemap.xml&#x27;</span>)</span><br><span class="line">    parser.add_argument(<span class="string">&#x27;--chunk&#x27;</span>, <span class="string">&#x27;-c&#x27;</span>, <span class="built_in">type</span>=<span class="built_in">int</span>, dest=<span class="string">&#x27;chunk_size&#x27;</span>, default=<span class="number">100</span>,</span><br><span class="line">                        <span class="built_in">help</span>=<span class="string">&#x27;how many urls should be submitted each time&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    args = parser.parse_args()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> args</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span>():</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    main process</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    args = get_args()</span><br><span class="line">    site = args.site</span><br><span class="line">    token = args.token</span><br><span class="line">    sitemap_path = args.sitemap</span><br><span class="line">    chunk_size = args.chunk_size</span><br><span class="line"></span><br><span class="line">    submitter = BaiduSubmitter(site, token, sitemap_path)</span><br><span class="line">    submitter.run(chunk_size=chunk_size)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    main()</span><br><span class="line"></span><br></pre></td></tr></table></figure><p>这个脚本编写的时候都使用了标准库的东西，不需要再安装额外的依赖了。</p><p>可以把这个脚本保存到本地，使用的时候，先在百度搜索资源平台获取到资源提交用的token(就是这个地方<a href="https://ziyuan.baidu.com/linksubmit">https://ziyuan.baidu.com/linksubmit</a>)，然后按照以下形式来进行请求就可以了：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 baidu_submit.py --site https://knktc.com --token AABBCCDD --sitemap sitemap.xml --chunk 100</span><br></pre></td></tr></table></figure><p>对命令中的几个参数简单说明下：</p><ul><li>–site(或是-s)：这个用来指定blog的网址；</li><li>–token(或是-t): 用来指定刚才获取到的token；</li><li>–sitemap(或是-p): 可以指定下sitemap的路径，比如我的sitemap在<a href="https://knktc.com/sitemap.xml">https://knktc.com/sitemap.xml</a>，那这里就可以写sitemap.xml就可以了；</li><li>–chunk(或是-c): 这个地方用来指定给百度发送请求时每批传多少个url过去，默认是100个。</li></ul><p>运行的结果类似下面的样子：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Get 235 links from sitemap: [https:&#x2F;&#x2F;knktc.com&#x2F;sitemap.xml]</span><br><span class="line">&#123;&quot;remain&quot;:2585,&quot;success&quot;:100&#125;</span><br><span class="line">&#123;&quot;remain&quot;:2485,&quot;success&quot;:100&#125;</span><br><span class="line">&#123;&quot;remain&quot;:2450,&quot;success&quot;:35&#125;</span><br></pre></td></tr></table></figure><p>为了方便分享和维护，我也把这个脚本放到了github gist上，地址是: <a href="https://gist.github.com/knktc/846950067e60a92612c1befbe4213a32">https://gist.github.com/knktc/846950067e60a92612c1befbe4213a32</a></p><p>后面在github上写workflow的时候直接拉取这个脚本就可以了。</p><h1 id="Github-Actions"><a href="#Github-Actions" class="headerlink" title="Github Actions"></a>Github Actions</h1><p>在hexo中添加github actions的配置文件有点小技巧，请先参考我之前写的一篇blog：<a href="https://knktc.com/2021/06/26/hexo-use-github-actions-to-submit-sitemap/">Hexo博客使用GitHub Actions来自动提交Sitemap</a> 。</p><p>这次可以添加一个baidu_sitemap.yml的配置文件：</p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># workflow to summit urls from sitemap to baidu</span></span><br><span class="line"></span><br><span class="line"><span class="attr">name:</span> <span class="string">Submit</span> <span class="string">baidu</span> <span class="string">Sitemap</span></span><br><span class="line"></span><br><span class="line"><span class="attr">on:</span></span><br><span class="line">  <span class="attr">schedule:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">cron:</span> <span class="string">&#x27;15 2 * * *&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="attr">jobs:</span></span><br><span class="line">  <span class="attr">submit:</span></span><br><span class="line">    <span class="attr">runs-on:</span> <span class="string">ubuntu-latest</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">steps:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">get</span> <span class="string">gist</span></span><br><span class="line">        <span class="attr">uses:</span> <span class="string">andymckay/get-gist-action@0.1</span></span><br><span class="line">        <span class="attr">with:</span></span><br><span class="line">          <span class="attr">gistURL:</span> <span class="string">https://gist.github.com/knktc/846950067e60a92612c1befbe4213a32</span></span><br><span class="line">      </span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">run</span> <span class="string">script</span></span><br><span class="line">        <span class="attr">env:</span></span><br><span class="line">          <span class="attr">BAIDU_TOKEN:</span> <span class="string">$&#123;&#123;</span> <span class="string">secrets.BAIDU_TOKEN</span> <span class="string">&#125;&#125;</span></span><br><span class="line">        <span class="attr">run:</span> <span class="string">python3</span> <span class="string">/tmp/baidu_submit.py</span> <span class="string">--site</span> <span class="string">https://knktc.com</span> <span class="string">--token</span> <span class="string">$BAIDU_TOKEN</span></span><br></pre></td></tr></table></figure><p>在这个任务配置中有几个点：</p><ul><li>我们指定了UTC时间每天的2:15(也就是北京时间的10:15)运行任务；</li><li>运行的脚本是直接从gist上拉取的，没有放到hexo的项目中；</li><li>运行脚本时用的百度token需要先在项目的settings中配置下secrets，参考下面的图片设置即可：</li></ul><p><a href="https://imgtu.com/i/bMgFKK"><img src="https://s4.ax1x.com/2022/02/28/bMgFKK.png" alt="bMgFKK.png"></a></p><p>然后就可以使用github workflow每天自动给百度提交url了。</p>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;当我看到我的博客可怜的PV时，我开始学习SEO，这才第一次登陆&lt;a href=&quot;https://ziyuan.baidu.com/&quot;&gt;https://ziyuan.baidu.com/&lt;/a&gt;，然后发现我的博客在百度的索引量仅仅只有8个！&lt;/p&gt;
+&lt;p&gt;怪不得我的blog来源基本都是google和bing，合着百度完全没收录过我的文章~那就只好主动提交咯，但是查了半天，百度也没有google这种主动提交sitemap的接口，只有一个接口来接收url。只好边吐槽百度资源站的原始，边写点东西，让这个博客可以通过github actions来给百度提交sitemap。&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="hexo" scheme="https://knktc.com/tags/hexo/"/>
+    
+    <category term="github" scheme="https://knktc.com/tags/github/"/>
+    
+    <category term="sitemap" scheme="https://knktc.com/tags/sitemap/"/>
+    
+    <category term="baidu" scheme="https://knktc.com/tags/baidu/"/>
+    
+    <category term="百度" scheme="https://knktc.com/tags/%E7%99%BE%E5%BA%A6/"/>
+    
+    <category term="seo" scheme="https://knktc.com/tags/seo/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>解决Nginx多节点上相同静态文件的etag不同的问题</title>
+    <link href="https://knktc.com/2022/02/26/nginx-etag-different-in-2-nodes/"/>
+    <id>https://knktc.com/2022/02/26/nginx-etag-different-in-2-nodes/</id>
+    <published>2022-02-25T16:06:05.000Z</published>
+    <updated>2022-02-25T16:30:40.090Z</updated>
+    
+    <content type="html"><![CDATA[<p>最近用nginx来提供一些静态文件作为配置。nginx从1.3.3版起就支持etag了，默认就可以生效，配置文件更改后可以通过etag的变化来让浏览器拉取新的配置，还是挺方便的。但是在测试环境部署后，却发现了问题：测试环境的nginx有两个节点，前面再放个负载均衡器，轮询访问到不同的服务器上，此时发现请求相同的静态文件时，返回的etag却不同，浏览器每次请求都会返回个200，而不是304，没有缓存的效果了。</p><span id="more"></span><p>到网上查了下nginx etag的算法，才发现，nginx是通过文件的大小和文件的修改时间来计算etag的，nginx的源码中<strong>ngx_http_set_etag</strong>函数中有这样的代码：</p><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">etag-&gt;value.len = ngx_sprintf(etag-&gt;value.data, <span class="string">&quot;\&quot;%xT-%xO\&quot;&quot;</span>,</span><br><span class="line">                                  r-&gt;headers_out.last_modified_time,</span><br><span class="line">                                  r-&gt;headers_out.content_length_n)</span><br><span class="line">                      - etag-&gt;value.data;</span><br><span class="line"></span><br><span class="line">    r-&gt;headers_out.etag = etag;</span><br></pre></td></tr></table></figure><p>完整的源码可参考：<a href="https://github.com/nginx/nginx/blob/1f01183b9e6658749934313fd72f7f16c1918b54/src/http/ngx_http_core_module.c#L1673">https://github.com/nginx/nginx/blob/1f01183b9e6658749934313fd72f7f16c1918b54/src/http/ngx_http_core_module.c#L1673</a></p><p>这样看来，两个nginx返回的etag不同，可能就是因为两边文件的修改时间不同。</p><p>变更文件的修改时间还是挺容易的，可以直接用touch命令。在touch命令的man文档中描述了-t参数的用法：</p><blockquote><p>-t STAMP<br>              use [[CC]YY]MMDDhhmm[.ss] instead of current time</p></blockquote><p>那么在两个节点上都用以下的命令就可以将文件的修改时间都设置为2022年2月25日13:13分了：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">touch -t 202202251313 myconf.json</span><br></pre></td></tr></table></figure><p>如果要用python写代码的话，可以用os.utime来设置文件的修改时间：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line">os.utime(<span class="string">&#x27;myconf.json&#x27;</span>, (<span class="number">1645806368</span>, <span class="number">1645806368</span>))</span><br></pre></td></tr></table></figure><p>此时再进行下测试，两个节点上nginx返回的etag就一致了，第二次请求的时候就可以看到响应是304而不是200了。</p><p>参考文档：</p><ul><li><a href="https://serverfault.com/questions/690341/algorithm-behind-nginx-etag-generation">serverfault上对nginx etag算法的讨论</a></li></ul>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;最近用nginx来提供一些静态文件作为配置。nginx从1.3.3版起就支持etag了，默认就可以生效，配置文件更改后可以通过etag的变化来让浏览器拉取新的配置，还是挺方便的。但是在测试环境部署后，却发现了问题：测试环境的nginx有两个节点，前面再放个负载均衡器，轮询访问到不同的服务器上，此时发现请求相同的静态文件时，返回的etag却不同，浏览器每次请求都会返回个200，而不是304，没有缓存的效果了。&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="nginx" scheme="https://knktc.com/tags/nginx/"/>
+    
+    <category term="etag" scheme="https://knktc.com/tags/etag/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>在Confluence中使用Jira的图表</title>
+    <link href="https://knktc.com/2022/02/17/add-jira-charts-to-confluence-macro/"/>
+    <id>https://knktc.com/2022/02/17/add-jira-charts-to-confluence-macro/</id>
+    <published>2022-02-17T14:56:53.000Z</published>
+    <updated>2022-02-17T15:13:38.123Z</updated>
+    
+    <content type="html"><![CDATA[<p>最近在confluence中搞周报，希望能把Jira中的燃尽图在confluence页面中展示出来。但confluence自带的宏中却没有相关的图表可以用，只好查了下，发现其实官方支持把jira面板中的小工具作为confluence的宏来使用。</p><span id="more"></span><p>因为jira面板中可以添加一个燃尽图的图表，所以可以尝试把这个图表也让confluence给用上。</p><p>首先进入jira的首页，如果有一个面板的话，可以在面板的右上角看到“添加小程序”按钮(也可能是别的字样，总之官方汉化是比较烂的~ )：</p><p><a href="https://imgtu.com/i/HIqk0P"><img src="https://s4.ax1x.com/2022/02/17/HIqk0P.png" alt="HIqk0P.png"></a></p><p>点击后将会弹出“添加小程序”弹窗，此时可以选择需要的小程序，然后点击“显示XML链接”，选择复制下这个xml的URL：</p><p><a href="https://imgtu.com/i/HIqATf"><img src="https://s4.ax1x.com/2022/02/17/HIqATf.md.png" alt="HIqATf.md.png"></a></p><p>此时用管理员账号进入confluence的站点管理界面，在“外部小工具”页面的“小工具规范”标签页下，贴入刚才获取的URL地址，然后点击“添加”按钮，就可以添加一个小工具了(这里的翻译又变成小工具了~)：</p><p><a href="https://imgtu.com/i/HIqZtS"><img src="https://s4.ax1x.com/2022/02/17/HIqZtS.md.png" alt="HIqZtS.md.png"></a></p><p>然后在confluence的页面中添加一个宏，此时在宏选择器中的扩展内容部分就可以看到这些添加的小程序了，可以看到现在可以添加和jira面板一样的小程序了：</p><p><a href="https://imgtu.com/i/HIqVk8"><img src="https://s4.ax1x.com/2022/02/17/HIqVk8.md.png" alt="HIqVk8.md.png"></a></p><p>注意，这些小程序都是基于iframe来实现的，所以使用的时候其实要求用户在confluence和jira两边的可以通过oauth来打通的。</p><p>参考：</p><ul><li><a href="https://confluence.atlassian.com/doc/registering-external-gadgets-204050482.html">Atlassian官方的文档</a></li></ul>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;最近在confluence中搞周报，希望能把Jira中的燃尽图在confluence页面中展示出来。但confluence自带的宏中却没有相关的图表可以用，只好查了下，发现其实官方支持把jira面板中的小工具作为confluence的宏来使用。&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="confluence" scheme="https://knktc.com/tags/confluence/"/>
+    
+    <category term="jira" scheme="https://knktc.com/tags/jira/"/>
+    
+    <category term="wiki" scheme="https://knktc.com/tags/wiki/"/>
+    
+    <category term="macro" scheme="https://knktc.com/tags/macro/"/>
+    
+    <category term="宏" scheme="https://knktc.com/tags/%E5%AE%8F/"/>
+    
+    <category term="图表" scheme="https://knktc.com/tags/%E5%9B%BE%E8%A1%A8/"/>
+    
+    <category term="gadgets" scheme="https://knktc.com/tags/gadgets/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>缩短poetry虚拟环境的命令行提示符前缀</title>
+    <link href="https://knktc.com/2022/02/09/shorten-prompt-ps1-of-poetry-env/"/>
+    <id>https://knktc.com/2022/02/09/shorten-prompt-ps1-of-poetry-env/</id>
+    <published>2022-02-09T14:52:01.000Z</published>
+    <updated>2022-02-09T15:13:52.053Z</updated>
+    
+    <content type="html"><![CDATA[<p>最近在尝试使用poetry来进行项目的包管理，发现poetry创建的虚拟环境中，命令行提示符特别的长。</p><p>比如我创建了一个名为”test-poetry”的项目，那么使用 <strong>poetry shell</strong> 命令激活虚拟环境后，却发现整个命令行提示符如此之长：</p><blockquote><p>(test-poetry-FvrREBVp-py3.6) knktc@knktc-rmbp test_poetry % </p></blockquote><p>因为poetry自动为虚拟环境编了个码，同时还加上了python版本号，都放到命令行提示符里作为前缀就很长了。对于小屏幕的用户来说(比如我这13寸笔记本的用户)就很不友好了。</p><p>还是想想怎么缩短下这个括号中的环境名称吧。</p><span id="more"></span><p>因为这些虚拟环境都是用bin/activate命令来启动的，所以可以尝试定位下activate命令到底在哪里。</p><p>可以在项目目录下(确认当前目录下有pyproject.toml文件即可)，执行以下的命令：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">poetry env info -p</span><br></pre></td></tr></table></figure><p>此时会打印出来环境的path信息，比如：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(test-poetry-FvrREBVp-py3.6) knktc@knktc-rmbp test_poetry % poetry env info -p</span><br><span class="line">/Users/knktc/Library/Caches/pypoetry/virtualenvs/test-poetry-FvrREBVp-py3.6</span><br></pre></td></tr></table></figure><p>那么我们就可以直接到这个目录下去找bin/activate文件来修改了：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /Users/knktc/Library/Caches/pypoetry/virtualenvs/test-poetry-FvrREBVp-py3.6/bin/activate</span><br></pre></td></tr></table></figure><p>在代码的第68行左右可以看到设置PS1的相关代码，这里其实是用了环境的目录名来做为了命令行提示符的前缀：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> [ -z <span class="string">&quot;<span class="variable">$&#123;VIRTUAL_ENV_DISABLE_PROMPT-&#125;</span>&quot;</span> ] ; <span class="keyword">then</span></span><br><span class="line">    _OLD_VIRTUAL_PS1=<span class="string">&quot;<span class="variable">$&#123;PS1-&#125;</span>&quot;</span></span><br><span class="line">    <span class="keyword">if</span> [ <span class="string">&quot;x&quot;</span> != x ] ; <span class="keyword">then</span></span><br><span class="line">        PS1=<span class="string">&quot;() <span class="variable">$&#123;PS1-&#125;</span>&quot;</span></span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        PS1=<span class="string">&quot;(`basename \&quot;<span class="variable">$VIRTUAL_ENV</span>\&quot;`) <span class="variable">$&#123;PS1-&#125;</span>&quot;</span>    <span class="comment"># &lt;---就是这行</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line">    <span class="built_in">export</span> PS1</span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure><p>那么我们可以修改下这句，直接改成项目的名称就好了：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> [ -z <span class="string">&quot;<span class="variable">$&#123;VIRTUAL_ENV_DISABLE_PROMPT-&#125;</span>&quot;</span> ] ; <span class="keyword">then</span></span><br><span class="line">    _OLD_VIRTUAL_PS1=<span class="string">&quot;<span class="variable">$&#123;PS1-&#125;</span>&quot;</span></span><br><span class="line">    <span class="keyword">if</span> [ <span class="string">&quot;x&quot;</span> != x ] ; <span class="keyword">then</span></span><br><span class="line">        PS1=<span class="string">&quot;() <span class="variable">$&#123;PS1-&#125;</span>&quot;</span></span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        PS1=<span class="string">&quot;(test-poetry) <span class="variable">$&#123;PS1-&#125;</span>&quot;</span>    <span class="comment"># &lt;---- 直接写死为项目名称了</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line">    <span class="built_in">export</span> PS1</span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure><p>然后保存退出，重新激活下环境：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">knktc@knktc-rmbp test_poetry % poetry shell</span><br><span class="line">Spawning shell within /Users/knktc/Library/Caches/pypoetry/virtualenvs/test-poetry-FvrREBVp-py3.6</span><br><span class="line">Restored session: 2022年 2月 9日 星期三 23时12分53秒 CST</span><br><span class="line">knktc@knktc-rmbp test_poetry % . /Users/knktc/Library/Caches/pypoetry/virtualenvs/test-poetry-FvrREBVp-py3.6/bin/activate</span><br><span class="line">(test-poetry) knktc@knktc-rmbp test_poetry % </span><br></pre></td></tr></table></figure><p>这下就好了~</p>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;最近在尝试使用poetry来进行项目的包管理，发现poetry创建的虚拟环境中，命令行提示符特别的长。&lt;/p&gt;
+&lt;p&gt;比如我创建了一个名为”test-poetry”的项目，那么使用 &lt;strong&gt;poetry shell&lt;/strong&gt; 命令激活虚拟环境后，却发现整个命令行提示符如此之长：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;(test-poetry-FvrREBVp-py3.6) knktc@knktc-rmbp test_poetry % &lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;因为poetry自动为虚拟环境编了个码，同时还加上了python版本号，都放到命令行提示符里作为前缀就很长了。对于小屏幕的用户来说(比如我这13寸笔记本的用户)就很不友好了。&lt;/p&gt;
+&lt;p&gt;还是想想怎么缩短下这个括号中的环境名称吧。&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="poetry" scheme="https://knktc.com/tags/poetry/"/>
+    
+    <category term="bash" scheme="https://knktc.com/tags/bash/"/>
+    
+    <category term="prompt" scheme="https://knktc.com/tags/prompt/"/>
+    
+    <category term="修改" scheme="https://knktc.com/tags/%E4%BF%AE%E6%94%B9/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>用Docker安装Headless Chrome</title>
+    <link href="https://knktc.com/2022/02/05/install-headless-chrome-in-docker/"/>
+    <id>https://knktc.com/2022/02/05/install-headless-chrome-in-docker/</id>
+    <published>2022-02-05T13:35:59.000Z</published>
+    <updated>2022-02-05T14:14:31.392Z</updated>
+    
+    <content type="html"><![CDATA[<p>最近用Headless Chrome浏览器配合Selenium搞了下前端项目的测试，效果还可以，在Jenkins部署代码后引入测试，起码保障了前端部署后的可用性。这篇文档放上在Ubuntu 20.04环境下安装无头Chrome浏览器的Dockerfile，便于以后查询。</p><span id="more"></span><p>Dockerfile内容如下：</p><figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> ubuntu:<span class="number">20.04</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">ARG</span> APT_MIRROR_HOST=mirrors.tuna.tsinghua.edu.cn</span><br><span class="line"><span class="keyword">ENV</span> DEBIAN_FRONTEND noninteractive</span><br><span class="line"> </span><br><span class="line"><span class="comment"># modify apt source list</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> sed -i <span class="string">&quot;s/archive.ubuntu.com/<span class="variable">$&#123;APT_MIRROR_HOST&#125;</span>/g&quot;</span> /etc/apt/sources.list \</span></span><br><span class="line"><span class="bash">    &amp;&amp; sed -i <span class="string">&quot;s/security.ubuntu.com/<span class="variable">$&#123;APT_MIRROR_HOST&#125;</span>/g&quot;</span> /etc/apt/sources.list</span></span><br><span class="line"> </span><br><span class="line"><span class="comment"># update source</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> apt update</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># install base tools</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> apt install -y wget fonts-wqy-microhei</span></span><br><span class="line"> </span><br><span class="line"><span class="comment"># download and install latest chrome</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> dpkg -i google-chrome-stable_current_amd64.deb;<span class="built_in">exit</span> 0</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> apt install -f -y</span></span><br><span class="line"> </span><br><span class="line"><span class="comment"># config timezone</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime</span></span><br></pre></td></tr></table></figure><p>解释下其中的一些点：</p><ul><li>apt镜像换成了清华的源，安装依赖能快点；</li><li>设定DEBIAN_FRONTEND为noninteractive，因为安装过程中会涉及到安装tzdata这个包，这个包会启动交互询问，最终导致docker build的时候就卡住了，所以需要提前设定下这个环境变量。但这样做的话，最后一步也就需要加了个设置时区的操作，手动来设置下时区；</li><li>安装了下文泉驿的字体，虽然可能用不到，但可以解决导出pdf的时候中文无法显示的问题；</li><li>安装chrome的时候先用 <strong>dpkg -i</strong> 命令安装了一次，肯定会失败，因为缺依赖，此时要用’exit 0’来结尾，防止build命令退出；</li><li>用apt install -f -y尝试修复依赖，取巧，是可以安装成功的~</li></ul>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;最近用Headless Chrome浏览器配合Selenium搞了下前端项目的测试，效果还可以，在Jenkins部署代码后引入测试，起码保障了前端部署后的可用性。这篇文档放上在Ubuntu 20.04环境下安装无头Chrome浏览器的Dockerfile，便于以后查询。&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="chrome" scheme="https://knktc.com/tags/chrome/"/>
+    
+    <category term="docker" scheme="https://knktc.com/tags/docker/"/>
+    
+    <category term="ubuntu" scheme="https://knktc.com/tags/ubuntu/"/>
+    
+    <category term="headless" scheme="https://knktc.com/tags/headless/"/>
+    
+  </entry>
+  
+</feed>
