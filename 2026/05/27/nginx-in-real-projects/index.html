@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"knktc.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="结合几个真实项目场景，记录 Nginx 在代理外网服务、统一认证和简化单点登录上的一些实用做法。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="我在实际项目中是怎么用 Nginx 的">
+<meta property="og:url" content="https://knktc.com/2026/05/27/nginx-in-real-projects/">
+<meta property="og:site_name" content="knktc的杂乱空间">
+<meta property="og:description" content="结合几个真实项目场景，记录 Nginx 在代理外网服务、统一认证和简化单点登录上的一些实用做法。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-05-27T05:25:25.000Z">
+<meta property="article:modified_time" content="2026-05-27T05:33:02.005Z">
+<meta property="article:author" content="knktc">
+<meta property="article:tag" content="运维">
+<meta property="article:tag" content="nginx">
+<meta property="article:tag" content="认证">
+<meta property="article:tag" content="代理">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://knktc.com/2026/05/27/nginx-in-real-projects/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+<link rel="alternate" hreflang="zh-CN" href="&#x2F;2026&#x2F;05&#x2F;27&#x2F;nginx-in-real-projects&#x2F;">
+<link rel="alternate" hreflang="en" href="&#x2F;en&#x2F;2026&#x2F;05&#x2F;27&#x2F;nginx-in-real-projects&#x2F;">
+<link rel="alternate" hreflang="x-default" href="&#x2F;2026&#x2F;05&#x2F;27&#x2F;nginx-in-real-projects&#x2F;">
+
+  <title>我在实际项目中是怎么用 Nginx 的 | knktc的杂乱空间</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a23b2d1c6159a3a6c798edbc7f9211f9";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="knktc的杂乱空间" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">knktc的杂乱空间</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">python,cloud,linux...</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://knktc.com/2026/05/27/nginx-in-real-projects/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/sonic_avatar.png">
+      <meta itemprop="name" content="knktc">
+      <meta itemprop="description" content="关注linux,云计算,python，杂乱之地...">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="knktc的杂乱空间">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          我在实际项目中是怎么用 Nginx 的
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2026-05-27 13:25:25 / 修改时间：13:33:02" itemprop="dateCreated datePublished" datetime="2026-05-27T13:25:25+08:00">2026-05-27</time>
+            </span>
+
+          
+            <div class="post-description">结合几个真实项目场景，记录 Nginx 在代理外网服务、统一认证和简化单点登录上的一些实用做法。</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>这几年做项目时，Nginx 基本一直都在。很多时候它不只是一个“转发请求的入口”，而是前端、后端、内外网边界之间那个最容易下手、也最容易快速见效的一层。</p>
+<p>虽然这两年越来越多的场景开始用云原生方案，比如 Envoy Proxy 之类的组件来替代部分 Nginx 的工作，但回头看下来，很多问题最早还真就是靠 Nginx 先顶上、先跑通的。</p>
+<p>所以想趁着还有印象，整理一下这些年在项目里实际用过的几种 Nginx 用法。它们不一定都算“标准答案”，但在真实环境里，确实都解决过问题。</p>
+<span id="more"></span>
+
+<h2 id="1-代理-SMTP-服务，让内网服务也能发邮件"><a href="#1-代理-SMTP-服务，让内网服务也能发邮件" class="headerlink" title="1. 代理 SMTP 服务，让内网服务也能发邮件"></a>1. 代理 SMTP 服务，让内网服务也能发邮件</h2><p>这个场景在客户环境里挺常见的。</p>
+<p>有些系统部署在内网，业务服务本身不能直接访问外部网络，但偏偏又需要发邮件。长期来看，当然还是应该让对应节点具备访问 SMTP 服务器的能力；但如果只是临时救急，或者短期内没法推动网络策略调整，也可以让 Nginx 先做一层 TCP 代理。</p>
+<p>配置大概像这样：</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">load_module</span> /usr/lib/nginx/modules/ngx_stream_module.so;</span><br><span class="line"></span><br><span class="line"><span class="section">stream</span> &#123;</span><br><span class="line">    <span class="section">server</span> &#123;</span><br><span class="line">        <span class="attribute">listen</span> <span class="number">1587</span>;</span><br><span class="line">        <span class="attribute">proxy_pass</span> mail.example.com:<span class="number">587</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样一来，内网服务就不需要直接连外部 SMTP 服务器了，只要把 <code>Nginx 所在节点 IP + 1587</code> 当成 SMTP 地址使用即可。</p>
+<p>这个方案的核心点在于：这里走的不是 HTTP 代理，而是 <code>stream</code> 模块提供的四层转发能力。</p>
+<p>如果你用的是 Ubuntu 里通过 <code>apt</code> 安装的 Nginx，通常 <code>ngx_stream_module</code> 都已经编译进去了；如果是自己编译 Nginx，就要确认编译参数里带了 <code>--with-stream</code>。</p>
+<h2 id="2-代理企业微信、钉钉、飞书这类外部通知接口"><a href="#2-代理企业微信、钉钉、飞书这类外部通知接口" class="headerlink" title="2. 代理企业微信、钉钉、飞书这类外部通知接口"></a>2. 代理企业微信、钉钉、飞书这类外部通知接口</h2><p>和发邮件是同一类问题。</p>
+<p>很多部署在内网的服务，不只是要发邮件，还要给企业微信、钉钉、飞书这类企业通信工具发通知消息。服务本身出不了网时，也可以把这些请求统一转到一台可访问外网的 Nginx 节点上。</p>
+<p>以企业微信机器人为例，它的 Webhook 地址一般长这样：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=3e8b437b-419f-46b2-9495-391cf17a6719</span><br></pre></td></tr></table></figure>
+
+<p>如果内网服务不能直接访问外网，可以在 Nginx 上做一个反向代理：</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">    <span class="attribute">listen</span> <span class="number">80</span>;</span><br><span class="line">    <span class="attribute">server_name</span> wechat-proxy;</span><br><span class="line"></span><br><span class="line">    <span class="attribute">location</span> /cgi-bin/webhook &#123;</span><br><span class="line">        <span class="attribute">proxy_pass</span> https://qyapi.weixin.qq.com;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样，内网服务发送消息时，就可以把原始地址替换成类似下面这个内部地址：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://wechat-proxy/cgi-bin/webhook/send?key=3e8b437b-419f-46b2-9495-391cf17a6719</span><br></pre></td></tr></table></figure>
+
+<p>本质上，这还是“把不能出网的服务请求，借道一台能出网的节点发出去”。</p>
+<p>这种做法的好处是落地快，应用侧改动也不大；缺点也很明显，它更像一种工程上的折中方案。如果后面这类依赖越来越多，还是应该把统一出口、代理策略或者网络规划做得更正式一些。</p>
+<h2 id="3-用-auth-request-给静态资源和内部服务补一层认证"><a href="#3-用-auth-request-给静态资源和内部服务补一层认证" class="headerlink" title="3. 用 auth_request 给静态资源和内部服务补一层认证"></a>3. 用 <code>auth_request</code> 给静态资源和内部服务补一层认证</h2><p>还有一种情况也挺常见：有些内容本身很简单，比如 API 文档、模板文件、安装包，甚至是某个前端直接托管出来的小工具页。开发时大家往往觉得“这就是个静态文件”，于是直接通过 Nginx 暴露了。</p>
+<p>但到了客户环境里，这类路径经常会被安全扫描盯上。哪怕文件本身不敏感，只要是“未认证即可访问”，往往就容易被判定为风险项。</p>
+<p>这时候，<code>auth_request</code> 就很实用了。它可以让 Nginx 在真正返回资源之前，先去请求一个认证接口，认证通过后再继续返回内容。</p>
+<p>例如：</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">location</span> /docs &#123;</span><br><span class="line">    <span class="attribute">auth_request</span> /auth;</span><br><span class="line">    <span class="attribute">proxy_pass</span> http://frontend/docs;</span><br><span class="line">    <span class="attribute">proxy_set_header</span> Host $host;</span><br><span class="line">    <span class="attribute">error_page</span> <span class="number">401</span> = @<span class="literal">error</span>401;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="attribute">location</span> = /auth &#123;</span><br><span class="line">    <span class="attribute">proxy_pass</span> http://backend/auth;</span><br><span class="line">    <span class="attribute">proxy_pass_request_body</span> <span class="literal">off</span>;</span><br><span class="line">    <span class="attribute">proxy_set_header</span> Content-Length <span class="string">&quot;&quot;</span>;</span><br><span class="line">    <span class="attribute">proxy_set_header</span> X-Original-URI $request_uri;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="attribute">location</span> @<span class="literal">error</span>401 &#123;</span><br><span class="line">    <span class="attribute">return</span> <span class="number">302</span> /login;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个思路的好处是，后端只需要提供一个专门的鉴权接口，Nginx 就可以把认证逻辑挂到多个入口前面。</p>
+<p>除了静态资源，这个方案也很适合那些“不想自己重复造认证逻辑”的内部服务。服务本身只管功能，对外访问统一经过 Nginx，由 Nginx 先做认证，再把请求放进去。</p>
+<p>另外，认证接口还可以顺便返回一些认证后的上下文信息，再由 Nginx 透传给后端使用。比如认证接口返回了用户名：</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">auth_request_set</span> $username $upstream_http_x_username;</span><br><span class="line"><span class="attribute">proxy_set_header</span> X-Username $username;</span><br></pre></td></tr></table></figure>
+
+<p>这样后面的服务就可以直接读取 <code>X-Username</code>，不需要自己再重复解析一遍登录态。</p>
+<h2 id="4-用-add-header-Set-Cookie-做一层够用的单点登录"><a href="#4-用-add-header-Set-Cookie-做一层够用的单点登录" class="headerlink" title="4. 用 add_header Set-Cookie 做一层够用的单点登录"></a>4. 用 <code>add_header Set-Cookie</code> 做一层够用的单点登录</h2><p>这些年接过不少客户环境里的单点登录需求，最大的感受其实不是“标准方案很多”，而是“真正完全按标准落地的并不多”。</p>
+<p>很多项目一到集成阶段，认证链路里总会被加上各种定制要求。理论上可以讲 OAuth2、OIDC、SAML，但真到现场，往往还是得围着客户现有流程做适配。</p>
+<p>在这种背景下，我们有时会采用一个比较直接的办法：让系统后端先为指定用户创建好登录态，再通过 Nginx 返回 <code>Set-Cookie</code>，把 session 强行种到当前域下，达到“点一个链接就登录”的效果。</p>
+<p>假设系统用 <code>session_key</code> 这个 Cookie 保存登录态，那么可以在 Nginx 里加一个类似的入口：</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">location</span> <span class="regexp">~ ^/set-session/(?&lt;session_key&gt;\w+)$</span> &#123;</span><br><span class="line">    <span class="attribute">add_header</span> Set-Cookie <span class="string">&quot;session_key=$session_key; HttpOnly; Max-Age=21600; Path=/; SameSite=Lax&quot;</span>;</span><br><span class="line">    <span class="attribute">return</span> <span class="number">302</span> /;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>配合方式也很直接：</p>
+<ol>
+<li>业务后端提供一个管理员接口，用来为指定用户创建 session。</li>
+<li>这个接口返回生成好的 <code>session_key</code>。</li>
+<li>调用方把 <code>session_key</code> 拼到 <code>/set-session/&lt;session_key&gt;</code> 这个地址里。</li>
+<li>用户浏览器访问该地址后，Nginx 回写 Cookie，并跳转到首页。</li>
+</ol>
+<p>例如系统地址是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://example.com</span><br></pre></td></tr></table></figure>
+
+<p>如果生成的 <code>session_key</code> 是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">d79769307e7e443ca7abfd780e89217e</span><br></pre></td></tr></table></figure>
+
+<p>那么最终访问的地址就会是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://example.com/set-session/d79769307e7e443ca7abfd780e89217e</span><br></pre></td></tr></table></figure>
+
+<p>浏览器访问后，就会在当前域下写入对应的 <code>session_key</code>，随后跳回首页，从用户视角看起来就像一次“无感登录”。</p>
+<p>这套方式当然谈不上通用，也不一定适合所有系统，但在一些强定制、强集成、时间又比较紧的项目里，确实很好用。它最大的价值不在于优雅，而在于实现简单、改动集中，而且足够可控。</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>回头看这些例子，会发现 Nginx 在项目里真正有价值的地方，往往不是“它能不能把请求转过去”，而是它能不能在系统边界上帮你快速补上一层能力。</p>
+<p>有时候是补网络出口，有时候是补认证，有时候是补一段不那么标准、但又必须落地的集成逻辑。</p>
+<p>所以我现在对 Nginx 的感觉一直挺朴素的：它未必是每个问题的最终解法，但在很多实际项目里，它确实是那个最先把事情顶起来的工具。</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>如果我的文字帮到了您，那么可不可以请我喝罐可乐？</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechat.png" alt="knktc 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="knktc 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-6959365962327411"
+     data-ad-slot="4588493450"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>knktc
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://knktc.com/2026/05/27/nginx-in-real-projects/" title="我在实际项目中是怎么用 Nginx 的">https://knktc.com/2026/05/27/nginx-in-real-projects/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E8%BF%90%E7%BB%B4/" rel="tag"># 运维</a>
+              <a href="/tags/nginx/" rel="tag"># nginx</a>
+              <a href="/tags/%E8%AE%A4%E8%AF%81/" rel="tag"># 认证</a>
+              <a href="/tags/%E4%BB%A3%E7%90%86/" rel="tag"># 代理</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2026/05/22/register-us-apple-id/" rel="prev" title="如何注册一个可用的美区 Apple 账号">
+      <i class="fa fa-chevron-left"></i> 如何注册一个可用的美区 Apple 账号
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E4%BB%A3%E7%90%86-SMTP-%E6%9C%8D%E5%8A%A1%EF%BC%8C%E8%AE%A9%E5%86%85%E7%BD%91%E6%9C%8D%E5%8A%A1%E4%B9%9F%E8%83%BD%E5%8F%91%E9%82%AE%E4%BB%B6"><span class="nav-number">1.</span> <span class="nav-text">1. 代理 SMTP 服务，让内网服务也能发邮件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E4%BB%A3%E7%90%86%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A1%E3%80%81%E9%92%89%E9%92%89%E3%80%81%E9%A3%9E%E4%B9%A6%E8%BF%99%E7%B1%BB%E5%A4%96%E9%83%A8%E9%80%9A%E7%9F%A5%E6%8E%A5%E5%8F%A3"><span class="nav-number">2.</span> <span class="nav-text">2. 代理企业微信、钉钉、飞书这类外部通知接口</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E7%94%A8-auth-request-%E7%BB%99%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90%E5%92%8C%E5%86%85%E9%83%A8%E6%9C%8D%E5%8A%A1%E8%A1%A5%E4%B8%80%E5%B1%82%E8%AE%A4%E8%AF%81"><span class="nav-number">3.</span> <span class="nav-text">3. 用 auth_request 给静态资源和内部服务补一层认证</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E7%94%A8-add-header-Set-Cookie-%E5%81%9A%E4%B8%80%E5%B1%82%E5%A4%9F%E7%94%A8%E7%9A%84%E5%8D%95%E7%82%B9%E7%99%BB%E5%BD%95"><span class="nav-number">4.</span> <span class="nav-text">4. 用 add_header Set-Cookie 做一层够用的单点登录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E5%90%8E"><span class="nav-number">5.</span> <span class="nav-text">最后</span></a></li></ol></div>
+          <div class="post-sidebar-wechat motion-element">
+            <img
+              class="post-sidebar-wechat-image"
+              src="/images/wechat-mp-qrcode.png"
+              alt="微信扫码关注我的公众号"
+              loading="lazy"
+            >
+            <p class="post-sidebar-wechat-name">中年工程师苟活指南</p>
+            <p class="post-sidebar-wechat-desc">微信扫码关注，获取更多新文章和实战折腾记录。</p>
+          </div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="knktc"
+      src="/images/sonic_avatar.png">
+  <p class="site-author-name" itemprop="name">knktc</p>
+  <div class="site-description" itemprop="description">关注linux,云计算,python，杂乱之地...</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">75</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">231</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/knktc" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;knktc" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/knktc" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;knktc" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+<div class="wechat-mp-widget motion-element">
+  <img
+    class="wechat-mp-widget-image"
+    src="/images/wechat-mp-qrcode.png"
+    alt="微信扫码关注我的公众号"
+    loading="lazy"
+  >
+  <p class="wechat-mp-widget-name">中年工程师苟活指南</p>
+  <p class="wechat-mp-widget-desc">微信扫码关注，第一时间看到新文章和折腾记录。</p>
+</div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">鄂ICP备2021019593号-1 </a>
+      <img src="/images/beian.png" style="display: inline-block;"><a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=42018502005554" rel="noopener" target="_blank">鄂公网安备 42018502005554号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">knktc</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
