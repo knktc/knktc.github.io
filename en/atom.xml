@@ -6,7 +6,7 @@
   <link href="https://knktc.com/en/atom.xml" rel="self"/>
   
   <link href="https://knktc.com/en/"/>
-  <updated>2026-05-27T05:33:02.053Z</updated>
+  <updated>2026-06-01T15:03:18.148Z</updated>
   <id>https://knktc.com/en/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Upgrading a PSP 3000 to 6.61 and Installing Permanent ARK-4 CFW</title>
+    <link href="https://knktc.com/en/2026/06/01/psp-3000-upgrade-to-6-61-and-install-ark-4/"/>
+    <id>https://knktc.com/en/2026/06/01/psp-3000-upgrade-to-6-61-and-install-ark-4/</id>
+    <published>2026-06-01T14:51:27.000Z</published>
+    <updated>2026-06-01T15:03:18.148Z</updated>
+    
+    <content type="html"><![CDATA[<p>Some time ago, my son dug out an old PSP from storage.</p><p>It was my old PSP 3000, the kind of device that still carries a lot of memories from years ago. The console itself still worked, but the battery had already swollen, and the old third-party Memory Stick was basically unusable. After replacing the battery, I bought a Memory Stick adapter, put a TF card in it, and finally got the handheld powered on again.</p><p>Getting it to boot was only the first step. The bigger problem was that both the system software and the old modding setup were badly outdated.</p><p>Back in the day, this PSP was running <code>PRO CFW</code>. At the time, that was not nearly as convenient as the options available now. Every full reboot meant launching the custom firmware again. The old card was gone, so the old files were gone too. I ended up checking what people were using for PSP modding these days, and to my surprise the scene is still very much alive.</p><p>The more mature path now is to first upgrade the system to the final official firmware version, <code>6.61</code>, and then install <code>ARK-4</code>. That is exactly what I did this time. The whole process turned out to be much more straightforward than I expected, so I thought it was worth writing down.</p><span id="more"></span><h2 id="Check-the-current-firmware-first"><a href="#Check-the-current-firmware-first" class="headerlink" title="Check the current firmware first"></a>Check the current firmware first</h2><p>The first thing to do is open the system information screen and see what firmware the console is currently running.</p><p>Mine was still on <code>6.35</code>:</p><p><img src="IMG_3341.webp" alt="Current PSP firmware version"></p><p>If your PSP is also on an older firmware, it is better not to jump straight into custom firmware first. Upgrade to official <code>6.61</code> before doing anything else. That was Sony’s last official PSP firmware release, and most current tools and guides assume you are on <code>6.61</code>.</p><h2 id="Upgrade-to-official-firmware-6-61"><a href="#Upgrade-to-official-firmware-6-61" class="headerlink" title="Upgrade to official firmware 6.61"></a>Upgrade to official firmware 6.61</h2><p>The official firmware files are still available online. I used this archive site:</p><p><a href="https://darthsternie.net/psp-firmwares/">https://darthsternie.net/psp-firmwares/</a></p><p>Just find the download link for <code>6.61</code>. If you can, it is a good idea to verify the file hash after downloading it.</p><p>Before copying any files, I recommend inserting the TF card into the Memory Stick adapter, putting it into the PSP, and formatting it there first. That way the filesystem and folder structure start out clean, which helps avoid odd issues later.</p><p>The downloaded firmware file is usually named <code>661.PBP</code>. After connecting the card to your computer, create this folder on the card:</p><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/PSP/GAME/UPDATE</span><br></pre></td></tr></table></figure><p>Then rename <code>661.PBP</code> to <code>EBOOT.PBP</code> and place it inside that folder.</p><p>After putting the card back into the PSP, you should see the updater under <code>Game</code> and then <code>Memory Stick</code>:</p><p><img src="IMG_3342.webp" alt="PSP 6.61 updater shown under Memory Stick"></p><p>Run it and follow the on-screen prompts. The process only takes a few minutes. Once it finishes, the system information screen should show <code>6.61</code>:</p><p><img src="IMG_3330.webp" alt="System information after upgrading to 6.61"></p><p>One important warning here: make sure the battery is sufficiently charged, and ideally keep the PSP plugged in during the update. You really do not want power loss in the middle of a firmware flash.</p><h2 id="Install-ARK-4-next"><a href="#Install-ARK-4-next" class="headerlink" title="Install ARK-4 next"></a>Install ARK-4 next</h2><p>Once the official firmware upgrade is done, you can move on to <code>ARK-4</code>.</p><p>Unlike the old days of hunting through random forums for custom firmware downloads, ARK-4 now has a proper GitHub project and release page, which makes things much easier to follow:</p><ul><li>Project page: <a href="https://github.com/PSP-Archive/ARK-4">https://github.com/PSP-Archive/ARK-4</a></li><li>Releases: <a href="https://github.com/PSP-Archive/ARK-4/releases">https://github.com/PSP-Archive/ARK-4/releases</a></li></ul><p>As of <code>June 1, 2026</code>, the latest stable release visible there is <code>v4.20.69 r206</code>. The release notes also make it clear that this is the final official ARK-4 release, with future work moving toward <code>ARK-5</code>.</p><p>Download the <code>ARK4.zip</code> asset from the release page:</p><p><img src="ARK4download.png" alt="ARK-4 GitHub release download page"></p><h2 id="Copy-the-ARK-4-files-to-the-memory-card"><a href="#Copy-the-ARK-4-files-to-the-memory-card" class="headerlink" title="Copy the ARK-4 files to the memory card"></a>Copy the ARK-4 files to the memory card</h2><p>Reconnect the TF card to your computer, extract <code>ARK4.zip</code>, and copy a few folders into the right places.</p><p>The main ones you need are:</p><ol><li>Copy <code>ARK_01234</code> to <code>/PSP/SAVEDATA/</code></li><li>Copy <code>ARK_Loader</code> to <code>/PSP/GAME/</code></li><li>Copy <code>ARK_cIPL</code> to <code>/PSP/GAME/</code> (note that this folder is under the <code>PSP</code> directory inside the zip archive)</li></ol><p>The first two are enough to get ARK-4 running. The third one is for making the setup permanent afterward.</p><h2 id="Launch-temporary-ARK-4-first"><a href="#Launch-temporary-ARK-4-first" class="headerlink" title="Launch temporary ARK-4 first"></a>Launch temporary ARK-4 first</h2><p>After putting the card back into the PSP, go to <code>Game</code> and then <code>Memory Stick</code>. You should see <code>ARK Loader</code>.</p><p>Run it first to boot into temporary ARK-4:</p><p><img src="IMG_3343.webp" alt="Running ARK Loader"></p><p>After that, check the system information screen again. The version string should now show the <code>ARK-4 Live</code> label. At this point, you can already run games and homebrew normally. The only limitation is that after a full shutdown, you would need to launch <code>ARK Loader</code> again:</p><p><img src="IMG_3344.webp" alt="System information after launching temporary ARK-4"></p><h2 id="Then-install-cIPL-for-permanent-CFW"><a href="#Then-install-cIPL-for-permanent-CFW" class="headerlink" title="Then install cIPL for permanent CFW"></a>Then install cIPL for permanent CFW</h2><p>If you want the PSP to stay modded even after rebooting, the next step is to run <code>ARK cIPL Flasher</code>.</p><p>Launch it and follow the prompts to install. On my PSP, the whole process only took a few seconds:</p><p><img src="IMG_3345.webp" alt="Running ARK cIPL Flasher"></p><p>Once it finishes, open system information one more time. The version string should now include <code>cIPL</code>:</p><p><img src="IMG_3346.webp" alt="System information after permanent CFW installation"></p><p>At that point, my <code>PSP 3000</code> was effectively set up for permanent ARK booting, without having to relaunch the loader after every restart.</p><h2 id="Where-to-put-game-files"><a href="#Where-to-put-game-files" class="headerlink" title="Where to put game files"></a>Where to put game files</h2><p>The final step is easy.</p><p>Put your downloaded PSP game files in <code>.iso</code> or <code>.cso</code> format into the <code>ISO</code> folder at the root of the memory card. If the folder does not exist yet, just create it yourself:</p><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/ISO</span><br></pre></td></tr></table></figure><p>Once the files are there, the PSP should detect them normally:</p><p><img src="IMG_3347.webp" alt="ISO games recognized from the memory card"></p><h2 id="Final-thoughts"><a href="#Final-thoughts" class="headerlink" title="Final thoughts"></a>Final thoughts</h2><p>What I enjoyed most about bringing this old PSP back to life was not just that the modding worked. It was that the whole experience instantly brought back a very specific kind of old gaming memory.</p><p>It was already satisfying just to see the handheld boot again and load games properly. But what stood out even more was how much more polished this upgrade and custom firmware path feels compared with what I used years ago. At least for my <code>PSP 3000</code>, going from official <code>6.35</code> to <code>6.61</code>, then installing <code>ARK-4</code>, turned out to be smoother than I expected.</p><p>If you still have an old PSP sitting in a drawer somewhere, it might be worth pulling it back out one weekend. There is a good chance you will end up reviving more than just the console itself.</p>]]></content>
+    
+    
+    <summary type="html">A practical walkthrough of upgrading an old PSP 3000 from 6.35 to official 6.61, then installing ARK-4 and making it permanent.</summary>
+    
+    
+    
+    
+    <category term="psp" scheme="https://knktc.com/en/tags/psp/"/>
+    
+    <category term="handheld" scheme="https://knktc.com/en/tags/handheld/"/>
+    
+    <category term="firmware" scheme="https://knktc.com/en/tags/firmware/"/>
+    
+    <category term="modding" scheme="https://knktc.com/en/tags/modding/"/>
+    
+  </entry>
   
   <entry>
     <title>How I Have Used Nginx in Real Projects</title>
@@ -193,11 +218,11 @@
     
     <category term="git" scheme="https://knktc.com/en/tags/git/"/>
     
-    <category term="ssh" scheme="https://knktc.com/en/tags/ssh/"/>
-    
     <category term="macos" scheme="https://knktc.com/en/tags/macos/"/>
     
     <category term="ventura" scheme="https://knktc.com/en/tags/ventura/"/>
+    
+    <category term="ssh" scheme="https://knktc.com/en/tags/ssh/"/>
     
     <category term="permission" scheme="https://knktc.com/en/tags/permission/"/>
     
@@ -243,9 +268,9 @@
     
     
     
-    <category term="log" scheme="https://knktc.com/en/tags/log/"/>
-    
     <category term="nginx" scheme="https://knktc.com/en/tags/nginx/"/>
+    
+    <category term="log" scheme="https://knktc.com/en/tags/log/"/>
     
     <category term="404" scheme="https://knktc.com/en/tags/404/"/>
     
@@ -508,31 +533,6 @@
     <category term="prompt" scheme="https://knktc.com/en/tags/prompt/"/>
     
     <category term="customize" scheme="https://knktc.com/en/tags/customize/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Install Headless Chrome with Docker</title>
-    <link href="https://knktc.com/en/2022/02/05/install-headless-chrome-in-docker/"/>
-    <id>https://knktc.com/en/2022/02/05/install-headless-chrome-in-docker/</id>
-    <published>2022-02-05T13:35:59.000Z</published>
-    <updated>2026-04-29T01:04:56.833Z</updated>
-    
-    <content type="html"><![CDATA[<p>I recently used Headless Chrome together with Selenium to test a frontend project. The results were pretty good, and adding the tests after Jenkins deployment gave at least some confidence that the frontend still worked after each release.</p><p>This post records a Dockerfile for installing Headless Chrome on Ubuntu 20.04 so I can find it again later.</p><span id="more"></span><figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> ubuntu:<span class="number">20.04</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">ARG</span> APT_MIRROR_HOST=mirrors.tuna.tsinghua.edu.cn</span><br><span class="line"><span class="keyword">ENV</span> DEBIAN_FRONTEND noninteractive</span><br><span class="line"></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> sed -i <span class="string">&quot;s/archive.ubuntu.com/<span class="variable">$&#123;APT_MIRROR_HOST&#125;</span>/g&quot;</span> /etc/apt/sources.list \</span></span><br><span class="line"><span class="bash">    &amp;&amp; sed -i <span class="string">&quot;s/security.ubuntu.com/<span class="variable">$&#123;APT_MIRROR_HOST&#125;</span>/g&quot;</span> /etc/apt/sources.list</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> apt update</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> apt install -y wget fonts-wqy-microhei</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> dpkg -i google-chrome-stable_current_amd64.deb;<span class="built_in">exit</span> 0</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> apt install -f -y</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime</span></span><br></pre></td></tr></table></figure><p>Notes:</p><ul><li>The APT mirror is switched to Tsinghua’s mirror to speed up dependency installation.</li><li><code>DEBIAN_FRONTEND=noninteractive</code> is set because <code>tzdata</code> may otherwise prompt during installation and cause <code>docker build</code> to hang.</li><li>Because of that non-interactive setting, the final timezone configuration is handled manually.</li><li><code>fonts-wqy-microhei</code> is installed so Chinese text can render correctly, especially when exporting PDFs.</li><li>Installing Chrome with <code>dpkg -i</code> is expected to fail at first because dependencies are missing, so the command ends with <code>exit 0</code>.</li><li><code>apt install -f -y</code> is then used to repair dependencies and complete the installation.</li></ul>]]></content>
-    
-    
-    <summary type="html">A simple Dockerfile for installing Headless Chrome on Ubuntu 20.04, with notes about mirrors, timezone prompts, and font support.</summary>
-    
-    
-    
-    
-    <category term="ubuntu" scheme="https://knktc.com/en/tags/ubuntu/"/>
-    
-    <category term="chrome" scheme="https://knktc.com/en/tags/chrome/"/>
-    
-    <category term="docker" scheme="https://knktc.com/en/tags/docker/"/>
-    
-    <category term="headless" scheme="https://knktc.com/en/tags/headless/"/>
     
   </entry>
   

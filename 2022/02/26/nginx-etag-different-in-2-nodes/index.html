@@ -28,7 +28,7 @@
 <meta property="og:description" content="最近用nginx来提供一些静态文件作为配置。nginx从1.3.3版起就支持etag了，默认就可以生效，配置文件更改后可以通过etag的变化来让浏览器拉取新的配置，还是挺方便的。但是在测试环境部署后，却发现了问题：测试环境的nginx有两个节点，前面再放个负载均衡器，轮询访问到不同的服务器上，此时发现请求相同的静态文件时，返回的etag却不同，浏览器每次请求都会返回个200，而不是304，没有缓存">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-02-25T16:06:05.000Z">
-<meta property="article:modified_time" content="2022-02-25T16:30:40.090Z">
+<meta property="article:modified_time" content="2022-02-25T16:30:40.000Z">
 <meta property="article:author" content="knktc">
 <meta property="article:tag" content="nginx">
 <meta property="article:tag" content="etag">
