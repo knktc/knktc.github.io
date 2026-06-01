@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"knktc.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="记录一次把老 PSP 3000 从 6.35 升级到官方 6.61，再安装 ARK-4 并完成永久破解的实际过程。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="给 PSP 3000 升级 6.61，并刷入 ARK-4 永久破解">
+<meta property="og:url" content="https://knktc.com/2026/06/01/psp-3000-upgrade-to-6-61-and-install-ark-4/">
+<meta property="og:site_name" content="knktc的杂乱空间">
+<meta property="og:description" content="记录一次把老 PSP 3000 从 6.35 升级到官方 6.61，再安装 ARK-4 并完成永久破解的实际过程。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://knktc.com/2026/06/01/psp-3000-upgrade-to-6-61-and-install-ark-4/IMG_3341.webp">
+<meta property="og:image" content="https://knktc.com/2026/06/01/psp-3000-upgrade-to-6-61-and-install-ark-4/IMG_3342.webp">
+<meta property="og:image" content="https://knktc.com/2026/06/01/psp-3000-upgrade-to-6-61-and-install-ark-4/IMG_3330.webp">
+<meta property="og:image" content="https://knktc.com/2026/06/01/psp-3000-upgrade-to-6-61-and-install-ark-4/ARK4download.png">
+<meta property="og:image" content="https://knktc.com/2026/06/01/psp-3000-upgrade-to-6-61-and-install-ark-4/IMG_3343.webp">
+<meta property="og:image" content="https://knktc.com/2026/06/01/psp-3000-upgrade-to-6-61-and-install-ark-4/IMG_3344.webp">
+<meta property="og:image" content="https://knktc.com/2026/06/01/psp-3000-upgrade-to-6-61-and-install-ark-4/IMG_3345.webp">
+<meta property="og:image" content="https://knktc.com/2026/06/01/psp-3000-upgrade-to-6-61-and-install-ark-4/IMG_3346.webp">
+<meta property="og:image" content="https://knktc.com/2026/06/01/psp-3000-upgrade-to-6-61-and-install-ark-4/IMG_3347.webp">
+<meta property="article:published_time" content="2026-06-01T14:51:27.000Z">
+<meta property="article:modified_time" content="2026-06-01T14:59:26.786Z">
+<meta property="article:author" content="knktc">
+<meta property="article:tag" content="psp">
+<meta property="article:tag" content="游戏机">
+<meta property="article:tag" content="折腾">
+<meta property="article:tag" content="固件">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://knktc.com/2026/06/01/psp-3000-upgrade-to-6-61-and-install-ark-4/IMG_3341.webp">
+
+<link rel="canonical" href="https://knktc.com/2026/06/01/psp-3000-upgrade-to-6-61-and-install-ark-4/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+<link rel="alternate" hreflang="zh-CN" href="&#x2F;2026&#x2F;06&#x2F;01&#x2F;psp-3000-upgrade-to-6-61-and-install-ark-4&#x2F;">
+
+  <title>给 PSP 3000 升级 6.61，并刷入 ARK-4 永久破解 | knktc的杂乱空间</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a23b2d1c6159a3a6c798edbc7f9211f9";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="knktc的杂乱空间" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">knktc的杂乱空间</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">python,cloud,linux...</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://knktc.com/2026/06/01/psp-3000-upgrade-to-6-61-and-install-ark-4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/sonic_avatar.png">
+      <meta itemprop="name" content="knktc">
+      <meta itemprop="description" content="关注linux,云计算,python，杂乱之地...">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="knktc的杂乱空间">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          给 PSP 3000 升级 6.61，并刷入 ARK-4 永久破解
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2026-06-01 22:51:27 / 修改时间：22:59:26" itemprop="dateCreated datePublished" datetime="2026-06-01T22:51:27+08:00">2026-06-01</time>
+            </span>
+
+          
+            <div class="post-description">记录一次把老 PSP 3000 从 6.35 升级到官方 6.61，再安装 ARK-4 并完成永久破解的实际过程。</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>前段时间，我儿子把家里一台吃灰很多年的 PSP 翻了出来。</p>
+<p>这是我当年用过的一台 PSP 3000。机器本身还在，但电池已经鼓包了，原来的山寨记忆棒也基本报废。换了新电池之后，我又买了一个记忆棒卡套，插上一张 TF 卡，总算把这台老机器重新点亮了。</p>
+<p>机器能开机只是第一步。真正麻烦的是系统和破解环境都太老了。</p>
+<p>我这台机器当年用的是 <code>PRO CFW</code>，那时候还做不到现在这样省心，每次彻底关机后都得重新刷一次。如今旧卡已经不能用了，原来的破解文件自然也跟着没了。于是我顺手查了一下现在 PSP 还在用什么方案，结果发现这个圈子居然一直还在更新。</p>
+<p>现在比较成熟的一条路，是先把系统升级到官方最后一个正式版本 <code>6.61</code>，再安装 <code>ARK-4</code>。我这次就是按这个思路做的，整套流程走下来并不复杂，记录一下，后面如果还有人把老 PSP 翻出来，或许也能少踩点坑。</p>
+<span id="more"></span>
+
+<h2 id="先确认当前系统版本"><a href="#先确认当前系统版本" class="headerlink" title="先确认当前系统版本"></a>先确认当前系统版本</h2><p>开机后先到系统信息里看一眼。</p>
+<p>我这台机器当时还是 <code>6.35</code>：</p>
+<p><img src="IMG_3341.webp" alt="PSP 当前系统版本"></p>
+<p>如果你的版本也比较老，建议先别急着折腾自制固件，先把官方系统升级到 <code>6.61</code>。这是索尼给 PSP 发布的最后一个官方固件版本，后面很多教程和工具默认也都是围绕 <code>6.61</code> 来写的。</p>
+<h2 id="先升级到官方-6-61-固件"><a href="#先升级到官方-6-61-固件" class="headerlink" title="先升级到官方 6.61 固件"></a>先升级到官方 6.61 固件</h2><p>官方固件文件现在网上还能找到，我这次用的是这个整理站点：</p>
+<p><a target="_blank" rel="noopener" href="https://darthsternie.net/psp-firmwares/">https://darthsternie.net/psp-firmwares/</a></p>
+<p>找到 <code>6.61</code> 对应的下载链接即可。有条件的话，下载后顺手校验一下文件 hash 会更稳一点。</p>
+<p>在拷文件之前，建议先把 TF 卡插进记忆棒卡套，再插到 PSP 里格式化一次。这样目录结构和文件系统都会干净一点，后面少出一些莫名其妙的问题。</p>
+<p>下载到的固件文件名一般是 <code>661.PBP</code>。把卡接到电脑后，在卡里创建下面这个目录：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/PSP/GAME/UPDATE</span><br></pre></td></tr></table></figure>
+
+<p>然后把 <code>661.PBP</code> 重命名成 <code>EBOOT.PBP</code>，放到这个目录下面。</p>
+<p>之后把卡重新插回 PSP，在“游戏”里的 <code>Memory Stick</code> 下就能看到升级程序了：</p>
+<p><img src="IMG_3342.webp" alt="PSP 中的 6.61 升级程序"></p>
+<p>按提示一路升级即可。整个过程不算久，完成后再看系统信息，就已经是 <code>6.61</code> 了：</p>
+<p><img src="IMG_3330.webp" alt="升级到 6.61 后的系统信息"></p>
+<p>这里多提醒一句：升级固件时一定要保证电量充足，最好插着电源，别在刷机过程中断电。</p>
+<h2 id="再安装-ARK-4"><a href="#再安装-ARK-4" class="headerlink" title="再安装 ARK-4"></a>再安装 ARK-4</h2><p>系统升完之后，就可以开始装 <code>ARK-4</code> 了。</p>
+<p>和很多年前在论坛里到处找破解包不一样，现在 <code>ARK-4</code> 的项目和发布版本都在 GitHub 上，资料也比以前集中得多：</p>
+<ul>
+<li>项目地址：<a target="_blank" rel="noopener" href="https://github.com/PSP-Archive/ARK-4">https://github.com/PSP-Archive/ARK-4</a></li>
+<li>发布页面：<a target="_blank" rel="noopener" href="https://github.com/PSP-Archive/ARK-4/releases">https://github.com/PSP-Archive/ARK-4/releases</a></li>
+</ul>
+<p>按我写这篇文章时的情况，<code>2026-06-01</code> 能看到的最新正式版是 <code>v4.20.69 r206</code>。发布页面里也明确写了，这是 <code>ARK-4</code> 的最后一个官方版本，后续路线会转向 <code>ARK-5</code>。</p>
+<p>下载 release 里的 <code>ARK4.zip</code> 即可：</p>
+<p><img src="ARK4download.png" alt="ARK-4 GitHub release 下载页面"></p>
+<h2 id="把-ARK-4-文件复制到记忆卡里"><a href="#把-ARK-4-文件复制到记忆卡里" class="headerlink" title="把 ARK-4 文件复制到记忆卡里"></a>把 ARK-4 文件复制到记忆卡里</h2><p>把 TF 卡重新接到电脑上，解压 <code>ARK4.zip</code>，然后把里面几个目录复制到对应位置。</p>
+<p>需要的主要是这三项：</p>
+<ol>
+<li>把 <code>ARK_01234</code> 复制到 <code>/PSP/SAVEDATA/</code></li>
+<li>把 <code>ARK_Loader</code> 复制到 <code>/PSP/GAME/</code></li>
+<li>把 <code>ARK_cIPL</code> 复制到 <code>/PSP/GAME/</code>（注意这个文件夹在压缩包的 <code>PSP</code> 目录下）</li>
+</ol>
+<p>前两步是让系统先跑起来，第三步是给后面的永久破解做准备。</p>
+<h2 id="先刷入临时-ARK-4"><a href="#先刷入临时-ARK-4" class="headerlink" title="先刷入临时 ARK-4"></a>先刷入临时 ARK-4</h2><p>把卡插回 PSP 后，到“游戏”里的 <code>Memory Stick</code> 下面，可以先看到 <code>ARK Loader</code>。</p>
+<p>先运行它，把临时固件刷进去：</p>
+<p><img src="IMG_3343.webp" alt="运行 ARK Loader"></p>
+<p>刷好之后，再进系统信息，版本号会带上 <code>ARK-4 Live</code> 的标识。这时候其实已经可以正常跑游戏和自制程序了，只是如果彻底关机，下次还得重新执行一次 <code>ARK Loader</code>：</p>
+<p><img src="IMG_3344.webp" alt="刷入临时 ARK-4 后的系统信息"></p>
+<h2 id="再刷入-cIPL，做成永久破解"><a href="#再刷入-cIPL，做成永久破解" class="headerlink" title="再刷入 cIPL，做成永久破解"></a>再刷入 cIPL，做成永久破解</h2><p>如果你也想要“重启之后依然保持破解状态”的效果，就继续运行 <code>ARK cIPL Flasher</code>。</p>
+<p>进入之后按照界面提示确认安装即可，整个过程很快，我这台机器大概几秒钟就完成了：</p>
+<p><img src="IMG_3345.webp" alt="运行 ARK cIPL Flasher"></p>
+<p>刷完之后再次查看系统信息，就能看到版本后面已经带上了 <code>cIPL</code>：</p>
+<p><img src="IMG_3346.webp" alt="永久破解完成后的系统信息"></p>
+<p>我这台 <code>PSP 3000</code> 到这里就已经实现了重启后依旧保持 ARK 的状态，不需要每次开机再手动刷一次。</p>
+<h2 id="游戏文件放哪里"><a href="#游戏文件放哪里" class="headerlink" title="游戏文件放哪里"></a>游戏文件放哪里</h2><p>最后一步就简单了。</p>
+<p>把下载好的 <code>PSP .iso</code> 或 <code>.cso</code> 游戏文件放到记忆卡根目录下的 <code>ISO</code> 文件夹里即可。如果没有这个目录，自己新建一个就行：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/ISO</span><br></pre></td></tr></table></figure>
+
+<p>放好之后，在机器里就能直接看到游戏：</p>
+<p><img src="IMG_3347.webp" alt="把 ISO 游戏放到记忆卡后即可识别"></p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>这次把这台老 PSP 重新折腾起来，最大的感受其实不是“破解终于成功了”，而是很多年前那种熟悉的感觉一下子又回来了。</p>
+<p>老机器能重新开机、能重新进游戏，已经很开心；而现在这套升级和破解流程，比我当年折腾的时候也确实成熟了不少。至少对我这台 <code>PSP 3000</code> 来说，从官方 <code>6.35</code> 升到 <code>6.61</code>，再刷入 <code>ARK-4</code>，整个过程比预想中顺利很多。</p>
+<p>如果你家里也正好还有一台吃灰的 PSP，不妨找个周末把它翻出来试试。说不定折腾完之后，最先被唤醒的不是主机，而是自己很多年前打游戏时的那段记忆。</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>如果我的文字帮到了您，那么可不可以请我喝罐可乐？</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechat.png" alt="knktc 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="knktc 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-6959365962327411"
+     data-ad-slot="4588493450"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>knktc
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://knktc.com/2026/06/01/psp-3000-upgrade-to-6-61-and-install-ark-4/" title="给 PSP 3000 升级 6.61，并刷入 ARK-4 永久破解">https://knktc.com/2026/06/01/psp-3000-upgrade-to-6-61-and-install-ark-4/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/psp/" rel="tag"># psp</a>
+              <a href="/tags/%E6%B8%B8%E6%88%8F%E6%9C%BA/" rel="tag"># 游戏机</a>
+              <a href="/tags/%E6%8A%98%E8%85%BE/" rel="tag"># 折腾</a>
+              <a href="/tags/%E5%9B%BA%E4%BB%B6/" rel="tag"># 固件</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2026/05/27/nginx-in-real-projects/" rel="prev" title="我在实际项目中是怎么用 Nginx 的">
+      <i class="fa fa-chevron-left"></i> 我在实际项目中是怎么用 Nginx 的
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%88%E7%A1%AE%E8%AE%A4%E5%BD%93%E5%89%8D%E7%B3%BB%E7%BB%9F%E7%89%88%E6%9C%AC"><span class="nav-number">1.</span> <span class="nav-text">先确认当前系统版本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%88%E5%8D%87%E7%BA%A7%E5%88%B0%E5%AE%98%E6%96%B9-6-61-%E5%9B%BA%E4%BB%B6"><span class="nav-number">2.</span> <span class="nav-text">先升级到官方 6.61 固件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%8D%E5%AE%89%E8%A3%85-ARK-4"><span class="nav-number">3.</span> <span class="nav-text">再安装 ARK-4</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8A%8A-ARK-4-%E6%96%87%E4%BB%B6%E5%A4%8D%E5%88%B6%E5%88%B0%E8%AE%B0%E5%BF%86%E5%8D%A1%E9%87%8C"><span class="nav-number">4.</span> <span class="nav-text">把 ARK-4 文件复制到记忆卡里</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%88%E5%88%B7%E5%85%A5%E4%B8%B4%E6%97%B6-ARK-4"><span class="nav-number">5.</span> <span class="nav-text">先刷入临时 ARK-4</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%8D%E5%88%B7%E5%85%A5-cIPL%EF%BC%8C%E5%81%9A%E6%88%90%E6%B0%B8%E4%B9%85%E7%A0%B4%E8%A7%A3"><span class="nav-number">6.</span> <span class="nav-text">再刷入 cIPL，做成永久破解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B8%B8%E6%88%8F%E6%96%87%E4%BB%B6%E6%94%BE%E5%93%AA%E9%87%8C"><span class="nav-number">7.</span> <span class="nav-text">游戏文件放哪里</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E5%90%8E"><span class="nav-number">8.</span> <span class="nav-text">最后</span></a></li></ol></div>
+          <div class="post-sidebar-wechat motion-element">
+            <img
+              class="post-sidebar-wechat-image"
+              src="/images/wechat-mp-qrcode.png"
+              alt="微信扫码关注我的公众号"
+              loading="lazy"
+            >
+            <p class="post-sidebar-wechat-name">中年工程师苟活指南</p>
+            <p class="post-sidebar-wechat-desc">微信扫码关注，获取更多新文章和实战折腾记录。</p>
+          </div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="knktc"
+      src="/images/sonic_avatar.png">
+  <p class="site-author-name" itemprop="name">knktc</p>
+  <div class="site-description" itemprop="description">关注linux,云计算,python，杂乱之地...</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">76</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">235</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/knktc" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;knktc" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/knktc" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;knktc" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+<div class="wechat-mp-widget motion-element">
+  <img
+    class="wechat-mp-widget-image"
+    src="/images/wechat-mp-qrcode.png"
+    alt="微信扫码关注我的公众号"
+    loading="lazy"
+  >
+  <p class="wechat-mp-widget-name">中年工程师苟活指南</p>
+  <p class="wechat-mp-widget-desc">微信扫码关注，第一时间看到新文章和折腾记录。</p>
+</div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">鄂ICP备2021019593号-1 </a>
+      <img src="/images/beian.png" style="display: inline-block;"><a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=42018502005554" rel="noopener" target="_blank">鄂公网安备 42018502005554号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">knktc</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

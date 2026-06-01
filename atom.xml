@@ -6,7 +6,7 @@
   <link href="https://knktc.com/atom.xml" rel="self"/>
   
   <link href="https://knktc.com/"/>
-  <updated>2026-05-27T05:33:02.005Z</updated>
+  <updated>2026-06-01T14:59:26.786Z</updated>
   <id>https://knktc.com/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>给 PSP 3000 升级 6.61，并刷入 ARK-4 永久破解</title>
+    <link href="https://knktc.com/2026/06/01/psp-3000-upgrade-to-6-61-and-install-ark-4/"/>
+    <id>https://knktc.com/2026/06/01/psp-3000-upgrade-to-6-61-and-install-ark-4/</id>
+    <published>2026-06-01T14:51:27.000Z</published>
+    <updated>2026-06-01T14:59:26.786Z</updated>
+    
+    <content type="html"><![CDATA[<p>前段时间，我儿子把家里一台吃灰很多年的 PSP 翻了出来。</p><p>这是我当年用过的一台 PSP 3000。机器本身还在，但电池已经鼓包了，原来的山寨记忆棒也基本报废。换了新电池之后，我又买了一个记忆棒卡套，插上一张 TF 卡，总算把这台老机器重新点亮了。</p><p>机器能开机只是第一步。真正麻烦的是系统和破解环境都太老了。</p><p>我这台机器当年用的是 <code>PRO CFW</code>，那时候还做不到现在这样省心，每次彻底关机后都得重新刷一次。如今旧卡已经不能用了，原来的破解文件自然也跟着没了。于是我顺手查了一下现在 PSP 还在用什么方案，结果发现这个圈子居然一直还在更新。</p><p>现在比较成熟的一条路，是先把系统升级到官方最后一个正式版本 <code>6.61</code>，再安装 <code>ARK-4</code>。我这次就是按这个思路做的，整套流程走下来并不复杂，记录一下，后面如果还有人把老 PSP 翻出来，或许也能少踩点坑。</p><span id="more"></span><h2 id="先确认当前系统版本"><a href="#先确认当前系统版本" class="headerlink" title="先确认当前系统版本"></a>先确认当前系统版本</h2><p>开机后先到系统信息里看一眼。</p><p>我这台机器当时还是 <code>6.35</code>：</p><p><img src="IMG_3341.webp" alt="PSP 当前系统版本"></p><p>如果你的版本也比较老，建议先别急着折腾自制固件，先把官方系统升级到 <code>6.61</code>。这是索尼给 PSP 发布的最后一个官方固件版本，后面很多教程和工具默认也都是围绕 <code>6.61</code> 来写的。</p><h2 id="先升级到官方-6-61-固件"><a href="#先升级到官方-6-61-固件" class="headerlink" title="先升级到官方 6.61 固件"></a>先升级到官方 6.61 固件</h2><p>官方固件文件现在网上还能找到，我这次用的是这个整理站点：</p><p><a href="https://darthsternie.net/psp-firmwares/">https://darthsternie.net/psp-firmwares/</a></p><p>找到 <code>6.61</code> 对应的下载链接即可。有条件的话，下载后顺手校验一下文件 hash 会更稳一点。</p><p>在拷文件之前，建议先把 TF 卡插进记忆棒卡套，再插到 PSP 里格式化一次。这样目录结构和文件系统都会干净一点，后面少出一些莫名其妙的问题。</p><p>下载到的固件文件名一般是 <code>661.PBP</code>。把卡接到电脑后，在卡里创建下面这个目录：</p><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/PSP/GAME/UPDATE</span><br></pre></td></tr></table></figure><p>然后把 <code>661.PBP</code> 重命名成 <code>EBOOT.PBP</code>，放到这个目录下面。</p><p>之后把卡重新插回 PSP，在“游戏”里的 <code>Memory Stick</code> 下就能看到升级程序了：</p><p><img src="IMG_3342.webp" alt="PSP 中的 6.61 升级程序"></p><p>按提示一路升级即可。整个过程不算久，完成后再看系统信息，就已经是 <code>6.61</code> 了：</p><p><img src="IMG_3330.webp" alt="升级到 6.61 后的系统信息"></p><p>这里多提醒一句：升级固件时一定要保证电量充足，最好插着电源，别在刷机过程中断电。</p><h2 id="再安装-ARK-4"><a href="#再安装-ARK-4" class="headerlink" title="再安装 ARK-4"></a>再安装 ARK-4</h2><p>系统升完之后，就可以开始装 <code>ARK-4</code> 了。</p><p>和很多年前在论坛里到处找破解包不一样，现在 <code>ARK-4</code> 的项目和发布版本都在 GitHub 上，资料也比以前集中得多：</p><ul><li>项目地址：<a href="https://github.com/PSP-Archive/ARK-4">https://github.com/PSP-Archive/ARK-4</a></li><li>发布页面：<a href="https://github.com/PSP-Archive/ARK-4/releases">https://github.com/PSP-Archive/ARK-4/releases</a></li></ul><p>按我写这篇文章时的情况，<code>2026-06-01</code> 能看到的最新正式版是 <code>v4.20.69 r206</code>。发布页面里也明确写了，这是 <code>ARK-4</code> 的最后一个官方版本，后续路线会转向 <code>ARK-5</code>。</p><p>下载 release 里的 <code>ARK4.zip</code> 即可：</p><p><img src="ARK4download.png" alt="ARK-4 GitHub release 下载页面"></p><h2 id="把-ARK-4-文件复制到记忆卡里"><a href="#把-ARK-4-文件复制到记忆卡里" class="headerlink" title="把 ARK-4 文件复制到记忆卡里"></a>把 ARK-4 文件复制到记忆卡里</h2><p>把 TF 卡重新接到电脑上，解压 <code>ARK4.zip</code>，然后把里面几个目录复制到对应位置。</p><p>需要的主要是这三项：</p><ol><li>把 <code>ARK_01234</code> 复制到 <code>/PSP/SAVEDATA/</code></li><li>把 <code>ARK_Loader</code> 复制到 <code>/PSP/GAME/</code></li><li>把 <code>ARK_cIPL</code> 复制到 <code>/PSP/GAME/</code>（注意这个文件夹在压缩包的 <code>PSP</code> 目录下）</li></ol><p>前两步是让系统先跑起来，第三步是给后面的永久破解做准备。</p><h2 id="先刷入临时-ARK-4"><a href="#先刷入临时-ARK-4" class="headerlink" title="先刷入临时 ARK-4"></a>先刷入临时 ARK-4</h2><p>把卡插回 PSP 后，到“游戏”里的 <code>Memory Stick</code> 下面，可以先看到 <code>ARK Loader</code>。</p><p>先运行它，把临时固件刷进去：</p><p><img src="IMG_3343.webp" alt="运行 ARK Loader"></p><p>刷好之后，再进系统信息，版本号会带上 <code>ARK-4 Live</code> 的标识。这时候其实已经可以正常跑游戏和自制程序了，只是如果彻底关机，下次还得重新执行一次 <code>ARK Loader</code>：</p><p><img src="IMG_3344.webp" alt="刷入临时 ARK-4 后的系统信息"></p><h2 id="再刷入-cIPL，做成永久破解"><a href="#再刷入-cIPL，做成永久破解" class="headerlink" title="再刷入 cIPL，做成永久破解"></a>再刷入 cIPL，做成永久破解</h2><p>如果你也想要“重启之后依然保持破解状态”的效果，就继续运行 <code>ARK cIPL Flasher</code>。</p><p>进入之后按照界面提示确认安装即可，整个过程很快，我这台机器大概几秒钟就完成了：</p><p><img src="IMG_3345.webp" alt="运行 ARK cIPL Flasher"></p><p>刷完之后再次查看系统信息，就能看到版本后面已经带上了 <code>cIPL</code>：</p><p><img src="IMG_3346.webp" alt="永久破解完成后的系统信息"></p><p>我这台 <code>PSP 3000</code> 到这里就已经实现了重启后依旧保持 ARK 的状态，不需要每次开机再手动刷一次。</p><h2 id="游戏文件放哪里"><a href="#游戏文件放哪里" class="headerlink" title="游戏文件放哪里"></a>游戏文件放哪里</h2><p>最后一步就简单了。</p><p>把下载好的 <code>PSP .iso</code> 或 <code>.cso</code> 游戏文件放到记忆卡根目录下的 <code>ISO</code> 文件夹里即可。如果没有这个目录，自己新建一个就行：</p><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/ISO</span><br></pre></td></tr></table></figure><p>放好之后，在机器里就能直接看到游戏：</p><p><img src="IMG_3347.webp" alt="把 ISO 游戏放到记忆卡后即可识别"></p><h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>这次把这台老 PSP 重新折腾起来，最大的感受其实不是“破解终于成功了”，而是很多年前那种熟悉的感觉一下子又回来了。</p><p>老机器能重新开机、能重新进游戏，已经很开心；而现在这套升级和破解流程，比我当年折腾的时候也确实成熟了不少。至少对我这台 <code>PSP 3000</code> 来说，从官方 <code>6.35</code> 升到 <code>6.61</code>，再刷入 <code>ARK-4</code>，整个过程比预想中顺利很多。</p><p>如果你家里也正好还有一台吃灰的 PSP，不妨找个周末把它翻出来试试。说不定折腾完之后，最先被唤醒的不是主机，而是自己很多年前打游戏时的那段记忆。</p>]]></content>
+    
+    
+    <summary type="html">记录一次把老 PSP 3000 从 6.35 升级到官方 6.61，再安装 ARK-4 并完成永久破解的实际过程。</summary>
+    
+    
+    
+    
+    <category term="psp" scheme="https://knktc.com/tags/psp/"/>
+    
+    <category term="游戏机" scheme="https://knktc.com/tags/%E6%B8%B8%E6%88%8F%E6%9C%BA/"/>
+    
+    <category term="折腾" scheme="https://knktc.com/tags/%E6%8A%98%E8%85%BE/"/>
+    
+    <category term="固件" scheme="https://knktc.com/tags/%E5%9B%BA%E4%BB%B6/"/>
+    
+  </entry>
   
   <entry>
     <title>我在实际项目中是怎么用 Nginx 的</title>
@@ -536,37 +561,6 @@
     <category term="图表" scheme="https://knktc.com/tags/%E5%9B%BE%E8%A1%A8/"/>
     
     <category term="gadgets" scheme="https://knktc.com/tags/gadgets/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>缩短poetry虚拟环境的命令行提示符前缀</title>
-    <link href="https://knktc.com/2022/02/09/shorten-prompt-ps1-of-poetry-env/"/>
-    <id>https://knktc.com/2022/02/09/shorten-prompt-ps1-of-poetry-env/</id>
-    <published>2022-02-09T14:52:01.000Z</published>
-    <updated>2022-02-09T15:13:52.053Z</updated>
-    
-    <content type="html"><![CDATA[<p>最近在尝试使用poetry来进行项目的包管理，发现poetry创建的虚拟环境中，命令行提示符特别的长。</p><p>比如我创建了一个名为”test-poetry”的项目，那么使用 <strong>poetry shell</strong> 命令激活虚拟环境后，却发现整个命令行提示符如此之长：</p><blockquote><p>(test-poetry-FvrREBVp-py3.6) knktc@knktc-rmbp test_poetry % </p></blockquote><p>因为poetry自动为虚拟环境编了个码，同时还加上了python版本号，都放到命令行提示符里作为前缀就很长了。对于小屏幕的用户来说(比如我这13寸笔记本的用户)就很不友好了。</p><p>还是想想怎么缩短下这个括号中的环境名称吧。</p><span id="more"></span><p>因为这些虚拟环境都是用bin/activate命令来启动的，所以可以尝试定位下activate命令到底在哪里。</p><p>可以在项目目录下(确认当前目录下有pyproject.toml文件即可)，执行以下的命令：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">poetry env info -p</span><br></pre></td></tr></table></figure><p>此时会打印出来环境的path信息，比如：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(test-poetry-FvrREBVp-py3.6) knktc@knktc-rmbp test_poetry % poetry env info -p</span><br><span class="line">/Users/knktc/Library/Caches/pypoetry/virtualenvs/test-poetry-FvrREBVp-py3.6</span><br></pre></td></tr></table></figure><p>那么我们就可以直接到这个目录下去找bin/activate文件来修改了：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /Users/knktc/Library/Caches/pypoetry/virtualenvs/test-poetry-FvrREBVp-py3.6/bin/activate</span><br></pre></td></tr></table></figure><p>在代码的第68行左右可以看到设置PS1的相关代码，这里其实是用了环境的目录名来做为了命令行提示符的前缀：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> [ -z <span class="string">&quot;<span class="variable">$&#123;VIRTUAL_ENV_DISABLE_PROMPT-&#125;</span>&quot;</span> ] ; <span class="keyword">then</span></span><br><span class="line">    _OLD_VIRTUAL_PS1=<span class="string">&quot;<span class="variable">$&#123;PS1-&#125;</span>&quot;</span></span><br><span class="line">    <span class="keyword">if</span> [ <span class="string">&quot;x&quot;</span> != x ] ; <span class="keyword">then</span></span><br><span class="line">        PS1=<span class="string">&quot;() <span class="variable">$&#123;PS1-&#125;</span>&quot;</span></span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        PS1=<span class="string">&quot;(`basename \&quot;<span class="variable">$VIRTUAL_ENV</span>\&quot;`) <span class="variable">$&#123;PS1-&#125;</span>&quot;</span>    <span class="comment"># &lt;---就是这行</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line">    <span class="built_in">export</span> PS1</span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure><p>那么我们可以修改下这句，直接改成项目的名称就好了：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> [ -z <span class="string">&quot;<span class="variable">$&#123;VIRTUAL_ENV_DISABLE_PROMPT-&#125;</span>&quot;</span> ] ; <span class="keyword">then</span></span><br><span class="line">    _OLD_VIRTUAL_PS1=<span class="string">&quot;<span class="variable">$&#123;PS1-&#125;</span>&quot;</span></span><br><span class="line">    <span class="keyword">if</span> [ <span class="string">&quot;x&quot;</span> != x ] ; <span class="keyword">then</span></span><br><span class="line">        PS1=<span class="string">&quot;() <span class="variable">$&#123;PS1-&#125;</span>&quot;</span></span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        PS1=<span class="string">&quot;(test-poetry) <span class="variable">$&#123;PS1-&#125;</span>&quot;</span>    <span class="comment"># &lt;---- 直接写死为项目名称了</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line">    <span class="built_in">export</span> PS1</span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure><p>然后保存退出，重新激活下环境：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">knktc@knktc-rmbp test_poetry % poetry shell</span><br><span class="line">Spawning shell within /Users/knktc/Library/Caches/pypoetry/virtualenvs/test-poetry-FvrREBVp-py3.6</span><br><span class="line">Restored session: 2022年 2月 9日 星期三 23时12分53秒 CST</span><br><span class="line">knktc@knktc-rmbp test_poetry % . /Users/knktc/Library/Caches/pypoetry/virtualenvs/test-poetry-FvrREBVp-py3.6/bin/activate</span><br><span class="line">(test-poetry) knktc@knktc-rmbp test_poetry % </span><br></pre></td></tr></table></figure><p>这下就好了~</p>]]></content>
-    
-    
-    <summary type="html">&lt;p&gt;最近在尝试使用poetry来进行项目的包管理，发现poetry创建的虚拟环境中，命令行提示符特别的长。&lt;/p&gt;
-&lt;p&gt;比如我创建了一个名为”test-poetry”的项目，那么使用 &lt;strong&gt;poetry shell&lt;/strong&gt; 命令激活虚拟环境后，却发现整个命令行提示符如此之长：&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;(test-poetry-FvrREBVp-py3.6) knktc@knktc-rmbp test_poetry % &lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;因为poetry自动为虚拟环境编了个码，同时还加上了python版本号，都放到命令行提示符里作为前缀就很长了。对于小屏幕的用户来说(比如我这13寸笔记本的用户)就很不友好了。&lt;/p&gt;
-&lt;p&gt;还是想想怎么缩短下这个括号中的环境名称吧。&lt;/p&gt;</summary>
-    
-    
-    
-    
-    <category term="poetry" scheme="https://knktc.com/tags/poetry/"/>
-    
-    <category term="bash" scheme="https://knktc.com/tags/bash/"/>
-    
-    <category term="prompt" scheme="https://knktc.com/tags/prompt/"/>
-    
-    <category term="修改" scheme="https://knktc.com/tags/%E4%BF%AE%E6%94%B9/"/>
     
   </entry>
   
