@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/en/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/en/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/en/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/en/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/en/css/main.css">
+
+
+<link rel="stylesheet" href="/en/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"knktc.com","root":"/en/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Why I built EnvMate, and how this Chrome extension helps me avoid mistakes across development, testing, staging, and production environments.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="I Built a Chrome Extension with Codex Vibe Coding: EnvMate">
+<meta property="og:url" content="https://knktc.com/en/2026/06/12/envmate-chrome-extension/">
+<meta property="og:site_name" content="knktc&#39;s Notes">
+<meta property="og:description" content="Why I built EnvMate, and how this Chrome extension helps me avoid mistakes across development, testing, staging, and production environments.">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://knktc.com/en/2026/06/12/envmate-chrome-extension/envmate_overview.webp">
+<meta property="og:image" content="https://knktc.com/en/2026/06/12/envmate-chrome-extension/env_url_pattern.webp">
+<meta property="og:image" content="https://knktc.com/en/2026/06/12/envmate-chrome-extension/envmate_pageicon.webp">
+<meta property="og:image" content="https://knktc.com/en/2026/06/12/envmate-chrome-extension/envmate_watermark.webp">
+<meta property="og:image" content="https://knktc.com/en/2026/06/12/envmate-chrome-extension/env_autofill.webp">
+<meta property="og:image" content="https://knktc.com/en/2026/06/12/envmate-chrome-extension/envmate_testaccount.webp">
+<meta property="article:published_time" content="2026-06-12T03:20:00.000Z">
+<meta property="article:modified_time" content="2026-06-12T03:25:22.818Z">
+<meta property="article:author" content="knktc">
+<meta property="article:tag" content="chrome">
+<meta property="article:tag" content="extension">
+<meta property="article:tag" content="codex">
+<meta property="article:tag" content="vibe-coding">
+<meta property="article:tag" content="envmate">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://knktc.com/en/2026/06/12/envmate-chrome-extension/envmate_overview.webp">
+
+<link rel="canonical" href="https://knktc.com/en/2026/06/12/envmate-chrome-extension/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+<link rel="alternate" hreflang="en" href="&#x2F;en&#x2F;2026&#x2F;06&#x2F;12&#x2F;envmate-chrome-extension&#x2F;">
+<link rel="alternate" hreflang="zh-CN" href="&#x2F;2026&#x2F;06&#x2F;12&#x2F;envmate-chrome-extension&#x2F;">
+<link rel="alternate" hreflang="x-default" href="&#x2F;2026&#x2F;06&#x2F;12&#x2F;envmate-chrome-extension&#x2F;">
+
+  <title>I Built a Chrome Extension with Codex Vibe Coding: EnvMate | knktc's Notes</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a23b2d1c6159a3a6c798edbc7f9211f9";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/en/atom.xml" title="knktc's Notes" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/en/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">knktc's Notes</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">python, cloud, linux...</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/en/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/en/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/en/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://knktc.com/2026/06/12/envmate-chrome-extension/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/en/images/sonic_avatar.png">
+      <meta itemprop="name" content="knktc">
+      <meta itemprop="description" content="Notes on Python, Linux, and cloud infrastructure.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="knktc's Notes">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          I Built a Chrome Extension with Codex Vibe Coding: EnvMate
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2026-06-12 11:20:00 / Modified: 11:25:22" itemprop="dateCreated datePublished" datetime="2026-06-12T11:20:00+08:00">2026-06-12</time>
+            </span>
+
+          
+            <div class="post-description">Why I built EnvMate, and how this Chrome extension helps me avoid mistakes across development, testing, staging, and production environments.</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>A Chrome extension I built with Codex has finally made it to release, and it is called <code>EnvMate</code>.</p>
+<p>If you want to install it right away, you can search for <code>EnvMate</code> in the Chrome Web Store, or just open this link directly:</p>
+<p><a target="_blank" rel="noopener" href="https://chromewebstore.google.com/detail/envmate/mccdmjfnlkkjmcioapnehkmpgkblhiei">https://chromewebstore.google.com/detail/envmate/mccdmjfnlkkjmcioapnehkmpgkblhiei</a></p>
+<p>At its core, it is a Chrome extension for multi-environment workflows. It solves a very specific but very familiar problem: a lot of development, testing, staging, and production systems look almost identical, and when you switch between them all day, it becomes far too easy to click in the wrong place.</p>
+<p>So this time I wanted to see whether I could solve two things in a lightweight way: making the current environment obvious at a glance, and making test-account login a lot less annoying.</p>
+<p>Here is the main configuration screen first:</p>
+<p><img src="envmate_overview.webp" alt="EnvMate overview"></p>
+<span id="more"></span>
+
+<h2 id="Why-I-wanted-to-build-this"><a href="#Why-I-wanted-to-build-this" class="headerlink" title="Why I wanted to build this"></a>Why I wanted to build this</h2><p>Over the years, I have felt more and more that plenty of online mistakes do not come from complicated technical issues. They often come from something much simpler, like looking at the wrong environment.</p>
+<p>The same system may exist in several versions, and the page structure, menus, and buttons all look almost the same. You think you are clicking around in a test environment, but the page in front of you is actually production. Or you are only trying to verify something quickly, and the action ends up landing somewhere it absolutely should not.</p>
+<p>It is not a complicated problem in theory, but if you switch between multiple environments regularly, you know how annoying it can be.</p>
+<p>Another practical issue is that some internal test systems around me have gradually been moving to <code>HTTPS</code>, but with self-signed certificates. Once that happens, Chrome’s built-in saved credentials and autofill do not always feel as smooth or reliable as before. You end up hunting for test accounts, retyping credentials, and constantly breaking your own flow.</p>
+<p>So what I wanted in the end was not some heavy “environment management platform.” I wanted a lightweight browser extension that opens fast and solves the real daily pain points:</p>
+<ol>
+<li>Let me see immediately which environment I am in.</li>
+<li>Let me fill the right test account quickly when I need to log in.</li>
+</ol>
+<p>That is the direction <code>EnvMate</code> came from.</p>
+<h2 id="What-EnvMate-can-do-right-now"><a href="#What-EnvMate-can-do-right-now" class="headerlink" title="What EnvMate can do right now"></a>What EnvMate can do right now</h2><p>The extension is not trying to do anything overly grand. Most of what it does is focused on two things: reducing mistakes and making environment switching smoother.</p>
+<h3 id="1-Identify-the-current-environment-with-URL-rules"><a href="#1-Identify-the-current-environment-with-URL-rules" class="headerlink" title="1. Identify the current environment with URL rules"></a>1. Identify the current environment with URL rules</h3><p>You can define matching rules for different environments, such as wildcard rules, prefix rules, or regular expressions. Once the current page URL matches one of those rules, the extension can identify which environment the page belongs to.</p>
+<p>The nice part is that this does not depend on changing the page itself, and it does not require the system to expose some special built-in environment marker. In a lot of cases, if the domain or path follows a pattern, that is already enough.</p>
+<p><img src="env_url_pattern.webp" alt="EnvMate URL rule configuration"></p>
+<h3 id="2-Mark-the-environment-in-a-way-you-are-unlikely-to-miss"><a href="#2-Mark-the-environment-in-a-way-you-are-unlikely-to-miss" class="headerlink" title="2. Mark the environment in a way you are unlikely to miss"></a>2. Mark the environment in a way you are unlikely to miss</h3><p>Once the environment is recognized, the next step is making sure you do not overlook it.</p>
+<p>Right now <code>EnvMate</code> supports a few very direct visual cues:</p>
+<ul>
+<li>page corner badges</li>
+<li>page watermarks</li>
+<li>page title prefixes</li>
+<li>combinations of corner badges and watermarks</li>
+</ul>
+<p>The point of these features is not to look fancy. The point is to be obvious.</p>
+<p>For example, production can keep a high-contrast badge visible at all times, while a test environment can use a softer watermark across the page. Even if the UI itself looks nearly identical, you can still tell where you are the moment you switch back to the tab or refocus the window.</p>
+<p><img src="envmate_pageicon.webp" alt="Page corner badge example"></p>
+<p><img src="envmate_watermark.webp" alt="Page watermark example"></p>
+<h3 id="3-Keep-test-accounts-tied-to-each-environment"><a href="#3-Keep-test-accounts-tied-to-each-environment" class="headerlink" title="3. Keep test accounts tied to each environment"></a>3. Keep test accounts tied to each environment</h3><p>Recognizing the environment is only half of it. A lot of the time, you also need to get into it quickly.</p>
+<p>So the extension also lets you maintain test accounts for each environment. Once you are on a matching page, you can choose the relevant account directly from the extension instead of digging through docs, chat history, or a password manager.</p>
+<p>This is especially handy for internal systems using self-signed <code>HTTPS</code>, where the browser’s built-in autofill is not always the smoothest option. Keeping the accounts close to the environment itself turns out to fit day-to-day testing much better.</p>
+<p>It is also worth saying clearly: the extension only fills information when you trigger it yourself. It does not auto-submit forms.</p>
+<p><img src="env_autofill.webp" alt="Extension popup with environment info and test accounts"></p>
+<p><img src="envmate_testaccount.webp" alt="Test account configuration screen"></p>
+<h3 id="4-Organize-many-environments-with-groups"><a href="#4-Organize-many-environments-with-groups" class="headerlink" title="4. Organize many environments with groups"></a>4. Organize many environments with groups</h3><p>If you are not dealing with just one system, or if a single product line already has dev, test, staging, and production environments stacked together, the configuration can become messy very quickly.</p>
+<p>So I also added grouping. You can organize environments by product, project, or business line, which makes the setup much easier to maintain as it grows.</p>
+<h2 id="Who-this-extension-is-for"><a href="#Who-this-extension-is-for" class="headerlink" title="Who this extension is for"></a>Who this extension is for</h2><p>If your daily work looks anything like this, <code>EnvMate</code> will probably feel useful:</p>
+<ul>
+<li>you switch between development, testing, staging, and production a lot</li>
+<li>several systems look too similar and are easy to mix up</li>
+<li>you log in with different test accounts frequently</li>
+<li>internal systems are moving to self-signed <code>HTTPS</code>, and built-in browser autofill no longer feels reliable enough</li>
+</ul>
+<p>It is not solving a huge abstract problem. It is solving a very specific, very frequent, and very real one.</p>
+<h2 id="Using-Codex-for-this-was-also-a-fun-experience"><a href="#Using-Codex-for-this-was-also-a-fun-experience" class="headerlink" title="Using Codex for this was also a fun experience"></a>Using Codex for this was also a fun experience</h2><p>Strictly speaking, this was a pretty typical vibe-coding project.</p>
+<p>I did not start by fully specifying every detail and then implementing it step by step. Instead, I locked onto the core goal first, then had Codex follow along while I kept refining the interactions, behavior, and small details.</p>
+<p>That rhythm feels quite different from the traditional “write the full spec first, then execute the plan” approach. It is closer to setting a clear direction and then pushing on every part that still feels awkward until the result starts to feel like a real tool you would actually keep using.</p>
+<p>For this kind of personal-efficiency, utility-shaped project, I think that approach works especially well. The benefit is not only speed. It is also that you can turn a vague idea into something real, installable, and useful in the browser with relatively little friction.</p>
+<h2 id="Installation-and-source-code"><a href="#Installation-and-source-code" class="headerlink" title="Installation and source code"></a>Installation and source code</h2><p>If you just want to install it, the Chrome Web Store is the simplest option:</p>
+<ul>
+<li>Chrome Web Store: <a target="_blank" rel="noopener" href="https://chromewebstore.google.com/detail/envmate/mccdmjfnlkkjmcioapnehkmpgkblhiei">https://chromewebstore.google.com/detail/envmate/mccdmjfnlkkjmcioapnehkmpgkblhiei</a></li>
+</ul>
+<p>If you want to look through the implementation, the source code is on GitHub:</p>
+<ul>
+<li>GitHub: <a target="_blank" rel="noopener" href="https://github.com/knktc/EnvMate">https://github.com/knktc/EnvMate</a></li>
+</ul>
+<p>I also uploaded a copy to Baidu Netdisk. If downloading the extension directly is inconvenient for you, you can use this link instead:</p>
+<ul>
+<li>Baidu Netdisk: <a target="_blank" rel="noopener" href="https://pan.baidu.com/s/133Z4ofjbWXourmDe2ntzeg?pwd=fg42">https://pan.baidu.com/s/133Z4ofjbWXourmDe2ntzeg?pwd=fg42</a></li>
+</ul>
+<p>If you want to install the <code>crx</code> manually, the process is simple:</p>
+<ol>
+<li>Open <code>chrome://extensions/</code> in Chrome.</li>
+<li>Turn on <code>Developer mode</code> in the top-right corner.</li>
+<li>If your browser allows direct <code>crx</code> installation, drag the downloaded file into the page and confirm the prompt.</li>
+<li>If your Chrome build does not allow direct <code>crx</code> installation, extract it first, then click <code>Load unpacked</code> and choose the extracted folder.</li>
+</ol>
+<p>If you spend a lot of time jumping between environments that all look the same, or if you have been fighting awkward account autofill in self-signed <code>HTTPS</code> systems, this extension might save you a few mistakes.</p>
+<p>And if I keep adding more convenient capabilities later, like smoother environment-switching helpers, more page-recognition details, or something better suited for team-shared configuration, I will keep iterating on it.</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>如果我的文字帮到了您，那么可不可以请我喝罐可乐？</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    Donate
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/en/images/wechat.png" alt="knktc WeChat Pay">
+        <p>WeChat Pay</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/en/images/alipay.jpg" alt="knktc Alipay">
+        <p>Alipay</p>
+      </div>
+
+  </div>
+</div>
+
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-6959365962327411"
+     data-ad-slot="4588493450"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>Post author:  </strong>knktc
+  </li>
+  <li class="post-copyright-link">
+    <strong>Post link: </strong>
+    <a href="https://knktc.com/2026/06/12/envmate-chrome-extension/" title="I Built a Chrome Extension with Codex Vibe Coding: EnvMate">https://knktc.com/2026/06/12/envmate-chrome-extension/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/en/tags/chrome/" rel="tag"># chrome</a>
+              <a href="/en/tags/extension/" rel="tag"># extension</a>
+              <a href="/en/tags/codex/" rel="tag"># codex</a>
+              <a href="/en/tags/vibe-coding/" rel="tag"># vibe-coding</a>
+              <a href="/en/tags/envmate/" rel="tag"># envmate</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/en/2026/06/01/psp-3000-upgrade-to-6-61-and-install-ark-4/" rel="prev" title="Upgrading a PSP 3000 to 6.61 and Installing Permanent ARK-4 CFW">
+      <i class="fa fa-chevron-left"></i> Upgrading a PSP 3000 to 6.61 and Installing Permanent ARK-4 CFW
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Why-I-wanted-to-build-this"><span class="nav-number">1.</span> <span class="nav-text">Why I wanted to build this</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#What-EnvMate-can-do-right-now"><span class="nav-number">2.</span> <span class="nav-text">What EnvMate can do right now</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-Identify-the-current-environment-with-URL-rules"><span class="nav-number">2.1.</span> <span class="nav-text">1. Identify the current environment with URL rules</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-Mark-the-environment-in-a-way-you-are-unlikely-to-miss"><span class="nav-number">2.2.</span> <span class="nav-text">2. Mark the environment in a way you are unlikely to miss</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Keep-test-accounts-tied-to-each-environment"><span class="nav-number">2.3.</span> <span class="nav-text">3. Keep test accounts tied to each environment</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-Organize-many-environments-with-groups"><span class="nav-number">2.4.</span> <span class="nav-text">4. Organize many environments with groups</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Who-this-extension-is-for"><span class="nav-number">3.</span> <span class="nav-text">Who this extension is for</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Using-Codex-for-this-was-also-a-fun-experience"><span class="nav-number">4.</span> <span class="nav-text">Using Codex for this was also a fun experience</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Installation-and-source-code"><span class="nav-number">5.</span> <span class="nav-text">Installation and source code</span></a></li></ol></div>
+          <div class="post-sidebar-wechat motion-element">
+            <img
+              class="post-sidebar-wechat-image"
+              src="/images/wechat-mp-qrcode.png"
+              alt="微信扫码关注我的公众号"
+              loading="lazy"
+            >
+            <p class="post-sidebar-wechat-name">中年工程师苟活指南</p>
+            <p class="post-sidebar-wechat-desc">微信扫码关注，获取更多新文章和实战折腾记录。</p>
+          </div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="knktc"
+      src="/en/images/sonic_avatar.png">
+  <p class="site-author-name" itemprop="name">knktc</p>
+  <div class="site-description" itemprop="description">Notes on Python, Linux, and cloud infrastructure.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/en/archives/">
+        
+          <span class="site-state-item-count">76</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">217</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/knktc" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;knktc" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/knktc" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;knktc" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+<div class="wechat-mp-widget motion-element">
+  <img
+    class="wechat-mp-widget-image"
+    src="/images/wechat-mp-qrcode.png"
+    alt="微信扫码关注我的公众号"
+    loading="lazy"
+  >
+  <p class="wechat-mp-widget-name">中年工程师苟活指南</p>
+  <p class="wechat-mp-widget-desc">微信扫码关注，第一时间看到新文章和折腾记录。</p>
+</div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/en/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">鄂ICP备2021019593号-1 </a>
+      <img src="/en/images/beian.png" style="display: inline-block;"><a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=42018502005554" rel="noopener" target="_blank">鄂公网安备 42018502005554号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">knktc</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/en/lib/anime.min.js"></script>
+
+<script src="/en/js/utils.js"></script>
+
+
+<script src="/en/js/schemes/pisces.js"></script>
+
+
+<script src="/en/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
