@@ -27,6 +27,7 @@
 <meta property="og:site_name" content="knktc的杂乱空间">
 <meta property="og:description" content="记录我为什么做 EnvMate，以及这个 Chrome 插件是怎么帮我在开发、测试、预发和生产环境之间少犯错的。">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://knktc.com/2026/06/12/envmate-chrome-extension/icon-128-display.png">
 <meta property="og:image" content="https://knktc.com/2026/06/12/envmate-chrome-extension/envmate_overview.webp">
 <meta property="og:image" content="https://knktc.com/2026/06/12/envmate-chrome-extension/env_url_pattern.webp">
 <meta property="og:image" content="https://knktc.com/2026/06/12/envmate-chrome-extension/envmate_pageicon.webp">
@@ -34,7 +35,7 @@
 <meta property="og:image" content="https://knktc.com/2026/06/12/envmate-chrome-extension/env_autofill.webp">
 <meta property="og:image" content="https://knktc.com/2026/06/12/envmate-chrome-extension/envmate_testaccount.webp">
 <meta property="article:published_time" content="2026-06-12T03:20:00.000Z">
-<meta property="article:modified_time" content="2026-06-12T03:23:57.481Z">
+<meta property="article:modified_time" content="2026-06-15T00:48:21.787Z">
 <meta property="article:author" content="knktc">
 <meta property="article:tag" content="chrome">
 <meta property="article:tag" content="codex">
@@ -42,7 +43,7 @@
 <meta property="article:tag" content="extension">
 <meta property="article:tag" content="envmate">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://knktc.com/2026/06/12/envmate-chrome-extension/envmate_overview.webp">
+<meta name="twitter:image" content="https://knktc.com/2026/06/12/envmate-chrome-extension/icon-128-display.png">
 
 <link rel="canonical" href="https://knktc.com/2026/06/12/envmate-chrome-extension/">
 
@@ -204,10 +205,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2026-06-12 11:20:00 / 修改时间：11:23:57" itemprop="dateCreated datePublished" datetime="2026-06-12T11:20:00+08:00">2026-06-12</time>
+              <time title="创建时间：2026-06-12 11:20:00" itemprop="dateCreated datePublished" datetime="2026-06-12T11:20:00+08:00">2026-06-12</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2026-06-15 08:48:21" itemprop="dateModified" datetime="2026-06-15T08:48:21+08:00">2026-06-15</time>
+              </span>
 
           
             <div class="post-description">记录我为什么做 EnvMate，以及这个 Chrome 插件是怎么帮我在开发、测试、预发和生产环境之间少犯错的。</div>
@@ -224,6 +231,7 @@
         <p>最近用 Codex 搓的一个 Chrome 插件终于上架了，名字叫 <code>EnvMate</code>。</p>
 <p>如果你想直接安装，可以去 Chrome 应用商店里搜 <code>EnvMate</code>，也可以直接点这个链接进去：</p>
 <p><a target="_blank" rel="noopener" href="https://chromewebstore.google.com/detail/envmate/mccdmjfnlkkjmcioapnehkmpgkblhiei">https://chromewebstore.google.com/detail/envmate/mccdmjfnlkkjmcioapnehkmpgkblhiei</a></p>
+<p><img src="icon-128-display.png" alt="EnvMate logo"></p>
 <p>它本质上是一个给“多环境切换”场景准备的 Chrome 插件，解决的是一个很具体、但又特别容易反复踩坑的问题：很多系统的开发、测试、预发、生产环境长得几乎一模一样，切来切去的时候，人很容易手滑。</p>
 <p>所以这次我就想试试看，能不能用一套比较轻的方式，把“看清当前环境”和“顺手切换测试账号”这两件事一起解决掉。</p>
 <p>先放一张整体配置页面的截图：</p>

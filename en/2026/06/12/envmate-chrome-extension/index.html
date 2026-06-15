@@ -27,6 +27,7 @@
 <meta property="og:site_name" content="knktc&#39;s Notes">
 <meta property="og:description" content="Why I built EnvMate, and how this Chrome extension helps me avoid mistakes across development, testing, staging, and production environments.">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://knktc.com/en/2026/06/12/envmate-chrome-extension/icon-128-display.png">
 <meta property="og:image" content="https://knktc.com/en/2026/06/12/envmate-chrome-extension/envmate_overview.webp">
 <meta property="og:image" content="https://knktc.com/en/2026/06/12/envmate-chrome-extension/env_url_pattern.webp">
 <meta property="og:image" content="https://knktc.com/en/2026/06/12/envmate-chrome-extension/envmate_pageicon.webp">
@@ -34,7 +35,7 @@
 <meta property="og:image" content="https://knktc.com/en/2026/06/12/envmate-chrome-extension/env_autofill.webp">
 <meta property="og:image" content="https://knktc.com/en/2026/06/12/envmate-chrome-extension/envmate_testaccount.webp">
 <meta property="article:published_time" content="2026-06-12T03:20:00.000Z">
-<meta property="article:modified_time" content="2026-06-12T03:25:22.818Z">
+<meta property="article:modified_time" content="2026-06-15T00:48:21.890Z">
 <meta property="article:author" content="knktc">
 <meta property="article:tag" content="chrome">
 <meta property="article:tag" content="extension">
@@ -42,7 +43,7 @@
 <meta property="article:tag" content="vibe-coding">
 <meta property="article:tag" content="envmate">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://knktc.com/en/2026/06/12/envmate-chrome-extension/envmate_overview.webp">
+<meta name="twitter:image" content="https://knktc.com/en/2026/06/12/envmate-chrome-extension/icon-128-display.png">
 
 <link rel="canonical" href="https://knktc.com/en/2026/06/12/envmate-chrome-extension/">
 
@@ -204,10 +205,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2026-06-12 11:20:00 / Modified: 11:25:22" itemprop="dateCreated datePublished" datetime="2026-06-12T11:20:00+08:00">2026-06-12</time>
+              <time title="Created: 2026-06-12 11:20:00" itemprop="dateCreated datePublished" datetime="2026-06-12T11:20:00+08:00">2026-06-12</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2026-06-15 08:48:21" itemprop="dateModified" datetime="2026-06-15T08:48:21+08:00">2026-06-15</time>
+              </span>
 
           
             <div class="post-description">Why I built EnvMate, and how this Chrome extension helps me avoid mistakes across development, testing, staging, and production environments.</div>
@@ -224,6 +231,7 @@
         <p>A Chrome extension I built with Codex has finally made it to release, and it is called <code>EnvMate</code>.</p>
 <p>If you want to install it right away, you can search for <code>EnvMate</code> in the Chrome Web Store, or just open this link directly:</p>
 <p><a target="_blank" rel="noopener" href="https://chromewebstore.google.com/detail/envmate/mccdmjfnlkkjmcioapnehkmpgkblhiei">https://chromewebstore.google.com/detail/envmate/mccdmjfnlkkjmcioapnehkmpgkblhiei</a></p>
+<p><img src="icon-128-display.png" alt="EnvMate logo"></p>
 <p>At its core, it is a Chrome extension for multi-environment workflows. It solves a very specific but very familiar problem: a lot of development, testing, staging, and production systems look almost identical, and when you switch between them all day, it becomes far too easy to click in the wrong place.</p>
 <p>So this time I wanted to see whether I could solve two things in a lightweight way: making the current environment obvious at a glance, and making test-account login a lot less annoying.</p>
 <p>Here is the main configuration screen first:</p>
