@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"knktc.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="最近在用 Headlamp 管理 Kubernetes 集群时，注意到页面顶部有一个全局搜索框。 输入 Pod 名称、namespace，甚至是资源类型，都能很快跳到目标资源。第一眼看上去，它很像是接入了某种集群搜索服务：把搜索词发给 Kubernetes API，然后由后端返回模糊匹配的结果。 出于好奇翻了一下实现，发现它的思路其实很直接：先把资源列表拉到前端，再在浏览器里做模糊搜索。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Headlamp 顶部的模糊搜索，是怎么实现的？">
+<meta property="og:url" content="https://knktc.com/2026/07/29/headlamp-global-fuzzy-search/">
+<meta property="og:site_name" content="knktc的杂乱空间">
+<meta property="og:description" content="最近在用 Headlamp 管理 Kubernetes 集群时，注意到页面顶部有一个全局搜索框。 输入 Pod 名称、namespace，甚至是资源类型，都能很快跳到目标资源。第一眼看上去，它很像是接入了某种集群搜索服务：把搜索词发给 Kubernetes API，然后由后端返回模糊匹配的结果。 出于好奇翻了一下实现，发现它的思路其实很直接：先把资源列表拉到前端，再在浏览器里做模糊搜索。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://knktc.com/2026/07/29/headlamp-global-fuzzy-search/search-demo.png">
+<meta property="og:image" content="https://knktc.com/2026/07/29/headlamp-global-fuzzy-search/search-theme.png">
+<meta property="article:published_time" content="2026-07-29T14:00:00.000Z">
+<meta property="article:modified_time" content="2026-07-29T00:58:52.769Z">
+<meta property="article:author" content="knktc">
+<meta property="article:tag" content="kubernetes">
+<meta property="article:tag" content="headlamp">
+<meta property="article:tag" content="搜索">
+<meta property="article:tag" content="fuse.js">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://knktc.com/2026/07/29/headlamp-global-fuzzy-search/search-demo.png">
+
+<link rel="canonical" href="https://knktc.com/2026/07/29/headlamp-global-fuzzy-search/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+<link rel="alternate" hreflang="zh-CN" href="&#x2F;2026&#x2F;07&#x2F;29&#x2F;headlamp-global-fuzzy-search&#x2F;">
+
+  <title>Headlamp 顶部的模糊搜索，是怎么实现的？ | knktc的杂乱空间</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a23b2d1c6159a3a6c798edbc7f9211f9";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="knktc的杂乱空间" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">knktc的杂乱空间</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">python,cloud,linux...</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://knktc.com/2026/07/29/headlamp-global-fuzzy-search/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/sonic_avatar.png">
+      <meta itemprop="name" content="knktc">
+      <meta itemprop="description" content="关注linux,云计算,python，杂乱之地...">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="knktc的杂乱空间">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Headlamp 顶部的模糊搜索，是怎么实现的？
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2026-07-29 22:00:00 / 修改时间：08:58:52" itemprop="dateCreated datePublished" datetime="2026-07-29T22:00:00+08:00">2026-07-29</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>最近在用 <a target="_blank" rel="noopener" href="https://headlamp.dev/">Headlamp</a> 管理 Kubernetes 集群时，注意到页面顶部有一个全局搜索框。</p>
+<p>输入 Pod 名称、namespace，甚至是资源类型，都能很快跳到目标资源。第一眼看上去，它很像是接入了某种集群搜索服务：把搜索词发给 Kubernetes API，然后由后端返回模糊匹配的结果。</p>
+<p>出于好奇翻了一下实现，发现它的思路其实很直接：<strong>先把资源列表拉到前端，再在浏览器里做模糊搜索。</strong></p>
+<p><img src="search-demo.png" alt="在搜索框中输入 envoy-gateway 后，Headlamp 同时返回多种 Kubernetes 资源"></p>
+<span id="more"></span>
+
+<h2 id="Kubernetes-API-并不提供通用模糊查询"><a href="#Kubernetes-API-并不提供通用模糊查询" class="headerlink" title="Kubernetes API 并不提供通用模糊查询"></a>Kubernetes API 并不提供通用模糊查询</h2><p>Kubernetes API 可以通过 label selector、field selector 等条件筛选资源。例如，可以按标签找一批 Pod。</p>
+<p>但它并不支持下面这类通用查询：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">查找名称大概包含 nginx 的所有资源</span><br><span class="line">查找拼写接近 deploymnt 的 Deployment</span><br><span class="line">跨多种资源类型进行全文搜索</span><br></pre></td></tr></table></figure>
+
+<p>所以 Headlamp 不会把用户输入直接交给 Kubernetes API 做模糊匹配。</p>
+<h2 id="打开搜索后，先收集候选资源"><a href="#打开搜索后，先收集候选资源" class="headerlink" title="打开搜索后，先收集候选资源"></a>打开搜索后，先收集候选资源</h2><p>当点击顶部搜索框，或者按下默认快捷键 <code>/</code> 时，Headlamp 会开始准备搜索数据。它会读取当前集群里的多类 Kubernetes 资源，包括：</p>
+<ul>
+<li>Pod</li>
+<li>Deployment</li>
+<li>Service</li>
+<li>Job 和 CronJob</li>
+<li>ConfigMap</li>
+<li>Namespace</li>
+<li>StatefulSet、ReplicaSet</li>
+<li>PVC、Ingress、Node、ServiceAccount 等</li>
+</ul>
+<p>对于 Pod 这类 namespace 级资源，如果当前集群允许访问多个 namespace，Headlamp 会针对每个 namespace 分别发起 List 请求，再把结果合并到前端的同一个资源列表中。</p>
+<p>例如，允许访问的范围是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">default</span><br><span class="line">kube-system</span><br><span class="line">monitoring</span><br></pre></td></tr></table></figure>
+
+<p>那么 Pod 数据大致就来自三个 namespace 的列表请求。若没有限制 namespace，则会使用集群范围的列表请求；最终能看到哪些资源，依然由 Kubernetes RBAC 决定。</p>
+<h2 id="真正的搜索发生在浏览器里"><a href="#真正的搜索发生在浏览器里" class="headerlink" title="真正的搜索发生在浏览器里"></a>真正的搜索发生在浏览器里</h2><p>资源列表到达前端后，Headlamp 会把每个对象整理为可搜索项。除了资源名称外，其中还会带上资源类型、namespace、labels 和用于展示的辅助信息。</p>
+<p>然后，它使用 <a target="_blank" rel="noopener" href="https://www.fusejs.io/">Fuse.js</a> 做本地模糊匹配。</p>
+<p>因此，输入：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">coredns kube-system</span><br></pre></td></tr></table></figure>
+
+<p>并不是向 API Server 发送一个包含模糊条件的请求，而是在已加载的候选项中匹配。多个词的行为更接近 AND：结果需要同时匹配 <code>coredns</code> 和 <code>kube-system</code>，但两个词可以命中不同字段，例如一个命中资源名，另一个命中 namespace。</p>
+<p>如果输入类似：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">app=coredns</span><br></pre></td></tr></table></figure>
+
+<p>标签也会成为匹配线索。</p>
+<p>为了控制误命中和结果数量，Headlamp 对 Fuse.js 使用了较严格的匹配阈值，并限制了最多展示的结果数。搜索结果中的命中片段也可以被高亮出来。</p>
+<h2 id="它不只是-Kubernetes-资源搜索"><a href="#它不只是-Kubernetes-资源搜索" class="headerlink" title="它不只是 Kubernetes 资源搜索"></a>它不只是 Kubernetes 资源搜索</h2><p>Headlamp 顶部搜索框中混入的并不只有 Kubernetes 对象。它还会放入一些可以直接跳转或执行的项目，例如：</p>
+<ul>
+<li>集群切换</li>
+<li>页面入口</li>
+<li>namespace 设置</li>
+<li>主题切换</li>
+<li>快捷键设置</li>
+<li>跳转到高级搜索的建议</li>
+</ul>
+<p>因此，它更像是“资源导航 + 命令面板”的组合，而不仅仅是一个 Pod 搜索框。</p>
+<p><img src="search-theme.png" alt="搜索 theme 时，结果中同时出现主题切换、资源、高级搜索和 namespace 设置"></p>
+<h2 id="为什么结果看起来很实时？"><a href="#为什么结果看起来很实时？" class="headerlink" title="为什么结果看起来很实时？"></a>为什么结果看起来很实时？</h2><p>初次获取资源列表后，Headlamp 还会借助 Kubernetes 的 Watch 机制持续接收资源变化。Pod 创建、更新或删除时，前端维护的资源集合也会随之刷新。</p>
+<p>整个过程可以概括为：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Kubernetes List 获取初始状态</span><br><span class="line">        ↓</span><br><span class="line">Watch 接收后续资源变化</span><br><span class="line">        ↓</span><br><span class="line">前端维护当前资源视图</span><br><span class="line">        ↓</span><br><span class="line">Fuse.js 在本地完成模糊匹配</span><br><span class="line">        ↓</span><br><span class="line">跳转到资源详情或执行相应操作</span><br></pre></td></tr></table></figure>
+
+<h2 id="这种实现适合什么场景？"><a href="#这种实现适合什么场景？" class="headerlink" title="这种实现适合什么场景？"></a>这种实现适合什么场景？</h2><p>这套方案的优点很明显：不需要额外部署搜索服务，搜索响应很快，也能把资源、页面和操作收进一个入口。</p>
+<p>不过它并不是真正的集群级搜索引擎。资源量或集群数量很大时，压力主要不在 Fuse.js，而在于前端需要先拉取并持续维护大量资源清单。</p>
+<p>所以 Headlamp 的顶部搜索更适合导航型需求：我大概知道自己要找什么资源，希望尽快跳过去。对于跨集群检索大量 YAML 内容、复杂全文查询、历史状态检索，或者几十万对象下的稳定低延迟搜索，则更适合使用独立的索引服务。</p>
+<h2 id="一点思考"><a href="#一点思考" class="headerlink" title="一点思考"></a>一点思考</h2><p>Headlamp 的全局搜索没有依赖 Kubernetes API 的模糊查询能力，而是把 Kubernetes 的 List 和 Watch 能力与前端的 Fuse.js 搜索结合起来。一个看起来像“全局搜索”的功能，背后其实是资源缓存与前端交互的组合。</p>
+<p>这让我想到，在云原生时代，很多基础设施都会尽量直接建立在 Kubernetes 原生能力之上：通过 List 获取初始状态，用 Watch 持续同步变化，再在自己的缓存或界面层完成所需的交互。这样做不一定能覆盖所有场景，却能少引入一套额外的组件、存储和运维成本，也天然沿用 Kubernetes 的 RBAC 与资源模型。</p>
+<p>当然，真正的大规模全文检索仍然需要专门的索引服务；但当需求只是围绕当前可见资源做导航、筛选、聚合或简单的状态判断时，Headlamp 的思路很值得借鉴。实现功能时，不妨先问一句：能不能先用 Kubernetes 已有的 List、Watch、label 和资源状态把问题解决，再在本地维护一个足够小、足够新鲜的视图？</p>
+<p>很多时候，答案是可以的。它不试图把自己做成搜索引擎，而是把当前可见的集群资源整理成一个足够顺手的导航入口；这种克制，反而让功能更贴合云原生系统本身的运行方式。</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>如果我的文字帮到了您，那么可不可以请我喝罐可乐？</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechat.png" alt="knktc 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="knktc 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-6959365962327411"
+     data-ad-slot="4588493450"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>knktc
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://knktc.com/2026/07/29/headlamp-global-fuzzy-search/" title="Headlamp 顶部的模糊搜索，是怎么实现的？">https://knktc.com/2026/07/29/headlamp-global-fuzzy-search/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/kubernetes/" rel="tag"># kubernetes</a>
+              <a href="/tags/headlamp/" rel="tag"># headlamp</a>
+              <a href="/tags/%E6%90%9C%E7%B4%A2/" rel="tag"># 搜索</a>
+              <a href="/tags/fuse-js/" rel="tag"># fuse.js</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2026/06/12/envmate-chrome-extension/" rel="prev" title="我用 Codex vibe coding 搓了一个 Chrome 插件：EnvMate">
+      <i class="fa fa-chevron-left"></i> 我用 Codex vibe coding 搓了一个 Chrome 插件：EnvMate
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Kubernetes-API-%E5%B9%B6%E4%B8%8D%E6%8F%90%E4%BE%9B%E9%80%9A%E7%94%A8%E6%A8%A1%E7%B3%8A%E6%9F%A5%E8%AF%A2"><span class="nav-number">1.</span> <span class="nav-text">Kubernetes API 并不提供通用模糊查询</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%93%E5%BC%80%E6%90%9C%E7%B4%A2%E5%90%8E%EF%BC%8C%E5%85%88%E6%94%B6%E9%9B%86%E5%80%99%E9%80%89%E8%B5%84%E6%BA%90"><span class="nav-number">2.</span> <span class="nav-text">打开搜索后，先收集候选资源</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9C%9F%E6%AD%A3%E7%9A%84%E6%90%9C%E7%B4%A2%E5%8F%91%E7%94%9F%E5%9C%A8%E6%B5%8F%E8%A7%88%E5%99%A8%E9%87%8C"><span class="nav-number">3.</span> <span class="nav-text">真正的搜索发生在浏览器里</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%83%E4%B8%8D%E5%8F%AA%E6%98%AF-Kubernetes-%E8%B5%84%E6%BA%90%E6%90%9C%E7%B4%A2"><span class="nav-number">4.</span> <span class="nav-text">它不只是 Kubernetes 资源搜索</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E7%BB%93%E6%9E%9C%E7%9C%8B%E8%B5%B7%E6%9D%A5%E5%BE%88%E5%AE%9E%E6%97%B6%EF%BC%9F"><span class="nav-number">5.</span> <span class="nav-text">为什么结果看起来很实时？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%99%E7%A7%8D%E5%AE%9E%E7%8E%B0%E9%80%82%E5%90%88%E4%BB%80%E4%B9%88%E5%9C%BA%E6%99%AF%EF%BC%9F"><span class="nav-number">6.</span> <span class="nav-text">这种实现适合什么场景？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E7%82%B9%E6%80%9D%E8%80%83"><span class="nav-number">7.</span> <span class="nav-text">一点思考</span></a></li></ol></div>
+          <div class="post-sidebar-wechat motion-element">
+            <img
+              class="post-sidebar-wechat-image"
+              src="/images/wechat-mp-qrcode.png"
+              alt="微信扫码关注我的公众号"
+              loading="lazy"
+            >
+            <p class="post-sidebar-wechat-name">中年工程师苟活指南</p>
+            <p class="post-sidebar-wechat-desc">微信扫码关注，获取更多新文章和实战折腾记录。</p>
+          </div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="knktc"
+      src="/images/sonic_avatar.png">
+  <p class="site-author-name" itemprop="name">knktc</p>
+  <div class="site-description" itemprop="description">关注linux,云计算,python，杂乱之地...</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">78</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">241</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/knktc" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;knktc" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/knktc" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;knktc" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+<div class="wechat-mp-widget motion-element">
+  <img
+    class="wechat-mp-widget-image"
+    src="/images/wechat-mp-qrcode.png"
+    alt="微信扫码关注我的公众号"
+    loading="lazy"
+  >
+  <p class="wechat-mp-widget-name">中年工程师苟活指南</p>
+  <p class="wechat-mp-widget-desc">微信扫码关注，第一时间看到新文章和折腾记录。</p>
+</div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">鄂ICP备2021019593号-1 </a>
+      <img src="/images/beian.png" style="display: inline-block;"><a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=42018502005554" rel="noopener" target="_blank">鄂公网安备 42018502005554号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">knktc</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

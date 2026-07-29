@@ -6,7 +6,7 @@
   <link href="https://knktc.com/en/atom.xml" rel="self"/>
   
   <link href="https://knktc.com/en/"/>
-  <updated>2026-06-15T00:48:21.890Z</updated>
+  <updated>2026-07-29T01:05:49.837Z</updated>
   <id>https://knktc.com/en/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>How Headlamp&#39;s Top-Bar Fuzzy Search Works</title>
+    <link href="https://knktc.com/en/2026/07/29/headlamp-global-fuzzy-search/"/>
+    <id>https://knktc.com/en/2026/07/29/headlamp-global-fuzzy-search/</id>
+    <published>2026-07-29T14:00:00.000Z</published>
+    <updated>2026-07-29T01:05:49.837Z</updated>
+    
+    <content type="html"><![CDATA[<p>While using <a href="https://headlamp.dev/">Headlamp</a> to manage Kubernetes clusters, I noticed the global search box in its top bar.</p><p>Type a Pod name, a namespace, or even a resource kind, and it quickly takes you to something useful. At first, I assumed it was backed by a cluster search service: perhaps the query was sent to the Kubernetes API and the backend returned fuzzy matches.</p><p>After looking into the implementation, the idea turned out to be much simpler: <strong>load resource lists into the frontend, then perform fuzzy matching in the browser.</strong></p><span id="more"></span><p><img src="search-demo.png" alt="Searching for envoy-gateway returns multiple Kubernetes resource types in Headlamp"></p><h2 id="The-Kubernetes-API-does-not-offer-general-fuzzy-search"><a href="#The-Kubernetes-API-does-not-offer-general-fuzzy-search" class="headerlink" title="The Kubernetes API does not offer general fuzzy search"></a>The Kubernetes API does not offer general fuzzy search</h2><p>The Kubernetes API supports filtering resources with label selectors, field selectors, and similar conditions. For example, you can select a set of Pods by label.</p><p>It does not, however, provide general-purpose queries such as:</p><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Find every resource whose name roughly contains nginx</span><br><span class="line">Find Deployments with names close to deploymnt</span><br><span class="line">Run a full-text search across multiple resource kinds</span><br></pre></td></tr></table></figure><p>So Headlamp does not hand the user’s input to the Kubernetes API and ask it to fuzzy-match resources.</p><h2 id="It-gathers-candidate-resources-first"><a href="#It-gathers-candidate-resources-first" class="headerlink" title="It gathers candidate resources first"></a>It gathers candidate resources first</h2><p>When you open the search box, or press the default <code>/</code> shortcut, Headlamp starts preparing its search data. It lists several Kubernetes resource kinds, including:</p><ul><li>Pods</li><li>Deployments</li><li>Services</li><li>Jobs and CronJobs</li><li>ConfigMaps</li><li>Namespaces</li><li>StatefulSets and ReplicaSets</li><li>PVCs, Ingresses, Nodes, ServiceAccounts, and more</li></ul><p>For namespaced resources such as Pods, Headlamp sends a separate List request for each namespace that the current cluster configuration allows, then merges the results into one frontend resource list.</p><p>For example, if access is limited to:</p><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">default</span><br><span class="line">kube-system</span><br><span class="line">monitoring</span><br></pre></td></tr></table></figure><p>the Pod data comes from list requests for those three namespaces. If no namespaces are configured, it uses a cluster-wide list request instead. Kubernetes RBAC still determines what the current user can actually see.</p><h2 id="The-actual-search-happens-in-the-browser"><a href="#The-actual-search-happens-in-the-browser" class="headerlink" title="The actual search happens in the browser"></a>The actual search happens in the browser</h2><p>Once the lists reach the frontend, Headlamp turns each object into a searchable item. In addition to a resource name, the item carries details such as its kind, namespace, labels, and display metadata.</p><p>It then uses <a href="https://www.fusejs.io/">Fuse.js</a> for local fuzzy matching.</p><p>That means a query like:</p><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">coredns kube-system</span><br></pre></td></tr></table></figure><p>does not produce a fuzzy-search request to the API server. Instead, Headlamp searches the candidates it has already loaded. Multiple words behave more like an AND condition: a result needs to match both <code>coredns</code> and <code>kube-system</code>, though they can match different fields—for example, the resource name and namespace respectively.</p><p>An input such as:</p><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">app=coredns</span><br></pre></td></tr></table></figure><p>can also serve as a label-matching hint.</p><p>To avoid noisy results, Headlamp uses a relatively strict Fuse.js threshold and caps the number of displayed matches. It can also highlight the parts that matched.</p><h2 id="It-is-more-than-Kubernetes-resource-search"><a href="#It-is-more-than-Kubernetes-resource-search" class="headerlink" title="It is more than Kubernetes resource search"></a>It is more than Kubernetes resource search</h2><p>The top-bar search does not only contain Kubernetes objects. It also includes items that can take you somewhere or perform an action, such as:</p><ul><li>cluster switching;</li><li>page navigation;</li><li>namespace settings;</li><li>theme switching;</li><li>keyboard shortcut settings;</li><li>a suggestion to open Advanced Search.</li></ul><p>That makes it closer to a combination of resource navigator and command palette than a Pod search box.</p><p><img src="search-theme.png" alt="Searching for theme exposes theme choices alongside resources, Advanced Search, and namespace actions"></p><h2 id="Why-does-it-feel-so-up-to-date"><a href="#Why-does-it-feel-so-up-to-date" class="headerlink" title="Why does it feel so up to date?"></a>Why does it feel so up to date?</h2><p>After retrieving the initial resource lists, Headlamp also uses Kubernetes Watch to keep receiving changes. When a Pod is created, updated, or deleted, the resource collection maintained by the frontend is updated as well.</p><p>The flow looks roughly like this:</p><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Kubernetes List retrieves the initial state</span><br><span class="line">        ↓</span><br><span class="line">Watch receives later resource changes</span><br><span class="line">        ↓</span><br><span class="line">The frontend maintains a current resource view</span><br><span class="line">        ↓</span><br><span class="line">Fuse.js performs local fuzzy matching</span><br><span class="line">        ↓</span><br><span class="line">Headlamp opens the resource details or performs the chosen action</span><br></pre></td></tr></table></figure><h2 id="Where-does-this-approach-fit"><a href="#Where-does-this-approach-fit" class="headerlink" title="Where does this approach fit?"></a>Where does this approach fit?</h2><p>The advantages are clear: no separate search service is required, results feel responsive, and resources, pages, and actions can share a single entry point.</p><p>It is not a cluster-scale search engine, though. In a large cluster or across many clusters, the expensive part is less likely to be Fuse.js itself than fetching and continuously maintaining a large resource inventory in the frontend.</p><p>Headlamp’s top-bar search is therefore best suited to navigation: you roughly know what you need and want to get there quickly. Searching large volumes of YAML across clusters, complex full-text queries, historical state, or consistently low latency for hundreds of thousands of objects calls for a dedicated indexing service instead.</p><h2 id="A-final-thought"><a href="#A-final-thought" class="headerlink" title="A final thought"></a>A final thought</h2><p>Headlamp does not depend on a fuzzy-search feature in the Kubernetes API. It combines Kubernetes List and Watch with Fuse.js in the frontend. What looks like a global search feature is really a carefully maintained resource view paired with a convenient interaction layer.</p><p>This is a pattern I keep noticing in cloud-native systems. Infrastructure software often tries to build directly on Kubernetes-native capabilities: use List to get the initial state, Watch to keep it current, then add the interaction or workflow it needs on top of a local cache or UI layer. It will not solve every problem, but it avoids introducing another component, storage system, and operational burden—and it naturally retains Kubernetes’ RBAC and resource model.</p><p>Large-scale full-text search still deserves a purpose-built indexing service. But for navigation, filtering, aggregation, or lightweight status checks over the resources a user can already see, Headlamp’s approach is worth keeping in mind. Before adding another service, it is often worth asking: can List, Watch, labels, and resource status solve this first, with a small and fresh local view?</p><p>Quite often, they can. Headlamp does not try to become a search engine; it turns visible cluster resources into a useful navigation entry point. That restraint is what makes the feature fit naturally into the way cloud-native systems already work.</p>]]></content>
+    
+    
+    <summary type="html">A look at how Headlamp combines Kubernetes List and Watch APIs with Fuse.js to provide its top-bar resource search.</summary>
+    
+    
+    
+    
+    <category term="kubernetes" scheme="https://knktc.com/en/tags/kubernetes/"/>
+    
+    <category term="headlamp" scheme="https://knktc.com/en/tags/headlamp/"/>
+    
+    <category term="search" scheme="https://knktc.com/en/tags/search/"/>
+    
+    <category term="fuse.js" scheme="https://knktc.com/en/tags/fuse-js/"/>
+    
+  </entry>
   
   <entry>
     <title>I Built a Chrome Extension with Codex Vibe Coding: EnvMate</title>
@@ -508,33 +533,6 @@
     <category term="nginx" scheme="https://knktc.com/en/tags/nginx/"/>
     
     <category term="etag" scheme="https://knktc.com/en/tags/etag/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Use Jira Charts Inside Confluence</title>
-    <link href="https://knktc.com/en/2022/02/17/add-jira-charts-to-confluence-macro/"/>
-    <id>https://knktc.com/en/2022/02/17/add-jira-charts-to-confluence-macro/</id>
-    <published>2022-02-17T14:56:53.000Z</published>
-    <updated>2026-04-29T01:36:04.080Z</updated>
-    
-    <content type="html"><![CDATA[<p>I recently wanted to build a weekly report in Confluence and embed a Jira burndown chart directly into the page. Confluence’s built-in macros did not include the chart I needed, so I looked into it and found that Atlassian actually supports using Jira dashboard gadgets as Confluence macros.</p><span id="more"></span><p>Since Jira dashboards can already display a burndown chart, the idea is to make that same gadget available in Confluence.</p><p>First, open the Jira home page. If you already have a dashboard, there should be an “Add gadget” button somewhere near the top right:</p><p><a href="https://imgtu.com/i/HIqk0P"><img src="https://s4.ax1x.com/2022/02/17/HIqk0P.png" alt="Jira add gadget"></a></p><p>After clicking it, a gadget dialog will appear. Choose the gadget you want, click “View XML”, and copy the XML URL:</p><p><a href="https://imgtu.com/i/HIqATf"><img src="https://s4.ax1x.com/2022/02/17/HIqATf.md.png" alt="Copy gadget XML URL"></a></p><p>Next, log in to Confluence as an administrator and open the site administration page. Under the “External Gadgets” section, on the gadget specification tab, paste the XML URL you copied and click “Add”:</p><p><a href="https://imgtu.com/i/HIqZtS"><img src="https://s4.ax1x.com/2022/02/17/HIqZtS.md.png" alt="Add external gadget in Confluence"></a></p><p>After that, when you add a macro to a Confluence page, you should see the registered gadgets in the macro picker. At that point you can insert the same gadget that exists on the Jira dashboard:</p><p><a href="https://imgtu.com/i/HIqVk8"><img src="https://s4.ax1x.com/2022/02/17/HIqVk8.md.png" alt="Use Jira gadget as a macro"></a></p><p>One thing to note is that these gadgets are implemented with iframes, so in practice users usually need Confluence and Jira authentication to be connected properly, typically through OAuth or a similar integration.</p><p>Reference:</p><ul><li><a href="https://confluence.atlassian.com/doc/registering-external-gadgets-204050482.html">Atlassian official documentation</a></li></ul>]]></content>
-    
-    
-    <summary type="html">Add Jira dashboard gadgets such as burndown charts to Confluence by registering them as external gadgets.</summary>
-    
-    
-    
-    
-    <category term="jira" scheme="https://knktc.com/en/tags/jira/"/>
-    
-    <category term="confluence" scheme="https://knktc.com/en/tags/confluence/"/>
-    
-    <category term="wiki" scheme="https://knktc.com/en/tags/wiki/"/>
-    
-    <category term="macro" scheme="https://knktc.com/en/tags/macro/"/>
-    
-    <category term="gadgets" scheme="https://knktc.com/en/tags/gadgets/"/>
     
   </entry>
   
