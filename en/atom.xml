@@ -270,11 +270,11 @@
     
     <category term="git" scheme="https://knktc.com/en/tags/git/"/>
     
-    <category term="ssh" scheme="https://knktc.com/en/tags/ssh/"/>
-    
     <category term="macos" scheme="https://knktc.com/en/tags/macos/"/>
     
     <category term="ventura" scheme="https://knktc.com/en/tags/ventura/"/>
+    
+    <category term="ssh" scheme="https://knktc.com/en/tags/ssh/"/>
     
     <category term="permission" scheme="https://knktc.com/en/tags/permission/"/>
     
