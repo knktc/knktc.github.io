@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"knktc.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="记录一下我最近在用的 Kubernetes port-forward 工具 kftray。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="我开始用 kftray 管理 Kubernetes port-forward 了">
+<meta property="og:url" content="https://knktc.com/2026/08/19/kftray-manage-kubernetes-port-forwards/">
+<meta property="og:site_name" content="knktc的杂乱空间">
+<meta property="og:description" content="记录一下我最近在用的 Kubernetes port-forward 工具 kftray。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://knktc.com/2026/08/19/kftray-manage-kubernetes-port-forwards/overview.png">
+<meta property="og:image" content="https://knktc.com/2026/08/19/kftray-manage-kubernetes-port-forwards/add-config.png">
+<meta property="og:image" content="https://knktc.com/2026/08/19/kftray-manage-kubernetes-port-forwards/click-to-open.png">
+<meta property="og:image" content="https://knktc.com/2026/08/19/kftray-manage-kubernetes-port-forwards/workload-type.png">
+<meta property="article:published_time" content="2026-08-19T02:00:00.000Z">
+<meta property="article:modified_time" content="2026-08-19T06:07:23.676Z">
+<meta property="article:author" content="knktc">
+<meta property="article:tag" content="kubernetes">
+<meta property="article:tag" content="kftray">
+<meta property="article:tag" content="port-forward">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://knktc.com/2026/08/19/kftray-manage-kubernetes-port-forwards/overview.png">
+
+<link rel="canonical" href="https://knktc.com/2026/08/19/kftray-manage-kubernetes-port-forwards/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+<link rel="alternate" hreflang="zh-CN" href="&#x2F;2026&#x2F;08&#x2F;19&#x2F;kftray-manage-kubernetes-port-forwards&#x2F;">
+<link rel="alternate" hreflang="en" href="&#x2F;en&#x2F;2026&#x2F;08&#x2F;19&#x2F;kftray-manage-kubernetes-port-forwards&#x2F;">
+<link rel="alternate" hreflang="x-default" href="&#x2F;2026&#x2F;08&#x2F;19&#x2F;kftray-manage-kubernetes-port-forwards&#x2F;">
+
+  <title>我开始用 kftray 管理 Kubernetes port-forward 了 | knktc的杂乱空间</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a23b2d1c6159a3a6c798edbc7f9211f9";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="knktc的杂乱空间" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">knktc的杂乱空间</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">python,cloud,linux...</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://knktc.com/2026/08/19/kftray-manage-kubernetes-port-forwards/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/sonic_avatar.png">
+      <meta itemprop="name" content="knktc">
+      <meta itemprop="description" content="关注linux,云计算,python，杂乱之地...">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="knktc的杂乱空间">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          我开始用 kftray 管理 Kubernetes port-forward 了
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2026-08-19 10:00:00 / 修改时间：14:07:23" itemprop="dateCreated datePublished" datetime="2026-08-19T10:00:00+08:00">2026-08-19</time>
+            </span>
+
+          
+            <div class="post-description">记录一下我最近在用的 Kubernetes port-forward 工具 kftray。</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>最近在折腾多个 Kubernetes 环境时，有个小问题一直挺烦的。</p>
+<p>有些服务只给集群内部用，平时想看个页面、调个接口，最直接的办法就是 <code>kubectl port-forward</code>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl -n monitoring port-forward svc/prometheus 9090:9090</span><br></pre></td></tr></table></figure>
+
+<p>一两个服务当然没什么。可环境一多，情况就开始变得有点乱：这个服务在哪个 kubeconfig 里、哪个 namespace、要转到本地哪个端口，隔几天不用基本又要重新翻一遍。</p>
+<p>以前我一般是临时写个 HTTPRoute，或者开个终端跑 <code>kubectl port-forward</code>。前者对“我就进去看一眼”的需求有点重，后者则是命令越攒越多，过两天自己都不太记得当时怎么转的。</p>
+<p>后来发现了 <a target="_blank" rel="noopener" href="https://kftray.app/">kftray</a>，用下来感觉还挺顺手，就记录一下。</p>
+<span id="more"></span>
+
+<p>它的项目在这里：<a target="_blank" rel="noopener" href="https://github.com/hcavarsan/kftray">hcavarsan/kftray</a>。</p>
+<p>下载时会看到 <code>kftray</code> 和 <code>kftui</code> 两个工具：前者是带界面的版本，平时就放在系统菜单栏里；后者是终端版。我自己目前只用了 <code>kftray</code>，所以这篇也只聊它。</p>
+<h2 id="它解决的其实就是“别让我再记命令”"><a href="#它解决的其实就是“别让我再记命令”" class="headerlink" title="它解决的其实就是“别让我再记命令”"></a>它解决的其实就是“别让我再记命令”</h2><p>kftray 的思路很简单：把平时要用的 port-forward 保存成配置。</p>
+<p>这样以后不用每次都手敲一大串命令，也不用去翻 Shell 历史。打开菜单栏，找到对应的服务，点一下就行。多个 kubeconfig、多个集群的配置也可以放在一起管理。</p>
+<p>先放一张整体界面的图：</p>
+<p><img src="overview.png" alt="kftray 配置总览"></p>
+<p>我觉得它特别适合这种场景：手里有好几个环境，但每天真正要访问的也就是那几个内部服务，比如 Grafana、Prometheus、内部 API 或管理后台。</p>
+<h2 id="配置一次，后面就省事了"><a href="#配置一次，后面就省事了" class="headerlink" title="配置一次，后面就省事了"></a>配置一次，后面就省事了</h2><p>新建配置时，填的内容其实就是平时 <code>kubectl port-forward</code> 命令里那些参数：先选 kubeconfig 和 context，再选 namespace、目标服务，以及本地和远端端口。</p>
+<p>比较省心的是，kubeconfig 选好后，后面的 namespace 和目标服务会在表单里自动加载出来，直接选就行，不用自己再去记名字。</p>
+<p><img src="add-config.png" alt="新建 port-forward 配置"></p>
+<p>本地端口也不用太纠结。不填的话，kftray 会自动生成一个可用端口。现在界面里支持直接点击打开页面，大多数时候连 <code>localhost:xxxx</code> 都不用记，自然也没必要刻意给每个服务规划端口了。</p>
+<h2 id="需要的时候点一下就能打开"><a href="#需要的时候点一下就能打开" class="headerlink" title="需要的时候点一下就能打开"></a>需要的时候点一下就能打开</h2><p>配置保存好之后，平时就不用管它了。想访问哪个服务，直接在菜单栏里把它打开。</p>
+<p>对网页服务来说，我最喜欢的是它可以直接点开本地地址。以前还得记住转发的是 <code>localhost:xxxx</code>，现在转发起来之后直接点一下就进去了。</p>
+<p><img src="click-to-open.png" alt="点击后直接打开转发地址"></p>
+<p>这种体验说不上多复杂，但日常用起来确实舒服。尤其是临时想看一下 Grafana、Prometheus，或者调个只在集群内暴露的接口时，不用再开终端、找命令、复制端口，节奏会顺很多。</p>
+<h2 id="不只可以转发-Service"><a href="#不只可以转发-Service" class="headerlink" title="不只可以转发 Service"></a>不只可以转发 Service</h2><p>配置界面里还可以选不同的 workload 类型：</p>
+<p><img src="workload-type.png" alt="workload 类型选择"></p>
+<p>我自己大部分时候还是直接选 Service，毕竟很多服务本来就是通过 Service 暴露的。不过有些场景需要直接找工作负载时，也可以在这里选对应类型。</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>kftray 没有取代 <code>kubectl port-forward</code>，它本质上还是在帮你把那些参数和操作收起来。权限也还是用你本机 kubeconfig 里的那套，没权限的服务当然还是连不上。</p>
+<p>但对我来说，这就够了。平时把常用的几个内部服务配好，之后需要访问时从菜单栏点一下，不用再记 context、namespace 和端口。</p>
+<p>如果你也经常在“上次那条 port-forward 命令是什么来着”和“我就临时看一眼服务”之间来回切换，可以试一下它。</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>如果我的文字帮到了您，那么可不可以请我喝罐可乐？</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechat.png" alt="knktc 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="knktc 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-6959365962327411"
+     data-ad-slot="4588493450"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>knktc
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://knktc.com/2026/08/19/kftray-manage-kubernetes-port-forwards/" title="我开始用 kftray 管理 Kubernetes port-forward 了">https://knktc.com/2026/08/19/kftray-manage-kubernetes-port-forwards/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/kubernetes/" rel="tag"># kubernetes</a>
+              <a href="/tags/kftray/" rel="tag"># kftray</a>
+              <a href="/tags/port-forward/" rel="tag"># port-forward</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2026/07/29/headlamp-global-fuzzy-search/" rel="prev" title="Headlamp 顶部的模糊搜索，是怎么实现的？">
+      <i class="fa fa-chevron-left"></i> Headlamp 顶部的模糊搜索，是怎么实现的？
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%83%E8%A7%A3%E5%86%B3%E7%9A%84%E5%85%B6%E5%AE%9E%E5%B0%B1%E6%98%AF%E2%80%9C%E5%88%AB%E8%AE%A9%E6%88%91%E5%86%8D%E8%AE%B0%E5%91%BD%E4%BB%A4%E2%80%9D"><span class="nav-number">1.</span> <span class="nav-text">它解决的其实就是“别让我再记命令”</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E4%B8%80%E6%AC%A1%EF%BC%8C%E5%90%8E%E9%9D%A2%E5%B0%B1%E7%9C%81%E4%BA%8B%E4%BA%86"><span class="nav-number">2.</span> <span class="nav-text">配置一次，后面就省事了</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9C%80%E8%A6%81%E7%9A%84%E6%97%B6%E5%80%99%E7%82%B9%E4%B8%80%E4%B8%8B%E5%B0%B1%E8%83%BD%E6%89%93%E5%BC%80"><span class="nav-number">3.</span> <span class="nav-text">需要的时候点一下就能打开</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8D%E5%8F%AA%E5%8F%AF%E4%BB%A5%E8%BD%AC%E5%8F%91-Service"><span class="nav-number">4.</span> <span class="nav-text">不只可以转发 Service</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E5%90%8E"><span class="nav-number">5.</span> <span class="nav-text">最后</span></a></li></ol></div>
+          <div class="post-sidebar-wechat motion-element">
+            <img
+              class="post-sidebar-wechat-image"
+              src="/images/wechat-mp-qrcode.png"
+              alt="微信扫码关注我的公众号"
+              loading="lazy"
+            >
+            <p class="post-sidebar-wechat-name">中年工程师苟活指南</p>
+            <p class="post-sidebar-wechat-desc">微信扫码关注，获取更多新文章和实战折腾记录。</p>
+          </div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="knktc"
+      src="/images/sonic_avatar.png">
+  <p class="site-author-name" itemprop="name">knktc</p>
+  <div class="site-description" itemprop="description">关注linux,云计算,python，杂乱之地...</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">243</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/knktc" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;knktc" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/knktc" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;knktc" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+<div class="wechat-mp-widget motion-element">
+  <img
+    class="wechat-mp-widget-image"
+    src="/images/wechat-mp-qrcode.png"
+    alt="微信扫码关注我的公众号"
+    loading="lazy"
+  >
+  <p class="wechat-mp-widget-name">中年工程师苟活指南</p>
+  <p class="wechat-mp-widget-desc">微信扫码关注，第一时间看到新文章和折腾记录。</p>
+</div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">鄂ICP备2021019593号-1 </a>
+      <img src="/images/beian.png" style="display: inline-block;"><a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=42018502005554" rel="noopener" target="_blank">鄂公网安备 42018502005554号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">knktc</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

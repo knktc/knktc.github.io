@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://knktc.com/en/2026/08/19/kftray-manage-kubernetes-port-forwards/</loc>
+    <lastmod>2026-08-19</lastmod>
+  </url>
+  <url>
+    <loc>https://knktc.com/en/2026/06/01/psp-3000-upgrade-to-6-61-and-install-ark-4/</loc>
+    <lastmod>2026-08-03</lastmod>
+  </url>
+  <url>
     <loc>https://knktc.com/en/2026/07/29/headlamp-global-fuzzy-search/</loc>
     <lastmod>2026-07-29</lastmod>
   </url>
   <url>
     <loc>https://knktc.com/en/2026/06/12/envmate-chrome-extension/</loc>
     <lastmod>2026-06-15</lastmod>
-  </url>
-  <url>
-    <loc>https://knktc.com/en/2026/06/01/psp-3000-upgrade-to-6-61-and-install-ark-4/</loc>
-    <lastmod>2026-06-01</lastmod>
   </url>
   <url>
     <loc>https://knktc.com/en/2026/05/27/nginx-in-real-projects/</loc>
