@@ -197,11 +197,11 @@
     <lastmod>2019-05-26</lastmod>
   </url>
   <url>
-    <loc>https://knktc.com/2018/06/22/docker-layer-doest-not-exist/</loc>
+    <loc>https://knktc.com/2014/08/09/docker-registry-install/</loc>
     <lastmod>2019-05-26</lastmod>
   </url>
   <url>
-    <loc>https://knktc.com/2014/08/09/docker-registry-install/</loc>
+    <loc>https://knktc.com/2018/06/22/docker-layer-doest-not-exist/</loc>
     <lastmod>2019-05-26</lastmod>
   </url>
   <url>
@@ -221,15 +221,19 @@
     <lastmod>2019-05-26</lastmod>
   </url>
   <url>
-    <loc>https://knktc.com/2014/08/03/gpg-use-external-keyring/</loc>
-    <lastmod>2019-05-26</lastmod>
-  </url>
-  <url>
     <loc>https://knktc.com/2014/05/12/gpg-crontab/</loc>
     <lastmod>2019-05-26</lastmod>
   </url>
   <url>
+    <loc>https://knktc.com/2014/08/03/gpg-use-external-keyring/</loc>
+    <lastmod>2019-05-26</lastmod>
+  </url>
+  <url>
     <loc>https://knktc.com/2014/05/04/hello-hexo/</loc>
+    <lastmod>2019-05-26</lastmod>
+  </url>
+  <url>
+    <loc>https://knktc.com/2018/06/12/how-to-duplicate-kvm-snapshot/</loc>
     <lastmod>2019-05-26</lastmod>
   </url>
   <url>
@@ -238,10 +242,6 @@
   </url>
   <url>
     <loc>https://knktc.com/2014/05/12/hive-in-not-in/</loc>
-    <lastmod>2019-05-26</lastmod>
-  </url>
-  <url>
-    <loc>https://knktc.com/2018/06/12/how-to-duplicate-kvm-snapshot/</loc>
     <lastmod>2019-05-26</lastmod>
   </url>
   <url>
@@ -281,7 +281,11 @@
     <lastmod>2019-05-26</lastmod>
   </url>
   <url>
-    <loc>https://knktc.com/2018/06/10/python3-uwsgi-no-python-application-found/</loc>
+    <loc>https://knktc.com/2014/05/24/python-get-process-pool-count/</loc>
+    <lastmod>2019-05-26</lastmod>
+  </url>
+  <url>
+    <loc>https://knktc.com/2014/05/17/python-segmentation-fault/</loc>
     <lastmod>2019-05-26</lastmod>
   </url>
   <url>
@@ -289,11 +293,7 @@
     <lastmod>2019-05-26</lastmod>
   </url>
   <url>
-    <loc>https://knktc.com/2014/05/24/python-get-process-pool-count/</loc>
-    <lastmod>2019-05-26</lastmod>
-  </url>
-  <url>
-    <loc>https://knktc.com/2014/06/14/remove-clean-dmraid/</loc>
+    <loc>https://knktc.com/2018/06/10/python3-uwsgi-no-python-application-found/</loc>
     <lastmod>2019-05-26</lastmod>
   </url>
   <url>
@@ -301,7 +301,7 @@
     <lastmod>2019-05-26</lastmod>
   </url>
   <url>
-    <loc>https://knktc.com/2014/05/17/python-segmentation-fault/</loc>
+    <loc>https://knktc.com/2014/06/14/remove-clean-dmraid/</loc>
     <lastmod>2019-05-26</lastmod>
   </url>
   <url>
