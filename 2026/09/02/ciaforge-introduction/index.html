@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"knktc.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="从 Vimm&#39;s Lair 下载 3DS 游戏后，面对 .cci 和 .3ds 镜像、却只有命令行工具可用时，我用 Codex、Tauri 和 Rust 做了一个跨平台桌面转换器 CiaForge。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="我用 Codex vibe coding 搓了一个 3DS 镜像转换工具：CiaForge">
+<meta property="og:url" content="https://knktc.com/2026/09/02/ciaforge-introduction/">
+<meta property="og:site_name" content="knktc的杂乱空间">
+<meta property="og:description" content="从 Vimm&#39;s Lair 下载 3DS 游戏后，面对 .cci 和 .3ds 镜像、却只有命令行工具可用时，我用 Codex、Tauri 和 Rust 做了一个跨平台桌面转换器 CiaForge。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://knktc.com/2026/09/02/ciaforge-introduction/ciaforge-icon.png">
+<meta property="og:image" content="https://knktc.com/2026/09/02/ciaforge-introduction/ciaforge-empty-state.png">
+<meta property="og:image" content="https://knktc.com/2026/09/02/ciaforge-introduction/ciaforge-conversion-queue.png">
+<meta property="article:published_time" content="2026-09-02T02:30:00.000Z">
+<meta property="article:modified_time" content="2026-09-02T00:38:32.969Z">
+<meta property="article:author" content="knktc">
+<meta property="article:tag" content="codex">
+<meta property="article:tag" content="vibe-coding">
+<meta property="article:tag" content="tauri">
+<meta property="article:tag" content="rust">
+<meta property="article:tag" content="nintendo-3ds">
+<meta property="article:tag" content="ciaforge">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://knktc.com/2026/09/02/ciaforge-introduction/ciaforge-icon.png">
+
+<link rel="canonical" href="https://knktc.com/2026/09/02/ciaforge-introduction/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+<link rel="alternate" hreflang="zh-CN" href="&#x2F;2026&#x2F;09&#x2F;02&#x2F;ciaforge-introduction&#x2F;">
+<link rel="alternate" hreflang="en" href="&#x2F;en&#x2F;2026&#x2F;09&#x2F;02&#x2F;ciaforge-introduction&#x2F;">
+<link rel="alternate" hreflang="x-default" href="&#x2F;2026&#x2F;09&#x2F;02&#x2F;ciaforge-introduction&#x2F;">
+
+  <title>我用 Codex vibe coding 搓了一个 3DS 镜像转换工具：CiaForge | knktc的杂乱空间</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a23b2d1c6159a3a6c798edbc7f9211f9";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="knktc的杂乱空间" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">knktc的杂乱空间</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">python,cloud,linux...</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://knktc.com/2026/09/02/ciaforge-introduction/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/sonic_avatar.png">
+      <meta itemprop="name" content="knktc">
+      <meta itemprop="description" content="关注linux,云计算,python，杂乱之地...">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="knktc的杂乱空间">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          我用 Codex vibe coding 搓了一个 3DS 镜像转换工具：CiaForge
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2026-09-02 10:30:00 / 修改时间：08:38:32" itemprop="dateCreated datePublished" datetime="2026-09-02T10:30:00+08:00">2026-09-02</time>
+            </span>
+
+          
+            <div class="post-description">从 Vimm's Lair 下载 3DS 游戏后，面对 .cci 和 .3ds 镜像、却只有命令行工具可用时，我用 Codex、Tauri 和 Rust 做了一个跨平台桌面转换器 CiaForge。</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>最近我用 Codex 搓了一个小桌面工具，叫 <code>CiaForge</code>。</p>
+<p>事情的起点其实很简单：我从 Vimm’s Lair 下载 3DS 游戏时，拿到的通常是 <code>.cci</code> 或 <code>.3ds</code> 格式的镜像；而在 3DS 上安装时，更常用的是 <code>.cia</code>。现有的 Python 项目 <a target="_blank" rel="noopener" href="https://github.com/ihaveamac/3dsconv">3dsconv</a> 能完成这件事，但它是命令行工具。</p>
+<p>正好我也想认真看看 Tauri 能做到什么程度，于是就有了 CiaForge：用 Tauri 做跨平台桌面界面，用 Rust 重写 3dsconv 的基础转换逻辑，把原本需要在终端里完成的流程做成一个可以拖拽使用的小工具。</p>
+<blockquote>
+<p>CiaForge 不包含游戏内容、密钥或固件资料；请只转换和安装自己有权使用的文件。</p>
+</blockquote>
+<p align="center">
+  <img src="ciaforge-icon.png" alt="CiaForge logo" width="180">
+</p>
+
+<span id="more"></span>
+
+<h2 id="从命令行到一个顺手的窗口"><a href="#从命令行到一个顺手的窗口" class="headerlink" title="从命令行到一个顺手的窗口"></a>从命令行到一个顺手的窗口</h2><p><code>3dsconv</code> 已经把最核心的事情解决得很好：把符合条件的 3DS 镜像转换成 CIA。它也正是 CiaForge 的灵感和参考来源。</p>
+<p>但我想要的体验更偏向日常使用：打开应用，把文件拖进去，选好输出位置，然后能直观看到每个文件的进度和结果。遇到失败时，也应该直接知道是哪一个文件、为什么失败，而不是从终端输出里翻。</p>
+<p>所以 CiaForge 的目标并不是重新发明一个万能转换器，而是把一个很具体的使用场景收拾得更轻一点：</p>
+<ul>
+<li>原生文件选择器，也支持把一个或多个 <code>.cci</code> / <code>.3ds</code> 文件拖进窗口；</li>
+<li>转换队列会显示文件名、大小、状态和单文件进度；</li>
+<li>可选择输出到源文件旁边，或统一输出到指定文件夹；</li>
+<li>自动避开重名，不会直接覆盖已有的 <code>.cia</code>；</li>
+<li>转换成功后可以直接在 Finder 里定位结果文件。</li>
+</ul>
+<p>下面是空列表时的导入界面，基本就是“拖进来，或者点一下选择文件”。</p>
+<p><img src="ciaforge-empty-state.png" alt="CiaForge 空列表与拖拽导入界面"></p>
+<h2 id="用-Tauri-做壳，用-Rust-写转换逻辑"><a href="#用-Tauri-做壳，用-Rust-写转换逻辑" class="headerlink" title="用 Tauri 做壳，用 Rust 写转换逻辑"></a>用 Tauri 做壳，用 Rust 写转换逻辑</h2><p>这次我没有把 Python 命令行工具直接打包进应用里，而是让 Rust 负责转换引擎，Tauri 负责把原生能力和前端交互接起来。</p>
+<p>这样拆下来，前端处理队列、设置和交互；Rust 侧读取镜像结构、校验 CCI / NCCH 内容、补齐 CIA 所需的元数据并写入内容记录和 SHA-256 完整性数据。Tauri 则把文件选择、拖放和“在文件管理器中显示”这类桌面能力连到一起。</p>
+<p>转换开始后，队列会逐个执行，避免同一批任务被重复启动。每个文件的状态都能单独看，不会因为其中一个失败就让整批任务变得不清不楚。</p>
+<p><img src="ciaforge-conversion-queue.png" alt="CiaForge 转换队列"></p>
+<h2 id="为什么选-Tauri"><a href="#为什么选-Tauri" class="headerlink" title="为什么选 Tauri"></a>为什么选 Tauri</h2><p>以前想做一个跨平台、又带 UI 的小工具，脑子里第一个冒出来的通常就是 Electron。它生态成熟、上手也直接，但对 CiaForge 这种功能很聚焦的应用来说，打包体积确实有点重。</p>
+<p>Tauri 这次给我的感觉很好：前端照样可以写出熟悉的界面，底层又能用 Rust 做原生逻辑，最终体积也很克制。CiaForge 这个小工具打包完成后还不到 10MB；对于一个只是想把镜像转换过程变得顺手一点的桌面应用来说，这个大小就很舒服。</p>
+<h2 id="当前能处理什么，不能处理什么"><a href="#当前能处理什么，不能处理什么" class="headerlink" title="当前能处理什么，不能处理什么"></a>当前能处理什么，不能处理什么</h2><p>这里有一个很重要的边界：CiaForge 当前支持的是 <code>.cci</code> 和 <code>.3ds</code> 镜像中<strong>未加密的 NCCH 内容</strong>。</p>
+<p>对于原始 NCCH 加密或 zero-key 加密的输入，它会明确识别并报错，不会悄悄产出一个不完整的 CIA。后面如果继续做，我也会更倾向于先把已有路径打磨稳，再看是否值得扩展更多格式和加密场景。</p>
+<p>对我来说，这个限制并不只是“功能还没写完”。桌面工具最重要的一点，是不能让人误以为已经转换成功，最后才在设备上发现文件不能用。明确告诉用户支持范围，反而比勉强给一个看起来完成了的结果更靠谱。</p>
+<h2 id="这次用-Codex-的感觉"><a href="#这次用-Codex-的感觉" class="headerlink" title="这次用 Codex 的感觉"></a>这次用 Codex 的感觉</h2><p>这次用 Codex 做下来，后端的转换流程反而挺顺利：把 3dsconv 的基础逻辑用 Rust 重写出来、跑通实际转换，推进得比预想快。</p>
+<p>真正花时间的是最后的界面逻辑和样式调整。比如文件队列怎么展示、转换时哪些按钮该禁用、错误信息怎么让人一眼看明白，以及窗口尺寸变化后布局怎样保持顺手。这些看起来都是小细节，但要把它们调到自己愿意长期使用，还是来回改了不少轮。</p>
+<h2 id="获取与参与测试"><a href="#获取与参与测试" class="headerlink" title="获取与参与测试"></a>获取与参与测试</h2><p>项目源码和各平台安装包都放在 GitHub：</p>
+<ul>
+<li>GitHub: <a target="_blank" rel="noopener" href="https://github.com/knktc/CiaForge">https://github.com/knktc/CiaForge</a></li>
+<li>Releases: <a target="_blank" rel="noopener" href="https://github.com/knktc/CiaForge/releases">https://github.com/knktc/CiaForge/releases</a></li>
+</ul>
+<p>目前 CI 会分别构建 macOS Apple Silicon、macOS Intel 和 Windows 的安装包。macOS 版本暂时是 ad-hoc 签名、未公证的构建，因此第一次从网络下载后，Gatekeeper 可能会拦截或提示应用已损坏。</p>
+<h3 id="macOS-安装与打开方法"><a href="#macOS-安装与打开方法" class="headerlink" title="macOS 安装与打开方法"></a>macOS 安装与打开方法</h3><p>从 Release 下载与自己 Mac 架构匹配的 DMG，双击打开后，把 <code>CiaForge.app</code> 拖进 <code>Applications</code>。如果首次打开被 Gatekeeper 拦住，请先确认安装包来自上面的 GitHub Release，然后在终端执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">xattr -dr com.apple.quarantine <span class="string">&quot;/Applications/CiaForge.app&quot;</span></span><br><span class="line">open <span class="string">&quot;/Applications/CiaForge.app&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>第一条命令只移除 <strong>CiaForge.app 这个应用</strong> 的下载隔离属性；它不会关闭系统全局的 Gatekeeper。第二条命令会立即打开应用。之后就可以从“应用程序”中正常启动 CiaForge 了。</p>
+<p>我目前只有一台 Apple Silicon（M 系列芯片）MacBook，因此只测试过 macOS ARM 版本。如果你有 Intel Mac 或 Windows 机器，欢迎帮忙测试对应版本；反馈时请带上系统版本、CPU 架构、CiaForge 版本和错误信息，会很有帮助。</p>
+<p>至于 CiaForge 本身，我会继续把它当成一个“我自己真会用”的小工具来迭代：保持边界清晰、少一点麻烦、把从镜像到可安装文件这一步做得更顺手。</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>如果我的文字帮到了您，那么可不可以请我喝罐可乐？</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechat.png" alt="knktc 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="knktc 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-6959365962327411"
+     data-ad-slot="4588493450"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>knktc
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://knktc.com/2026/09/02/ciaforge-introduction/" title="我用 Codex vibe coding 搓了一个 3DS 镜像转换工具：CiaForge">https://knktc.com/2026/09/02/ciaforge-introduction/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/codex/" rel="tag"># codex</a>
+              <a href="/tags/vibe-coding/" rel="tag"># vibe-coding</a>
+              <a href="/tags/tauri/" rel="tag"># tauri</a>
+              <a href="/tags/rust/" rel="tag"># rust</a>
+              <a href="/tags/nintendo-3ds/" rel="tag"># nintendo-3ds</a>
+              <a href="/tags/ciaforge/" rel="tag"># ciaforge</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2026/08/19/kftray-manage-kubernetes-port-forwards/" rel="prev" title="我开始用 kftray 管理 Kubernetes port-forward 了">
+      <i class="fa fa-chevron-left"></i> 我开始用 kftray 管理 Kubernetes port-forward 了
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%8E%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%88%B0%E4%B8%80%E4%B8%AA%E9%A1%BA%E6%89%8B%E7%9A%84%E7%AA%97%E5%8F%A3"><span class="nav-number">1.</span> <span class="nav-text">从命令行到一个顺手的窗口</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%A8-Tauri-%E5%81%9A%E5%A3%B3%EF%BC%8C%E7%94%A8-Rust-%E5%86%99%E8%BD%AC%E6%8D%A2%E9%80%BB%E8%BE%91"><span class="nav-number">2.</span> <span class="nav-text">用 Tauri 做壳，用 Rust 写转换逻辑</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%80%89-Tauri"><span class="nav-number">3.</span> <span class="nav-text">为什么选 Tauri</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BD%93%E5%89%8D%E8%83%BD%E5%A4%84%E7%90%86%E4%BB%80%E4%B9%88%EF%BC%8C%E4%B8%8D%E8%83%BD%E5%A4%84%E7%90%86%E4%BB%80%E4%B9%88"><span class="nav-number">4.</span> <span class="nav-text">当前能处理什么，不能处理什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%99%E6%AC%A1%E7%94%A8-Codex-%E7%9A%84%E6%84%9F%E8%A7%89"><span class="nav-number">5.</span> <span class="nav-text">这次用 Codex 的感觉</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96%E4%B8%8E%E5%8F%82%E4%B8%8E%E6%B5%8B%E8%AF%95"><span class="nav-number">6.</span> <span class="nav-text">获取与参与测试</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#macOS-%E5%AE%89%E8%A3%85%E4%B8%8E%E6%89%93%E5%BC%80%E6%96%B9%E6%B3%95"><span class="nav-number">6.1.</span> <span class="nav-text">macOS 安装与打开方法</span></a></li></ol></li></ol></div>
+          <div class="post-sidebar-wechat motion-element">
+            <img
+              class="post-sidebar-wechat-image"
+              src="/images/wechat-mp-qrcode.png"
+              alt="微信扫码关注我的公众号"
+              loading="lazy"
+            >
+            <p class="post-sidebar-wechat-name">中年工程师苟活指南</p>
+            <p class="post-sidebar-wechat-desc">微信扫码关注，获取更多新文章和实战折腾记录。</p>
+          </div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="knktc"
+      src="/images/sonic_avatar.png">
+  <p class="site-author-name" itemprop="name">knktc</p>
+  <div class="site-description" itemprop="description">关注linux,云计算,python，杂乱之地...</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">80</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">247</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/knktc" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;knktc" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/knktc" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;knktc" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+<div class="wechat-mp-widget motion-element">
+  <img
+    class="wechat-mp-widget-image"
+    src="/images/wechat-mp-qrcode.png"
+    alt="微信扫码关注我的公众号"
+    loading="lazy"
+  >
+  <p class="wechat-mp-widget-name">中年工程师苟活指南</p>
+  <p class="wechat-mp-widget-desc">微信扫码关注，第一时间看到新文章和折腾记录。</p>
+</div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">鄂ICP备2021019593号-1 </a>
+      <img src="/images/beian.png" style="display: inline-block;"><a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=42018502005554" rel="noopener" target="_blank">鄂公网安备 42018502005554号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">knktc</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
