@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"knktc.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="从一次 Kubernetes 管理界面的设计取舍，聊聊 AI 沙箱为何让 swap 重新受到关注，以及节点监控应该补上什么。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="当年没给 Kubernetes 节点留的 swap 监控位，现在该补上了">
+<meta property="og:url" content="https://knktc.com/2026/10/12/kubernetes-swap-monitoring-in-ai-era/">
+<meta property="og:site_name" content="knktc的杂乱空间">
+<meta property="og:description" content="从一次 Kubernetes 管理界面的设计取舍，聊聊 AI 沙箱为何让 swap 重新受到关注，以及节点监控应该补上什么。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-10-12T04:00:00.000Z">
+<meta property="article:modified_time" content="2026-10-12T01:21:06.414Z">
+<meta property="article:author" content="knktc">
+<meta property="article:tag" content="linux">
+<meta property="article:tag" content="kubernetes">
+<meta property="article:tag" content="swap">
+<meta property="article:tag" content="ai">
+<meta property="article:tag" content="监控">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://knktc.com/2026/10/12/kubernetes-swap-monitoring-in-ai-era/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+<link rel="alternate" hreflang="zh-CN" href="&#x2F;2026&#x2F;10&#x2F;12&#x2F;kubernetes-swap-monitoring-in-ai-era&#x2F;">
+<link rel="alternate" hreflang="en" href="&#x2F;en&#x2F;2026&#x2F;10&#x2F;12&#x2F;kubernetes-swap-monitoring-in-ai-era&#x2F;">
+<link rel="alternate" hreflang="x-default" href="&#x2F;2026&#x2F;10&#x2F;12&#x2F;kubernetes-swap-monitoring-in-ai-era&#x2F;">
+
+  <title>当年没给 Kubernetes 节点留的 swap 监控位，现在该补上了 | knktc的杂乱空间</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a23b2d1c6159a3a6c798edbc7f9211f9";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="knktc的杂乱空间" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">knktc的杂乱空间</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">python,cloud,linux...</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://knktc.com/2026/10/12/kubernetes-swap-monitoring-in-ai-era/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/sonic_avatar.png">
+      <meta itemprop="name" content="knktc">
+      <meta itemprop="description" content="关注linux,云计算,python，杂乱之地...">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="knktc的杂乱空间">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          当年没给 Kubernetes 节点留的 swap 监控位，现在该补上了
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2026-10-12 12:00:00 / 修改时间：09:21:06" itemprop="dateCreated datePublished" datetime="2026-10-12T12:00:00+08:00">2026-10-12</time>
+            </span>
+
+          
+            <div class="post-description">从一次 Kubernetes 管理界面的设计取舍，聊聊 AI 沙箱为何让 swap 重新受到关注，以及节点监控应该补上什么。</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>以前我们做一个基于 Kubernetes 的管理界面时，没有给节点的 swap 预留监控位。</p>
+<p>当时的想法很简单：Kubernetes 节点上的 swap 都要关掉，既然不会用，监控页面也就不用给它留位置了。</p>
+<p>最近读到 Kubernetes 官方的一篇文章：<a target="_blank" rel="noopener" href="https://kubernetes.io/zh-cn/blog/2026/10/05/scaling-kubernetes-workloads-with-node-swap/">《使用节点交换内存扩展 Kubernetes 工作负载》</a>，又想起了这个取舍。</p>
+<p>文章聊的是用本地 SSD 做 swap，让同一台节点容纳更多浏览器和 Python 沙箱。这些容器会占着不少内存，却经常在等用户的下一条指令。</p>
+<p>读到这里，我的第一反应是：看来当年没留的那个位置，现在还真得补上。</p>
+<span id="more"></span>
+
+<h2 id="当年为什么觉得用不到-swap"><a href="#当年为什么觉得用不到-swap" class="headerlink" title="当年为什么觉得用不到 swap"></a>当年为什么觉得用不到 swap</h2><p>这个想法有它的背景。Linux 节点启用了 swap 时，kubelet 默认会拒绝启动，关掉 swap 长期以来也是搭建 Kubernetes 集群时的常见步骤。</p>
+<p>而且 swap 确实会影响性能。进程要访问的数据如果被换到了磁盘上，就得先读回内存。内存紧张时，这种等待可能反复发生，对延迟敏感的服务尤其麻烦。</p>
+<p>所以当时做界面，没有特别考虑 swap，我觉得也很正常。只是时间一长，“节点上要关 swap”就很容易被记成“Kubernetes 不需要 swap”。后来再考虑节点监控时，也就顺手把它略过去了。</p>
+<p>其实 Kubernetes 对节点 swap 的支持已经推进了好几年：v1.22 时进入 Alpha，到 v1.34 已经 GA。AI 沙箱的需求，让这项能力又受到更多关注。</p>
+<h2 id="容器在等，内存还占着"><a href="#容器在等，内存还占着" class="headerlink" title="容器在等，内存还占着"></a>容器在等，内存还占着</h2><p>说起 AI 基础设施，首先想到的往往是 GPU。但智能体干活的时候，还可能需要启动浏览器、跑 Python，或者在隔离沙箱里执行外部代码。这些环境也会带来不少 CPU 和内存开销。</p>
+<p>这类容器有个特点：忙的时候需要不少内存，忙完之后又不能马上退出，因为还要保留会话和执行状态，等下一次交互。</p>
+<p>一个两个还好，会话多了，等待中的容器也会占掉很大一部分内存。节点的 CPU 可能还没用满，RAM 已经不够了。</p>
+<p>但进程保留着这些数据，不代表它一直在访问这些数据。等待期间，有些内存页可能很久都不会被碰到。</p>
+<p>swap 在这里就有用了。Linux 可以把暂时不用的内存页换出去，把 RAM 腾给其他 Pod。等原来的会话再次访问这些数据时，再读回来。应用还是照常访问内存，换页由操作系统处理。</p>
+<p>当然，读回来需要时间。能不能接受这点等待，就得看具体业务了。</p>
+<h2 id="能多放些-Pod，但也有代价"><a href="#能多放些-Pod，但也有代价" class="headerlink" title="能多放些 Pod，但也有代价"></a>能多放些 Pod，但也有代价</h2><p>原文用本地 SSD 做 swap，测试了编译任务、浏览器和 Python 沙箱。比较显眼的一个结果是，gVisor Python 沙箱从 80 个会话增加到了 240 个，容量变成了原来的三倍。</p>
+<p>不过文章里也有一个值得一起看的结果：编译任务的 RAM 限额压到 300 MB 时表现不错，再压到 200 MB，执行时间就增加了超过 40%。作者的解释是，这时连活跃工作集都被迫进入了 swap。</p>
+<p>这几组数据是文章作者的测试结果。我还没有在自己的环境里做同样的验证，三倍这个数字也不能直接拿来规划别的业务。</p>
+<p>现在的条件确实比以前好了。cgroup v2 能分别核算和限制内存与 swap，本地 NVMe SSD 也比机械磁盘快得多。但经常要用的数据如果不断被换出去、再读回来，性能照样会受影响。</p>
+<p>所以我觉得，先看清楚负载的特点更重要：平时有多少会话在等，多少内存暂时用不到，以及这些会话同时忙起来的时候会怎么样。原文里的收益，很大程度上就来自那些可以暂时换出的数据。</p>
+<h2 id="监控页面该补些什么"><a href="#监控页面该补些什么" class="headerlink" title="监控页面该补些什么"></a>监控页面该补些什么</h2><p>回到我们当年做的管理界面，如果现在要补 swap 监控，我会先放上容量、用量和趋势，但不会只放一个使用率就结束。</p>
+<p>毕竟，既然允许工作负载使用 swap，看到它有用量就不一定是坏事。还得知道哪些 Pod 在用、换页是否频繁，以及业务有没有变慢。</p>
+<table>
+<thead>
+<tr>
+<th>信息</th>
+<th>想看清楚什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>节点 swap 状态、容量与使用量</td>
+<td>节点是否配置了 swap，还有多少空间？</td>
+</tr>
+<tr>
+<td>Pod 使用 swap 的策略与实际用量</td>
+<td>哪些工作负载可以使用，哪些正在使用？</td>
+</tr>
+<tr>
+<td>swap 换入、换出速率</td>
+<td>数据是否正在频繁往返于 RAM 和存储？</td>
+</tr>
+<tr>
+<td>内存压力、存储延迟与业务延迟</td>
+<td>换页是否已经影响节点或应用的响应？</td>
+</tr>
+</tbody></table>
+<p>比如一台节点的 swap 使用量一直不低，但里面大多是暂时不用的数据，换入换出也很少；另一台节点用量没那么高，却一直在换页，业务响应也慢了。只看百分比，很容易忽略后面这种情况。</p>
+<p>Kubernetes 已经提供了节点、Pod 和容器级别的 swap 指标。kubelet 的 <code>/metrics/resource</code> 端点可以提供下面四项数据，单位均为字节，表示当前用量或上限：</p>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>层级</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>node_swap_usage_bytes</code></td>
+<td>节点</td>
+<td>节点当前的 swap 使用量</td>
+</tr>
+<tr>
+<td><code>pod_swap_usage_bytes</code></td>
+<td>Pod</td>
+<td>Pod 当前的 swap 使用量</td>
+</tr>
+<tr>
+<td><code>container_swap_usage_bytes</code></td>
+<td>容器</td>
+<td>容器当前的 swap 使用量</td>
+</tr>
+<tr>
+<td><code>container_swap_limit_bytes</code></td>
+<td>容器</td>
+<td>容器允许使用的 swap 上限</td>
+</tr>
+</tbody></table>
+<p>Pod 指标带有 <code>namespace</code> 和 <code>pod</code> 标签，容器指标还带有 <code>container</code>。有了这些数据，就可以从节点总览一路看到具体容器，知道它用了多少 swap、上限是多少。</p>
+<p>有一点接入时要留意：<strong>NodeSwap 功能已经 GA，但上面这四个监控指标目前仍标为 ALPHA。</strong> 它们还没有稳定指标那样的兼容性保证。接入前要确认自己的集群和采集链路能拿到这些数据，升级时也需要留意指标是否有变化。</p>
+<p>这四项指标都是用量或限额。换入、换出速率还需要从节点采集器等数据来源补充，再和延迟放到一起看。</p>
+<p>页面上最好也把“没配 swap”“不允许 Pod 用”和“没采到数据”分开显示。这几种情况都写成 0，看着整齐，排查问题时却帮不上忙。</p>
+<h2 id="还有些地方不能混在一起"><a href="#还有些地方不能混在一起" class="headerlink" title="还有些地方不能混在一起"></a>还有些地方不能混在一起</h2><p>补监控时，配置也得一起看。<code>failSwapOn: false</code> 只是允许 kubelet 在启用了 swap 的节点上运行。要让符合条件的容器使用 swap，还需要配置 <code>LimitedSwap</code>。</p>
+<p>另外，调度器目前不会把 swap 当成额外的可调度内存。所以页面上也别把 RAM 和 swap 加起来，直接显示成“节点可用内存”。两者的性能和调度含义都不一样。具体配置可以看官方的 <a target="_blank" rel="noopener" href="https://kubernetes.io/docs/concepts/cluster-administration/swap-memory-management/">swap 管理文档</a>。</p>
+<p>这次读文章，技术本身之外，让我印象比较深的还是那个没留的监控位。当时觉得不会用到，也就没再往下想。</p>
+<p>现在有了新的负载，也有了相应的支持，节点监控页面自然得跟着改。真要补起来，我最想先看到的就是：哪个 Pod 在用 swap，以及它开始频繁换页时，业务到底慢了多少。</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>如果我的文字帮到了您，那么可不可以请我喝罐可乐？</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechat.png" alt="knktc 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="knktc 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-6959365962327411"
+     data-ad-slot="4588493450"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>knktc
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://knktc.com/2026/10/12/kubernetes-swap-monitoring-in-ai-era/" title="当年没给 Kubernetes 节点留的 swap 监控位，现在该补上了">https://knktc.com/2026/10/12/kubernetes-swap-monitoring-in-ai-era/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/linux/" rel="tag"># linux</a>
+              <a href="/tags/kubernetes/" rel="tag"># kubernetes</a>
+              <a href="/tags/swap/" rel="tag"># swap</a>
+              <a href="/tags/ai/" rel="tag"># ai</a>
+              <a href="/tags/%E7%9B%91%E6%8E%A7/" rel="tag"># 监控</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2026/09/02/ciaforge-introduction/" rel="prev" title="我用 Codex 写了一个 3DS 镜像转换工具：CiaForge">
+      <i class="fa fa-chevron-left"></i> 我用 Codex 写了一个 3DS 镜像转换工具：CiaForge
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BD%93%E5%B9%B4%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A7%89%E5%BE%97%E7%94%A8%E4%B8%8D%E5%88%B0-swap"><span class="nav-number">1.</span> <span class="nav-text">当年为什么觉得用不到 swap</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%B9%E5%99%A8%E5%9C%A8%E7%AD%89%EF%BC%8C%E5%86%85%E5%AD%98%E8%BF%98%E5%8D%A0%E7%9D%80"><span class="nav-number">2.</span> <span class="nav-text">容器在等，内存还占着</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%BD%E5%A4%9A%E6%94%BE%E4%BA%9B-Pod%EF%BC%8C%E4%BD%86%E4%B9%9F%E6%9C%89%E4%BB%A3%E4%BB%B7"><span class="nav-number">3.</span> <span class="nav-text">能多放些 Pod，但也有代价</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%91%E6%8E%A7%E9%A1%B5%E9%9D%A2%E8%AF%A5%E8%A1%A5%E4%BA%9B%E4%BB%80%E4%B9%88"><span class="nav-number">4.</span> <span class="nav-text">监控页面该补些什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%98%E6%9C%89%E4%BA%9B%E5%9C%B0%E6%96%B9%E4%B8%8D%E8%83%BD%E6%B7%B7%E5%9C%A8%E4%B8%80%E8%B5%B7"><span class="nav-number">5.</span> <span class="nav-text">还有些地方不能混在一起</span></a></li></ol></div>
+          <div class="post-sidebar-wechat motion-element">
+            <img
+              class="post-sidebar-wechat-image"
+              src="/images/wechat-mp-qrcode.png"
+              alt="微信扫码关注我的公众号"
+              loading="lazy"
+            >
+            <p class="post-sidebar-wechat-name">中年工程师苟活指南</p>
+            <p class="post-sidebar-wechat-desc">微信扫码关注，获取更多新文章和实战折腾记录。</p>
+          </div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="knktc"
+      src="/images/sonic_avatar.png">
+  <p class="site-author-name" itemprop="name">knktc</p>
+  <div class="site-description" itemprop="description">关注linux,云计算,python，杂乱之地...</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">81</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">250</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/knktc" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;knktc" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/knktc" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;knktc" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+<div class="wechat-mp-widget motion-element">
+  <img
+    class="wechat-mp-widget-image"
+    src="/images/wechat-mp-qrcode.png"
+    alt="微信扫码关注我的公众号"
+    loading="lazy"
+  >
+  <p class="wechat-mp-widget-name">中年工程师苟活指南</p>
+  <p class="wechat-mp-widget-desc">微信扫码关注，第一时间看到新文章和折腾记录。</p>
+</div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">鄂ICP备2021019593号-1 </a>
+      <img src="/images/beian.png" style="display: inline-block;"><a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=42018502005554" rel="noopener" target="_blank">鄂公网安备 42018502005554号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">knktc</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

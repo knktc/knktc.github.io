@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/en/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/en/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/en/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/en/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/en/css/main.css">
+
+
+<link rel="stylesheet" href="/en/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"knktc.com","root":"/en/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="A decision we made when building a Kubernetes dashboard, why AI sandboxes are bringing swap back into the conversation, and what node monitoring should show.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="We Left Swap Out of Our Kubernetes Dashboard. It&#39;s Time to Add It.">
+<meta property="og:url" content="https://knktc.com/en/2026/10/12/kubernetes-swap-monitoring-in-ai-era/">
+<meta property="og:site_name" content="knktc&#39;s Notes">
+<meta property="og:description" content="A decision we made when building a Kubernetes dashboard, why AI sandboxes are bringing swap back into the conversation, and what node monitoring should show.">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-10-12T04:00:00.000Z">
+<meta property="article:modified_time" content="2026-10-12T01:25:04.150Z">
+<meta property="article:author" content="knktc">
+<meta property="article:tag" content="linux">
+<meta property="article:tag" content="kubernetes">
+<meta property="article:tag" content="swap">
+<meta property="article:tag" content="ai">
+<meta property="article:tag" content="monitoring">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://knktc.com/en/2026/10/12/kubernetes-swap-monitoring-in-ai-era/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+<link rel="alternate" hreflang="en" href="&#x2F;en&#x2F;2026&#x2F;10&#x2F;12&#x2F;kubernetes-swap-monitoring-in-ai-era&#x2F;">
+<link rel="alternate" hreflang="zh-CN" href="&#x2F;2026&#x2F;10&#x2F;12&#x2F;kubernetes-swap-monitoring-in-ai-era&#x2F;">
+<link rel="alternate" hreflang="x-default" href="&#x2F;2026&#x2F;10&#x2F;12&#x2F;kubernetes-swap-monitoring-in-ai-era&#x2F;">
+
+  <title>We Left Swap Out of Our Kubernetes Dashboard. It's Time to Add It. | knktc's Notes</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a23b2d1c6159a3a6c798edbc7f9211f9";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/en/atom.xml" title="knktc's Notes" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/en/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">knktc's Notes</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">python, cloud, linux...</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/en/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/en/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/en/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://knktc.com/2026/10/12/kubernetes-swap-monitoring-in-ai-era/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/en/images/sonic_avatar.png">
+      <meta itemprop="name" content="knktc">
+      <meta itemprop="description" content="Notes on Python, Linux, and cloud infrastructure.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="knktc's Notes">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          We Left Swap Out of Our Kubernetes Dashboard. It's Time to Add It.
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2026-10-12 12:00:00 / Modified: 09:25:04" itemprop="dateCreated datePublished" datetime="2026-10-12T12:00:00+08:00">2026-10-12</time>
+            </span>
+
+          
+            <div class="post-description">A decision we made when building a Kubernetes dashboard, why AI sandboxes are bringing swap back into the conversation, and what node monitoring should show.</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>When we built a management UI for Kubernetes, we didn’t include swap in the node monitoring view.</p>
+<p>The reasoning was simple: swap was supposed to be disabled on Kubernetes nodes. If nobody was going to use it, there was no reason to make room for it in the dashboard.</p>
+<p>Recently, I read an article on the Kubernetes blog, <a target="_blank" rel="noopener" href="https://kubernetes.io/zh-cn/blog/2026/10/05/scaling-kubernetes-workloads-with-node-swap/">Scaling Kubernetes Workloads with Node Swap</a>, and it brought that decision back to mind.</p>
+<p>The article describes using local SSDs for swap so a single node can host more browser and Python sandboxes. These containers can hold a lot of memory while spending much of their time waiting for the user’s next instruction.</p>
+<p>My first thought was: we probably need to add that missing piece to the dashboard after all.</p>
+<span id="more"></span>
+
+<h2 id="Why-we-thought-swap-wasn’t-needed"><a href="#Why-we-thought-swap-wasn’t-needed" class="headerlink" title="Why we thought swap wasn’t needed"></a>Why we thought swap wasn’t needed</h2><p>There was a good reason for that assumption. On Linux, the kubelet refuses to start by default when swap is enabled. Disabling swap has long been a familiar step when setting up a Kubernetes cluster.</p>
+<p>And swap does affect performance. If a process needs data that has been swapped out to disk, it has to wait for that data to be read back into memory. Under memory pressure, that can happen repeatedly, which is especially troublesome for services that are sensitive to latency.</p>
+<p>So leaving swap out of the UI seemed reasonable at the time. But over time, “disable swap on the nodes” easily became “Kubernetes doesn’t need swap.” When we thought about node monitoring later, we simply passed over it again.</p>
+<p>Kubernetes has actually been working on node swap support for several years. It entered Alpha in v1.22 and reached GA in v1.34. Demand for AI sandboxes has brought more attention to the feature.</p>
+<h2 id="The-containers-are-waiting-but-the-memory-is-still-occupied"><a href="#The-containers-are-waiting-but-the-memory-is-still-occupied" class="headerlink" title="The containers are waiting, but the memory is still occupied"></a>The containers are waiting, but the memory is still occupied</h2><p>When we talk about AI infrastructure, GPUs tend to come to mind first. But an agent may also need to launch a browser, run Python, or execute external code in an isolated sandbox. Those environments bring their own CPU and memory overhead.</p>
+<p>These containers often need a fair amount of memory while they’re busy. Once the task is finished, though, they can’t necessarily exit: they need to preserve the session and execution state for the next interaction.</p>
+<p>One or two sessions aren’t much of a problem. With many sessions, the waiting containers can occupy a large share of the node’s memory. The node may run out of RAM before it runs out of CPU capacity.</p>
+<p>But keeping data around doesn’t mean a process is constantly accessing it. While a session is waiting, some memory pages may go untouched for a long time.</p>
+<p>That’s where swap can help. Linux can swap out pages that aren’t currently needed, freeing RAM for other Pods. When the original session accesses those pages again, they’re read back into memory. The application continues accessing memory as usual; the operating system handles the paging.</p>
+<p>Of course, reading the data back takes time. Whether that delay is acceptable depends on the application.</p>
+<h2 id="More-Pods-with-some-tradeoffs"><a href="#More-Pods-with-some-tradeoffs" class="headerlink" title="More Pods, with some tradeoffs"></a>More Pods, with some tradeoffs</h2><p>The article tests compilation jobs, browsers, and Python sandboxes with swap backed by local SSDs. One result that stands out is the gVisor Python sandbox test: capacity increased from 80 sessions to 240, three times the original number.</p>
+<p>Another result is worth reading alongside that one. The compilation workload performed well with its RAM limit reduced to 300 MB. Reducing it further to 200 MB increased execution time by more than 40%. The authors explain that, at that point, even the active working set was being forced into swap.</p>
+<p>These are the authors’ benchmark results. I haven’t repeated the tests in my own environment, and I wouldn’t use that threefold increase directly when planning capacity for another application.</p>
+<p>The underlying conditions have improved. cgroup v2 can account for and limit memory and swap separately, and local NVMe SSDs are much faster than spinning disks. But if frequently accessed data keeps getting swapped out and read back in, performance will still suffer.</p>
+<p>So I’d start by understanding the workload: how many sessions are usually waiting, how much memory is temporarily unused, and what happens when those sessions all become busy at once. Much of the benefit in the article comes from data that can stay out of RAM for a while.</p>
+<h2 id="What-I’d-add-to-the-monitoring-view"><a href="#What-I’d-add-to-the-monitoring-view" class="headerlink" title="What I’d add to the monitoring view"></a>What I’d add to the monitoring view</h2><p>Coming back to the dashboard we built, I’d start with swap capacity, usage, and trends. But I wouldn’t stop at a usage percentage.</p>
+<p>Once workloads are allowed to use swap, seeing some usage isn’t necessarily a bad thing. We also need to know which Pods are using it, how often pages are being swapped, and whether the application is slowing down.</p>
+<table>
+<thead>
+<tr>
+<th>Information</th>
+<th>What it should help us understand</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Node swap status, capacity, and usage</td>
+<td>Is swap configured, and how much space is left?</td>
+</tr>
+<tr>
+<td>Pod swap policy and actual usage</td>
+<td>Which workloads can use swap, and which are using it?</td>
+</tr>
+<tr>
+<td>Swap-in and swap-out rates</td>
+<td>Are pages moving frequently between RAM and storage?</td>
+</tr>
+<tr>
+<td>Memory pressure, storage latency, and application latency</td>
+<td>Is paging affecting the node or the application?</td>
+</tr>
+</tbody></table>
+<p>For example, a node may consistently have high swap usage, but most of that data is temporarily unused and there is little paging activity. Another node may have lower usage but keep swapping pages while application response times get worse. Looking only at percentages makes the second case easy to miss.</p>
+<p>Kubernetes already provides swap metrics at the node, Pod, and container levels. The kubelet’s <code>/metrics/resource</code> endpoint can expose the following four metrics. All are measured in bytes and represent current usage or a limit:</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Level</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>node_swap_usage_bytes</code></td>
+<td>Node</td>
+<td>Current swap usage of the node</td>
+</tr>
+<tr>
+<td><code>pod_swap_usage_bytes</code></td>
+<td>Pod</td>
+<td>Current swap usage of the Pod</td>
+</tr>
+<tr>
+<td><code>container_swap_usage_bytes</code></td>
+<td>Container</td>
+<td>Current swap usage of the container</td>
+</tr>
+<tr>
+<td><code>container_swap_limit_bytes</code></td>
+<td>Container</td>
+<td>The container’s swap usage limit</td>
+</tr>
+</tbody></table>
+<p>Pod metrics have <code>namespace</code> and <code>pod</code> labels; container metrics also have a <code>container</code> label. That lets us go from a node overview down to an individual container and see both its swap usage and its limit.</p>
+<p>One detail to keep in mind when integrating them: <strong>NodeSwap has reached GA, but these four monitoring metrics are still marked ALPHA.</strong> They don’t yet have the compatibility guarantees of stable metrics. Before adding them to a dashboard, we need to check that the cluster and collection pipeline expose the data, and watch for changes when upgrading.</p>
+<p>These four metrics cover usage and limits. Swap-in and swap-out rates need to come from other sources, such as a node exporter, and should be viewed alongside latency.</p>
+<p>The UI should also distinguish between “swap isn’t configured,” “Pods aren’t allowed to use swap,” and “no data was collected.” Showing all three as zero might look tidy, but it won’t help much when troubleshooting.</p>
+<h2 id="A-few-things-the-UI-should-keep-separate"><a href="#A-few-things-the-UI-should-keep-separate" class="headerlink" title="A few things the UI should keep separate"></a>A few things the UI should keep separate</h2><p>Configuration matters here too. Setting <code>failSwapOn: false</code> only allows the kubelet to run on a node with swap enabled. Allowing eligible containers to use swap also requires <code>LimitedSwap</code>.</p>
+<p>The scheduler doesn’t currently treat swap as additional schedulable memory, either. So the dashboard shouldn’t add RAM and swap together and label the result “available node memory.” They differ in both performance and scheduling behavior. The official <a target="_blank" rel="noopener" href="https://kubernetes.io/docs/concepts/cluster-administration/swap-memory-management/">swap management documentation</a> covers the configuration in more detail.</p>
+<p>Beyond the technical details, what stayed with me after reading the article was that missing part of our dashboard. We thought we’d never need it, so we didn’t give it much more thought.</p>
+<p>Now there are new workloads and support for running them with swap, and the node monitoring view needs to catch up. If I were adding it today, the first things I’d want to see would be which Pod is using swap, and how much the application slows down when paging becomes frequent.</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>如果我的文字帮到了您，那么可不可以请我喝罐可乐？</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    Donate
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/en/images/wechat.png" alt="knktc WeChat Pay">
+        <p>WeChat Pay</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/en/images/alipay.jpg" alt="knktc Alipay">
+        <p>Alipay</p>
+      </div>
+
+  </div>
+</div>
+
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-6959365962327411"
+     data-ad-slot="4588493450"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>Post author:  </strong>knktc
+  </li>
+  <li class="post-copyright-link">
+    <strong>Post link: </strong>
+    <a href="https://knktc.com/2026/10/12/kubernetes-swap-monitoring-in-ai-era/" title="We Left Swap Out of Our Kubernetes Dashboard. It&#39;s Time to Add It.">https://knktc.com/2026/10/12/kubernetes-swap-monitoring-in-ai-era/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/en/tags/linux/" rel="tag"># linux</a>
+              <a href="/en/tags/kubernetes/" rel="tag"># kubernetes</a>
+              <a href="/en/tags/swap/" rel="tag"># swap</a>
+              <a href="/en/tags/ai/" rel="tag"># ai</a>
+              <a href="/en/tags/monitoring/" rel="tag"># monitoring</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/en/2026/09/02/ciaforge-introduction/" rel="prev" title="I Built a 3DS Image Converter with Codex: CiaForge">
+      <i class="fa fa-chevron-left"></i> I Built a 3DS Image Converter with Codex: CiaForge
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Why-we-thought-swap-wasn%E2%80%99t-needed"><span class="nav-number">1.</span> <span class="nav-text">Why we thought swap wasn’t needed</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#The-containers-are-waiting-but-the-memory-is-still-occupied"><span class="nav-number">2.</span> <span class="nav-text">The containers are waiting, but the memory is still occupied</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#More-Pods-with-some-tradeoffs"><span class="nav-number">3.</span> <span class="nav-text">More Pods, with some tradeoffs</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#What-I%E2%80%99d-add-to-the-monitoring-view"><span class="nav-number">4.</span> <span class="nav-text">What I’d add to the monitoring view</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#A-few-things-the-UI-should-keep-separate"><span class="nav-number">5.</span> <span class="nav-text">A few things the UI should keep separate</span></a></li></ol></div>
+          <div class="post-sidebar-wechat motion-element">
+            <img
+              class="post-sidebar-wechat-image"
+              src="/images/wechat-mp-qrcode.png"
+              alt="微信扫码关注我的公众号"
+              loading="lazy"
+            >
+            <p class="post-sidebar-wechat-name">中年工程师苟活指南</p>
+            <p class="post-sidebar-wechat-desc">微信扫码关注，获取更多新文章和实战折腾记录。</p>
+          </div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="knktc"
+      src="/en/images/sonic_avatar.png">
+  <p class="site-author-name" itemprop="name">knktc</p>
+  <div class="site-description" itemprop="description">Notes on Python, Linux, and cloud infrastructure.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/en/archives/">
+        
+          <span class="site-state-item-count">80</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">230</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/knktc" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;knktc" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/knktc" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;knktc" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+<div class="wechat-mp-widget motion-element">
+  <img
+    class="wechat-mp-widget-image"
+    src="/images/wechat-mp-qrcode.png"
+    alt="微信扫码关注我的公众号"
+    loading="lazy"
+  >
+  <p class="wechat-mp-widget-name">中年工程师苟活指南</p>
+  <p class="wechat-mp-widget-desc">微信扫码关注，第一时间看到新文章和折腾记录。</p>
+</div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/en/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">鄂ICP备2021019593号-1 </a>
+      <img src="/en/images/beian.png" style="display: inline-block;"><a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=42018502005554" rel="noopener" target="_blank">鄂公网安备 42018502005554号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">knktc</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/en/lib/anime.min.js"></script>
+
+<script src="/en/js/utils.js"></script>
+
+
+<script src="/en/js/schemes/pisces.js"></script>
+
+
+<script src="/en/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

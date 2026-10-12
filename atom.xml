@@ -6,7 +6,7 @@
   <link href="https://knktc.com/atom.xml" rel="self"/>
   
   <link href="https://knktc.com/"/>
-  <updated>2026-09-02T00:49:55.309Z</updated>
+  <updated>2026-10-12T01:21:06.414Z</updated>
   <id>https://knktc.com/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>当年没给 Kubernetes 节点留的 swap 监控位，现在该补上了</title>
+    <link href="https://knktc.com/2026/10/12/kubernetes-swap-monitoring-in-ai-era/"/>
+    <id>https://knktc.com/2026/10/12/kubernetes-swap-monitoring-in-ai-era/</id>
+    <published>2026-10-12T04:00:00.000Z</published>
+    <updated>2026-10-12T01:21:06.414Z</updated>
+    
+    <content type="html"><![CDATA[<p>以前我们做一个基于 Kubernetes 的管理界面时，没有给节点的 swap 预留监控位。</p><p>当时的想法很简单：Kubernetes 节点上的 swap 都要关掉，既然不会用，监控页面也就不用给它留位置了。</p><p>最近读到 Kubernetes 官方的一篇文章：<a href="https://kubernetes.io/zh-cn/blog/2026/10/05/scaling-kubernetes-workloads-with-node-swap/">《使用节点交换内存扩展 Kubernetes 工作负载》</a>，又想起了这个取舍。</p><p>文章聊的是用本地 SSD 做 swap，让同一台节点容纳更多浏览器和 Python 沙箱。这些容器会占着不少内存，却经常在等用户的下一条指令。</p><p>读到这里，我的第一反应是：看来当年没留的那个位置，现在还真得补上。</p><span id="more"></span><h2 id="当年为什么觉得用不到-swap"><a href="#当年为什么觉得用不到-swap" class="headerlink" title="当年为什么觉得用不到 swap"></a>当年为什么觉得用不到 swap</h2><p>这个想法有它的背景。Linux 节点启用了 swap 时，kubelet 默认会拒绝启动，关掉 swap 长期以来也是搭建 Kubernetes 集群时的常见步骤。</p><p>而且 swap 确实会影响性能。进程要访问的数据如果被换到了磁盘上，就得先读回内存。内存紧张时，这种等待可能反复发生，对延迟敏感的服务尤其麻烦。</p><p>所以当时做界面，没有特别考虑 swap，我觉得也很正常。只是时间一长，“节点上要关 swap”就很容易被记成“Kubernetes 不需要 swap”。后来再考虑节点监控时，也就顺手把它略过去了。</p><p>其实 Kubernetes 对节点 swap 的支持已经推进了好几年：v1.22 时进入 Alpha，到 v1.34 已经 GA。AI 沙箱的需求，让这项能力又受到更多关注。</p><h2 id="容器在等，内存还占着"><a href="#容器在等，内存还占着" class="headerlink" title="容器在等，内存还占着"></a>容器在等，内存还占着</h2><p>说起 AI 基础设施，首先想到的往往是 GPU。但智能体干活的时候，还可能需要启动浏览器、跑 Python，或者在隔离沙箱里执行外部代码。这些环境也会带来不少 CPU 和内存开销。</p><p>这类容器有个特点：忙的时候需要不少内存，忙完之后又不能马上退出，因为还要保留会话和执行状态，等下一次交互。</p><p>一个两个还好，会话多了，等待中的容器也会占掉很大一部分内存。节点的 CPU 可能还没用满，RAM 已经不够了。</p><p>但进程保留着这些数据，不代表它一直在访问这些数据。等待期间，有些内存页可能很久都不会被碰到。</p><p>swap 在这里就有用了。Linux 可以把暂时不用的内存页换出去，把 RAM 腾给其他 Pod。等原来的会话再次访问这些数据时，再读回来。应用还是照常访问内存，换页由操作系统处理。</p><p>当然，读回来需要时间。能不能接受这点等待，就得看具体业务了。</p><h2 id="能多放些-Pod，但也有代价"><a href="#能多放些-Pod，但也有代价" class="headerlink" title="能多放些 Pod，但也有代价"></a>能多放些 Pod，但也有代价</h2><p>原文用本地 SSD 做 swap，测试了编译任务、浏览器和 Python 沙箱。比较显眼的一个结果是，gVisor Python 沙箱从 80 个会话增加到了 240 个，容量变成了原来的三倍。</p><p>不过文章里也有一个值得一起看的结果：编译任务的 RAM 限额压到 300 MB 时表现不错，再压到 200 MB，执行时间就增加了超过 40%。作者的解释是，这时连活跃工作集都被迫进入了 swap。</p><p>这几组数据是文章作者的测试结果。我还没有在自己的环境里做同样的验证，三倍这个数字也不能直接拿来规划别的业务。</p><p>现在的条件确实比以前好了。cgroup v2 能分别核算和限制内存与 swap，本地 NVMe SSD 也比机械磁盘快得多。但经常要用的数据如果不断被换出去、再读回来，性能照样会受影响。</p><p>所以我觉得，先看清楚负载的特点更重要：平时有多少会话在等，多少内存暂时用不到，以及这些会话同时忙起来的时候会怎么样。原文里的收益，很大程度上就来自那些可以暂时换出的数据。</p><h2 id="监控页面该补些什么"><a href="#监控页面该补些什么" class="headerlink" title="监控页面该补些什么"></a>监控页面该补些什么</h2><p>回到我们当年做的管理界面，如果现在要补 swap 监控，我会先放上容量、用量和趋势，但不会只放一个使用率就结束。</p><p>毕竟，既然允许工作负载使用 swap，看到它有用量就不一定是坏事。还得知道哪些 Pod 在用、换页是否频繁，以及业务有没有变慢。</p><table><thead><tr><th>信息</th><th>想看清楚什么</th></tr></thead><tbody><tr><td>节点 swap 状态、容量与使用量</td><td>节点是否配置了 swap，还有多少空间？</td></tr><tr><td>Pod 使用 swap 的策略与实际用量</td><td>哪些工作负载可以使用，哪些正在使用？</td></tr><tr><td>swap 换入、换出速率</td><td>数据是否正在频繁往返于 RAM 和存储？</td></tr><tr><td>内存压力、存储延迟与业务延迟</td><td>换页是否已经影响节点或应用的响应？</td></tr></tbody></table><p>比如一台节点的 swap 使用量一直不低，但里面大多是暂时不用的数据，换入换出也很少；另一台节点用量没那么高，却一直在换页，业务响应也慢了。只看百分比，很容易忽略后面这种情况。</p><p>Kubernetes 已经提供了节点、Pod 和容器级别的 swap 指标。kubelet 的 <code>/metrics/resource</code> 端点可以提供下面四项数据，单位均为字节，表示当前用量或上限：</p><table><thead><tr><th>指标</th><th>层级</th><th>含义</th></tr></thead><tbody><tr><td><code>node_swap_usage_bytes</code></td><td>节点</td><td>节点当前的 swap 使用量</td></tr><tr><td><code>pod_swap_usage_bytes</code></td><td>Pod</td><td>Pod 当前的 swap 使用量</td></tr><tr><td><code>container_swap_usage_bytes</code></td><td>容器</td><td>容器当前的 swap 使用量</td></tr><tr><td><code>container_swap_limit_bytes</code></td><td>容器</td><td>容器允许使用的 swap 上限</td></tr></tbody></table><p>Pod 指标带有 <code>namespace</code> 和 <code>pod</code> 标签，容器指标还带有 <code>container</code>。有了这些数据，就可以从节点总览一路看到具体容器，知道它用了多少 swap、上限是多少。</p><p>有一点接入时要留意：<strong>NodeSwap 功能已经 GA，但上面这四个监控指标目前仍标为 ALPHA。</strong> 它们还没有稳定指标那样的兼容性保证。接入前要确认自己的集群和采集链路能拿到这些数据，升级时也需要留意指标是否有变化。</p><p>这四项指标都是用量或限额。换入、换出速率还需要从节点采集器等数据来源补充，再和延迟放到一起看。</p><p>页面上最好也把“没配 swap”“不允许 Pod 用”和“没采到数据”分开显示。这几种情况都写成 0，看着整齐，排查问题时却帮不上忙。</p><h2 id="还有些地方不能混在一起"><a href="#还有些地方不能混在一起" class="headerlink" title="还有些地方不能混在一起"></a>还有些地方不能混在一起</h2><p>补监控时，配置也得一起看。<code>failSwapOn: false</code> 只是允许 kubelet 在启用了 swap 的节点上运行。要让符合条件的容器使用 swap，还需要配置 <code>LimitedSwap</code>。</p><p>另外，调度器目前不会把 swap 当成额外的可调度内存。所以页面上也别把 RAM 和 swap 加起来，直接显示成“节点可用内存”。两者的性能和调度含义都不一样。具体配置可以看官方的 <a href="https://kubernetes.io/docs/concepts/cluster-administration/swap-memory-management/">swap 管理文档</a>。</p><p>这次读文章，技术本身之外，让我印象比较深的还是那个没留的监控位。当时觉得不会用到，也就没再往下想。</p><p>现在有了新的负载，也有了相应的支持，节点监控页面自然得跟着改。真要补起来，我最想先看到的就是：哪个 Pod 在用 swap，以及它开始频繁换页时，业务到底慢了多少。</p>]]></content>
+    
+    
+    <summary type="html">从一次 Kubernetes 管理界面的设计取舍，聊聊 AI 沙箱为何让 swap 重新受到关注，以及节点监控应该补上什么。</summary>
+    
+    
+    
+    
+    <category term="linux" scheme="https://knktc.com/tags/linux/"/>
+    
+    <category term="kubernetes" scheme="https://knktc.com/tags/kubernetes/"/>
+    
+    <category term="swap" scheme="https://knktc.com/tags/swap/"/>
+    
+    <category term="ai" scheme="https://knktc.com/tags/ai/"/>
+    
+    <category term="监控" scheme="https://knktc.com/tags/%E7%9B%91%E6%8E%A7/"/>
+    
+  </entry>
   
   <entry>
     <title>我用 Codex 写了一个 3DS 镜像转换工具：CiaForge</title>
@@ -162,9 +189,9 @@
     
     
     
-    <category term="运维" scheme="https://knktc.com/tags/%E8%BF%90%E7%BB%B4/"/>
-    
     <category term="nginx" scheme="https://knktc.com/tags/nginx/"/>
+    
+    <category term="运维" scheme="https://knktc.com/tags/%E8%BF%90%E7%BB%B4/"/>
     
     <category term="认证" scheme="https://knktc.com/tags/%E8%AE%A4%E8%AF%81/"/>
     
@@ -245,13 +272,13 @@
     
     
     
-    <category term="github" scheme="https://knktc.com/tags/github/"/>
-    
-    <category term="git" scheme="https://knktc.com/tags/git/"/>
-    
     <category term="vscode" scheme="https://knktc.com/tags/vscode/"/>
     
+    <category term="github" scheme="https://knktc.com/tags/github/"/>
+    
     <category term="copilot" scheme="https://knktc.com/tags/copilot/"/>
+    
+    <category term="git" scheme="https://knktc.com/tags/git/"/>
     
   </entry>
   
@@ -270,11 +297,11 @@
     
     
     
+    <category term="go" scheme="https://knktc.com/tags/go/"/>
+    
     <category term="tiny-requestbin" scheme="https://knktc.com/tags/tiny-requestbin/"/>
     
     <category term="requestbin" scheme="https://knktc.com/tags/requestbin/"/>
-    
-    <category term="go" scheme="https://knktc.com/tags/go/"/>
     
     <category term="开源项目" scheme="https://knktc.com/tags/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/"/>
     
@@ -314,7 +341,7 @@
     <link href="https://knktc.com/2023/05/06/install-pandas-on-kylin-v10-with-sw64-cpu/"/>
     <id>https://knktc.com/2023/05/06/install-pandas-on-kylin-v10-with-sw64-cpu/</id>
     <published>2023-05-06T06:08:14.000Z</published>
-    <updated>2023-05-11T01:22:29.284Z</updated>
+    <updated>2023-05-11T01:22:29.000Z</updated>
     
     <content type="html"><![CDATA[<p>最近在做一些国产化适配的工作，让自己的系统能跑在申威架构的CPU上。这几年国产CPU如雨后春笋一般涌现出来，感慨一下，放我刚工作的那几年真是想都不敢想。</p><p>申威架构的CPU与ARM架构的CPU不同，更加小众，国内也就UOS和Kylin对其有支持。客户提供的操作系统是Kylin V10的SW_64版本，本文就记录下在这个架构CPU+Kylin V10环境下装Pandas遇到的问题。</p><span id="more"></span><h2 id="创建venv"><a href="#创建venv" class="headerlink" title="创建venv"></a>创建venv</h2><p>Kylin V10自带的python3版本是3.7.4，先创建个venv:</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">python3 -m venv --copies knktc-env</span><br><span class="line">source knktc-env&#x2F;bin&#x2F;active</span><br></pre></td></tr></table></figure><h2 id="安装numpy"><a href="#安装numpy" class="headerlink" title="安装numpy"></a>安装numpy</h2><p>下意识地直接用pip来安装numpy: </p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install numpy</span><br></pre></td></tr></table></figure><p>一顿输出后，报错了：</p><blockquote><p>error: #error Unknown CPU, please report this to numpy maintainers with information about your platform (OS, CPU and compiler)</p></blockquote><p>果然有够小众的，识别不出来这个CPU，所以编译无法进行。</p><p>网上查了半天，在UOS的论坛上发现有人讨论过，说无法用pip来编译，只能下载UOS预编译好的包。然后在Kylin这个系统上也搜索了下，果然有：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">yum search numpy</span><br><span class="line"></span><br><span class="line">输出：</span><br><span class="line">Last metadata expiration check: 5 days, 16:43:36 ago on Fri 05 May 2023 04:06:16 PM CST.</span><br><span class="line">&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; Name Matched: numpy &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</span><br><span class="line">python3-numpy.sw_64 : A fast multidimensional array facility for Python</span><br></pre></td></tr></table></figure><p>于是先装下这个系统厂商提供的包：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install python3-numpy</span><br></pre></td></tr></table></figure><p>装好后需要手动拷贝下，把装到系统目录中的numpy给拷到venv中：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp -r &#x2F;usr&#x2F;lib&#x2F;python3.7&#x2F;site-packages&#x2F;numpy* knktc-env&#x2F;lib&#x2F;python3.7&#x2F;site-packages</span><br></pre></td></tr></table></figure><p>尝试看下版本:</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; import numpy</span><br><span class="line">&gt;&gt;&gt; numpy.__version__</span><br><span class="line">&#39;1.16.5&#39;</span><br></pre></td></tr></table></figure><p>好了，先把numpy的问题给解决了。</p><h2 id="安装Pandas"><a href="#安装Pandas" class="headerlink" title="安装Pandas"></a>安装Pandas</h2><p>要安装Pandas的话，这一步只好使用源码来编译了。</p><p>先把依赖给装下：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">pip install setuptools --upgrade -i https:&#x2F;&#x2F;pypi.tuna.tsinghua.edu.cn&#x2F;simple</span><br><span class="line">pip install wheel --upgrade -i https:&#x2F;&#x2F;pypi.tuna.tsinghua.edu.cn&#x2F;simple</span><br><span class="line">pip install Cython --upgrade -i https:&#x2F;&#x2F;pypi.tuna.tsinghua.edu.cn&#x2F;simple</span><br><span class="line">pip install pytz&#x3D;&#x3D;2018.7 -i https:&#x2F;&#x2F;pypi.tuna.tsinghua.edu.cn&#x2F;simple</span><br><span class="line">pip install python-dateutil -i https:&#x2F;&#x2F;pypi.tuna.tsinghua.edu.cn&#x2F;simple</span><br></pre></td></tr></table></figure><p>然后去以下地址下载源码包：</p><p><a href="https://github.com/pandas-dev/pandas/releases">https://github.com/pandas-dev/pandas/releases</a></p><p>我们还在用1.1.5版本，就用这个地址来下载：</p><p><a href="https://github.com/pandas-dev/pandas/releases/download/v1.1.5/pandas-1.1.5.tar.gz">https://github.com/pandas-dev/pandas/releases/download/v1.1.5/pandas-1.1.5.tar.gz</a></p><p>下载后解压，随后进入到目录用最传统的方式安装即可：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd pandas-1.1.5&#x2F;</span><br><span class="line">python setup.py install</span><br></pre></td></tr></table></figure><p>注意，这个过程有点漫长，建议开个screen来进行编译安装。</p><p>虽然过程漫长，但居然没啥报错地就完成了。</p><p>最后再试试panda的版本：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; import pandas</span><br><span class="line">&gt;&gt;&gt; pandas.__version__</span><br><span class="line">&#39;1.1.5&#39;</span><br></pre></td></tr></table></figure><p>嗯，应该可以了。</p>]]></content>
     
@@ -329,6 +356,8 @@
     
     <category term="国产化" scheme="https://knktc.com/tags/%E5%9B%BD%E4%BA%A7%E5%8C%96/"/>
     
+    <category term="sw_64" scheme="https://knktc.com/tags/sw-64/"/>
+    
     <category term="sw64" scheme="https://knktc.com/tags/sw64/"/>
     
     <category term="麒麟" scheme="https://knktc.com/tags/%E9%BA%92%E9%BA%9F/"/>
@@ -339,8 +368,6 @@
     
     <category term="numpy" scheme="https://knktc.com/tags/numpy/"/>
     
-    <category term="sw_64" scheme="https://knktc.com/tags/sw-64/"/>
-    
   </entry>
   
   <entry>
@@ -348,7 +375,7 @@
     <link href="https://knktc.com/2022/10/27/fix-mac-os-13-ventura-git-ssh-permission-denied/"/>
     <id>https://knktc.com/2022/10/27/fix-mac-os-13-ventura-git-ssh-permission-denied/</id>
     <published>2022-10-27T04:41:08.000Z</published>
-    <updated>2022-10-27T13:18:29.822Z</updated>
+    <updated>2022-10-27T13:18:29.000Z</updated>
     
     <content type="html"><![CDATA[<p>最近尝鲜升级了mac os 13 ventura，结果发现git push代码的时候怎么都不行，直接报了个错误: </p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Permission denied (publickey).</span><br><span class="line">fatal: Could not read from remote repository.</span><br><span class="line"></span><br><span class="line">Please make sure you have the correct access rights</span><br></pre></td></tr></table></figure><span id="more"></span><p>在反复确认自己的公钥已经放到gitlab上后，开始google，参考了下网上的讨论：<a href="https://superuser.com/questions/1749364/git-ssh-permission-denied-in-macos-13-ventura">https://superuser.com/questions/1749364/git-ssh-permission-denied-in-macos-13-ventura</a></p><p>应该是因为mac os 13中自带的OpenSSH_9.0p1默认禁止了RSA/SHA-1算法导致的。</p><p>解决方法的话，要么是生成一个新的ssh密钥，替换下（成本可能有点高）：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t ed25519</span><br></pre></td></tr></table></figure><p>要么就是编辑 ~/.ssh/config配置文件，在文件中加入以下的配置即可(还可以应对服务端太老不支持新的加密算法的情况)：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Host *</span><br><span class="line">    HostkeyAlgorithms +ssh-rsa</span><br><span class="line">    PubkeyAcceptedAlgorithms +ssh-rsa</span><br></pre></td></tr></table></figure>]]></content>
     
@@ -359,13 +386,13 @@
     
     
     
-    <category term="ssh" scheme="https://knktc.com/tags/ssh/"/>
-    
     <category term="git" scheme="https://knktc.com/tags/git/"/>
     
     <category term="macos" scheme="https://knktc.com/tags/macos/"/>
     
     <category term="ventura" scheme="https://knktc.com/tags/ventura/"/>
+    
+    <category term="ssh" scheme="https://knktc.com/tags/ssh/"/>
     
     <category term="permission" scheme="https://knktc.com/tags/permission/"/>
     
@@ -378,7 +405,7 @@
     <link href="https://knktc.com/2022/08/10/fix-python-memcached-3-8-syntax-warning/"/>
     <id>https://knktc.com/2022/08/10/fix-python-memcached-3-8-syntax-warning/</id>
     <published>2022-08-10T13:57:45.000Z</published>
-    <updated>2022-08-10T14:21:21.405Z</updated>
+    <updated>2022-08-10T14:21:21.000Z</updated>
     
     <content type="html"><![CDATA[<p>我们一直使用python-memcached库来操作memcached，最近发现在python3.8的环境中，代码会报类似这样的警告：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">memcache.py:1303: SyntaxWarning: &quot;is&quot; with a literal. Did you mean &quot;&#x3D;&#x3D;&quot;?</span><br><span class="line">  if key is &#39;&#39;:</span><br><span class="line">memcache.py:1304: SyntaxWarning: &quot;is&quot; with a literal. Did you mean &quot;&#x3D;&#x3D;&quot;?</span><br><span class="line">  if key_extra_len is 0:</span><br></pre></td></tr></table></figure><span id="more"></span><p>查了下python-memcached的源码(其实也就一个文件)，定位到1303和1304行，代码如下：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">if key is &#39;&#39;:</span><br><span class="line">    if key_extra_len is 0:</span><br></pre></td></tr></table></figure><p>看来这样的使用方法在python3.8里面是不被接受的。</p><p>虽然只是warning，但日志中打印这些信息总归让人感觉很不爽，所以得想法修复下。</p><p>查到官方的github仓库，发现这个库已经有年头没有人管了，即使有人提出了修改的PR(<a href="https://github.com/linsomniac/python-memcached/issues/176">https://github.com/linsomniac/python-memcached/issues/176</a>)，也没有人来合并。</p><p>于是两条路：</p><ol><li>在项目中直接修改memcache.py文件，改掉这两行的问题，把is改成==就可以了。</li><li>因为我们会发个requirements.txt，所以我自己做了个修改的版本，放到了pypi上(<a href="https://pypi.org/project/python-memcached-py38fix/">https://pypi.org/project/python-memcached-py38fix/</a>)，如果有需要的可以直接下载：</li></ol><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install python-memcached-py38fix</span><br></pre></td></tr></table></figure><p>看来下一步必须得考虑换成pymemcache了，毕竟Django都抛弃了对python-memcached的支持了。</p>]]></content>
     
@@ -402,7 +429,7 @@
     <link href="https://knktc.com/2022/08/10/nginx-not-found-log-off/"/>
     <id>https://knktc.com/2022/08/10/nginx-not-found-log-off/</id>
     <published>2022-08-10T13:42:44.000Z</published>
-    <updated>2022-08-10T13:52:07.712Z</updated>
+    <updated>2022-08-10T13:52:07.000Z</updated>
     
     <content type="html"><![CDATA[<p>最近尝试使用nginx来提供一些静态的json文件来作为配置，最为简单的做法就是提供下面这样的配置了：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">location ~ ^&#x2F;myconf&#x2F;(?&lt;filename&gt;.*)$ &#123;</span><br><span class="line">    alias &#x2F;home&#x2F;knktc&#x2F;myconf&#x2F;$filename;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><span id="more"></span><p>但是问题来了，如果匹配不到配置文件的话，直接返回的是nginx的404页面，为了能让前端代码更容易地处理下这种情况，可以加点配置，让文件找不到的时候直接返回空的json对象，于是配置可以改成下面的这样:</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">location ~ ^&#x2F;myconf&#x2F;(?&lt;filename&gt;.*)$ &#123;</span><br><span class="line">    alias &#x2F;home&#x2F;knktc&#x2F;myconf&#x2F;$filename;</span><br><span class="line">    error_page 404 &#x3D; @not_found_fallback;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">location @not_found_fallback &#123;</span><br><span class="line">        add_header Content-Type text&#x2F;plain;</span><br><span class="line">        return 200 &quot;&#123;&#125;&quot;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>现在的话，如果文件不存在的话，就可以返回一个空的json对象了。</p><p>但是问题又来了：这种情况下nginx的error.log里面又记录了一次404的错误事件，于是还需要继续改下配置，把not found的日志给关掉：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">location ~ ^&#x2F;myconf&#x2F;(?&lt;filename&gt;.*)$ &#123;</span><br><span class="line">    alias &#x2F;home&#x2F;knktc&#x2F;myconf&#x2F;$filename;</span><br><span class="line">    error_page 404 &#x3D; @not_found_fallback;</span><br><span class="line">    log_not_found off;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">location @not_found_fallback &#123;</span><br><span class="line">        add_header Content-Type text&#x2F;plain;</span><br><span class="line">        return 200 &quot;&#123;&#125;&quot;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>这下就OK了。使用Nginx静态文件能力来做一些简单的接口还是很方便的。</p>]]></content>
     
@@ -428,7 +455,7 @@
     <link href="https://knktc.com/2022/06/16/certbot-on-ubuntu-cheatsheet/"/>
     <id>https://knktc.com/2022/06/16/certbot-on-ubuntu-cheatsheet/</id>
     <published>2022-06-16T13:45:36.000Z</published>
-    <updated>2022-06-16T14:21:53.791Z</updated>
+    <updated>2022-06-16T14:21:53.000Z</updated>
     
     <content type="html"><![CDATA[<p>用Certbot来自动生成Let’s Encrypt证书这件事儿，虽然官方和网上已经有了很详实的文档了，但是我还是想自己记录下，留作以后备查吧。</p><p>本文用的操作系统是ubuntu 20.04，DNS的话用的是Cloudflare的服务，web服务使用nginx来提供。然后，按照以下步骤进行就可以了。</p><span id="more"></span><h2 id="安装Certbot"><a href="#安装Certbot" class="headerlink" title="安装Certbot"></a>安装Certbot</h2><p>用以下命令安装就可以了，某些时候snap install的时候可能比较慢，有时候还可能需要重试几次：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">apt install snapd</span><br><span class="line">snap install core</span><br><span class="line">snap refresh core</span><br><span class="line">snap install --classic certbot</span><br></pre></td></tr></table></figure><p>安装完成后，运行下<code>certbot --version</code>命令，如果有版本号输出，就表明安装成功了。</p><h2 id="安装Cloudflare插件"><a href="#安装Cloudflare插件" class="headerlink" title="安装Cloudflare插件"></a>安装Cloudflare插件</h2><p>为了实现自动化地续签证书，需要安装下对应DNS服务商的插件才可以。我使用Cloudflare来做DNS解析，所以可以使用以下的命令来安装Cloudflare插件：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">snap set certbot trust-plugin-with-root=ok</span><br><span class="line"></span><br><span class="line">snap install certbot-dns-cloudflare</span><br></pre></td></tr></table></figure><h2 id="设置Cloudflare-API令牌"><a href="#设置Cloudflare-API令牌" class="headerlink" title="设置Cloudflare API令牌"></a>设置Cloudflare API令牌</h2><p>要使用Cloudflare插件，需要先登录到Cloudflare控制台来生成一个仅可操作DNS解析的API 令牌。可在登录Cloudflare后，跳转到这个地址来进行创建：<a href="">https://dash.cloudflare.com/profile/api-tokens</a></p><p>以下是操作过程的简单演示：</p><p><a href="https://imgtu.com/i/XHvupd"><img src="https://s1.ax1x.com/2022/06/16/XHvupd.png" alt="XHvupd.png"></a></p><p><a href="https://imgtu.com/i/XHvmfH"><img src="https://s1.ax1x.com/2022/06/16/XHvmfH.png" alt="XHvmfH.png"></a></p><p><a href="https://imgtu.com/i/XHvete"><img src="https://s1.ax1x.com/2022/06/16/XHvete.png" alt="XHvete.png"></a></p><p>创建完成后记得将出现的令牌复制下来。然后使用以下命令来创建配置文件：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p ~/.secrets/certbot</span><br><span class="line"></span><br><span class="line">vim ~/.secrets/certbot/cloudflare.ini</span><br></pre></td></tr></table></figure><p>填入如下格式的配置就可以了：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dns_cloudflare_api_token &#x3D; 刚才获取到的API令牌</span><br></pre></td></tr></table></figure><p>编辑完成后，可以修改下这个文件的权限，否则执行certbot命令时会报一个警告说文件权限不安全：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chmod 600 ~/.secrets/certbot/cloudflare.ini</span><br></pre></td></tr></table></figure><h2 id="获取证书"><a href="#获取证书" class="headerlink" title="获取证书"></a>获取证书</h2><p>现在通过运行以下的命令就可以生成nginx所需的证书了：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">certbot certonly \</span><br><span class="line">  --dns-cloudflare \</span><br><span class="line">  --dns-cloudflare-credentials ~/.secrets/certbot/cloudflare.ini \</span><br><span class="line">  --dns-cloudflare-propagation-seconds 60 \</span><br><span class="line">  -d knktc.com</span><br></pre></td></tr></table></figure><p>注意，这里用了<code>--dns-cloudflare-propagation-seconds 60</code>把等待时间延长到了60秒，否则默认的10秒有些时候会导致校验失败。</p><p>生成的证书和私钥会放到/etc/letsencrypt/live/YOUR_HOST目录下。</p><p>贴一段nginx相关配置，备查：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">listen 443 ssl http2;</span><br><span class="line">server_name knktc.com;</span><br><span class="line">ssl_certificate /etc/letsencrypt/live/knktc.com/fullchain.pem; # managed by Certbot</span><br><span class="line">ssl_certificate_key /etc/letsencrypt/live/knktc.com/privkey.pem; # managed by Certbot</span><br><span class="line"></span><br><span class="line">ssl_protocols       TLSv1 TLSv1.1 TLSv1.2;</span><br><span class="line">ssl_ciphers         HIGH:!aNULL:!MD5;</span><br><span class="line">keepalive_timeout   70;</span><br><span class="line">ssl_session_timeout  5m;</span><br></pre></td></tr></table></figure><h2 id="定时任务"><a href="#定时任务" class="headerlink" title="定时任务"></a>定时任务</h2><p>通过以下命令可以查看certbot的定时任务是否添加成功了：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl list-timers</span><br></pre></td></tr></table></figure><p>如果要在每次生成新的证书后自动reload下nginx，可以加个hook脚本：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim &#x2F;etc&#x2F;letsencrypt&#x2F;renewal-hooks&#x2F;post&#x2F;reload-nginx</span><br></pre></td></tr></table></figure><p>加入以下的脚本：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#!&#x2F;bin&#x2F;sh</span><br><span class="line"></span><br><span class="line">systemctl reload nginx</span><br></pre></td></tr></table></figure><p>然后给这个脚本文件加上权限：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chmod +x &#x2F;etc&#x2F;letsencrypt&#x2F;renewal-hooks&#x2F;post&#x2F;reload-nginx</span><br></pre></td></tr></table></figure><p>这样的话，每次生成新的证书后，就会自动reload下nginx让新的证书生效了。</p>]]></content>
     
@@ -439,19 +466,19 @@
     
     
     
+    <category term="certbot" scheme="https://knktc.com/tags/certbot/"/>
+    
     <category term="ubuntu" scheme="https://knktc.com/tags/ubuntu/"/>
     
     <category term="ssl" scheme="https://knktc.com/tags/ssl/"/>
     
     <category term="https" scheme="https://knktc.com/tags/https/"/>
     
-    <category term="nginx" scheme="https://knktc.com/tags/nginx/"/>
-    
-    <category term="certbot" scheme="https://knktc.com/tags/certbot/"/>
-    
     <category term="letsencrypt" scheme="https://knktc.com/tags/letsencrypt/"/>
     
     <category term="cloudflare" scheme="https://knktc.com/tags/cloudflare/"/>
+    
+    <category term="nginx" scheme="https://knktc.com/tags/nginx/"/>
     
   </entry>
   
@@ -460,7 +487,7 @@
     <link href="https://knktc.com/2022/04/22/set-mirror-when-installing-poerty/"/>
     <id>https://knktc.com/2022/04/22/set-mirror-when-installing-poerty/</id>
     <published>2022-04-22T05:52:52.000Z</published>
-    <updated>2022-04-25T05:03:15.678Z</updated>
+    <updated>2022-04-25T05:03:15.000Z</updated>
     
     <content type="html"><![CDATA[<p>首先添加下全局的pip代理：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip config --user setglobal.index-url https:&#x2F;&#x2F;pypi.tuna.tsinghua.edu.cn&#x2F;simple</span><br></pre></td></tr></table></figure><p>然后下载安装脚本到本地(比如保存成install-poetry.py文件)：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -sSL https:&#x2F;&#x2F;install.python-poetry.org -o install-poetry.py</span><br></pre></td></tr></table></figure><p>打开脚本进行编辑，找到如下这段代码：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">def pip(self, *args, **kwargs) -&gt; subprocess.CompletedProcess:</span><br><span class="line">        return self.python(&quot;-m&quot;, &quot;pip&quot;, &quot;--isolated&quot;, *args, **kwargs)</span><br></pre></td></tr></table></figure><p>把里面的”–isolated”删除掉，然后安装脚本使用pip时就会自动使用之前配置好的镜像了:</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 install install-poetry.py</span><br></pre></td></tr></table></figure>]]></content>
     
@@ -474,9 +501,9 @@
     
     
     
-    <category term="poetry" scheme="https://knktc.com/tags/poetry/"/>
-    
     <category term="镜像" scheme="https://knktc.com/tags/%E9%95%9C%E5%83%8F/"/>
+    
+    <category term="poetry" scheme="https://knktc.com/tags/poetry/"/>
     
     <category term="pip" scheme="https://knktc.com/tags/pip/"/>
     
@@ -487,7 +514,7 @@
     <link href="https://knktc.com/2022/03/26/use-celery-broadcast-queue/"/>
     <id>https://knktc.com/2022/03/26/use-celery-broadcast-queue/</id>
     <published>2022-03-26T13:35:13.000Z</published>
-    <updated>2022-03-26T15:15:15.944Z</updated>
+    <updated>2022-03-26T15:15:15.000Z</updated>
     
     <content type="html"><![CDATA[<p>最近琢磨给自己的系统加上个Agent来实现配置变更和监控信息采集等任务，因为这个系统是多实例部署的，所以这些Agent可能需要同时运行相同的任务。因为我们正好在用celery，celery支持广播任务，所有的worker都能收到相同的任务，正好就能用这个特性来实现Agent的功能了。</p><span id="more"></span><p>为了测试下广播任务的效果，先写个示例任务：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># filename: agent.py</span></span><br><span class="line"><span class="keyword">import</span> datetime</span><br><span class="line"><span class="keyword">from</span> celery <span class="keyword">import</span> shared_task</span><br><span class="line"></span><br><span class="line"><span class="meta">@shared_task(<span class="params">bind=<span class="literal">True</span></span>)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">test</span>(<span class="params">self</span>):</span></span><br><span class="line">    name = self.request.hostname</span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">f&#x27;/tmp/<span class="subst">&#123;name&#125;</span>&#x27;</span>, <span class="string">&#x27;w&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">        f.write(<span class="built_in">str</span>(datetime.datetime.now()))</span><br></pre></td></tr></table></figure><p>稍微解释下，test这个任务会获取执行该任务的worker的hostname，然后以该hostname为文件名在/tmp目录下创建出来文件，文件中包含有执行任务的时间。</p><p>也就是说，如果测试ok的话，在这个test任务执行的时候，在/tmp目录下应该会同时生成多个文件：有几个worker绑定到这个队列就会有几个文件。</p><p>然后在celery的app配置代码中加入以下的代码：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> kombu.common <span class="keyword">import</span> Broadcast</span><br><span class="line"></span><br><span class="line">app.conf.task_queues = (Broadcast(<span class="string">&#x27;broadcast_tasks&#x27;</span>),)</span><br><span class="line">app.conf.task_routes = &#123;</span><br><span class="line">    <span class="string">&#x27;agent.test&#x27;</span>: &#123;</span><br><span class="line">        <span class="string">&#x27;queue&#x27;</span>: <span class="string">&#x27;broadcast_tasks&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;exchange&#x27;</span>: <span class="string">&#x27;broadcast_tasks&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>这里定义了一个名为broadcast_tasks的队列，然后agent.test的任务都会通过broadcast_tasks这个exchange来发出。</p><p>在celery worker方面，试着启动这么两个worker绑定broadcast_tasks队列，这两个worker一个叫agent1，一个叫agent2：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">celery -A boss2_manager worker --pidfile=/var/run/celeryworker_agent1.pid -Q broadcast_tasks -n agent1@%h</span><br><span class="line">celery -A boss2_manager worker --pidfile=/var/run/celeryworker_agent2.pid -Q broadcast_tasks -n agent2@%h</span><br></pre></td></tr></table></figure><p>celery worker启动后，如果使用了RabbitMQ作为broker的话，可以在管理界面中看到，广播类型的队列对于RabbitMQ来说就是一个fanout类型的exchange外加多个队列：启动一个worker就创建一个队列绑定到这个fanout exchange上。</p><p>试着直接用delay方法调用下这个test任务：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> agent <span class="keyword">import</span> test</span><br><span class="line"></span><br><span class="line">test.delay()</span><br></pre></td></tr></table></figure><p>然后去/tmp目录下看看，发现已经出现了两个文件，命名分别为：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">agent1@knktc-rmbp.local</span><br><span class="line">agent2@knktc-rmbp.local</span><br></pre></td></tr></table></figure><p>打开文件看看内容，两个文件中记录的时间相差不大。</p><p>OK，就用这个方法来做Agent吧。</p><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul><li>Celery Broadcast的官方文档(吐槽下，最近官方把原来的celeryproject.org域名给搞丢了，最后只好搞了个新的~)：<a href="https://docs.celeryq.dev/en/stable/userguide/routing.html#broadcast">https://docs.celeryq.dev/en/stable/userguide/routing.html#broadcast</a></li></ul>]]></content>
     
@@ -512,7 +539,7 @@
     <link href="https://knktc.com/2022/03/23/where-to-place-mib-files-in-ubuntu/"/>
     <id>https://knktc.com/2022/03/23/where-to-place-mib-files-in-ubuntu/</id>
     <published>2022-03-23T14:39:41.000Z</published>
-    <updated>2022-03-23T15:10:08.805Z</updated>
+    <updated>2022-03-23T15:10:08.000Z</updated>
     
     <content type="html"><![CDATA[<p>我这边的一个系统用了telegraf的snmp_trap插件来采集snmp trap告警，然后再转换为http格式吐出进入下一个环节。这个插件配置起来倒是简单，但是其中对于OID的翻译依赖于snmptranslate命令的结果，而如果让snmptranslate命令能正常翻译，又依赖于MIB库文件的正确放置和配置。最近在用这套东西来采集H3C交换机设备的告警，正好记录下在ubuntu环境下导入MIB库文件的方法。</p><span id="more"></span><h1 id="配置前"><a href="#配置前" class="headerlink" title="配置前"></a>配置前</h1><p>在进行配置前，可以先尝试运行下snmptranslate命令(注意，这里的-L n参数可以忽略输出的错误信息)：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">snmptranslate -L n .1.3.6.1.4.1.25506.2.38.1.6.3.0.1</span><br></pre></td></tr></table></figure><p>这个示例中的OID来自H3C的交换机设备，如果没导入MIB库的话，结果只会是：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SNMPv2-SMI::enterprises.25506.2.38.1.6.3.0.1</span><br></pre></td></tr></table></figure><p>很明显，光看这个还是没法知道设备发了个啥信息过来。</p><h1 id="导入和配置"><a href="#导入和配置" class="headerlink" title="导入和配置"></a>导入和配置</h1><p>先从H3C官方搞到MIB库文件，然后把这些mib文件解压到一个目录中。在这个示例中，我们把这些mib文件都放置到/usr/share/mibs/h3c_mibs目录下。</p><p>放好MIB库文件后，就可以开始配置snmp.conf这个配置文件了：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim &#x2F;etc&#x2F;snmp&#x2F;snmp.conf</span><br></pre></td></tr></table></figure><p>(如果没有这个文件，可能需要先使用apt install snmp命令来安装下相关的组件。)</p><p>配置文件中原始的配置内容是这样的：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># As the snmp packages come without MIB files due to license reasons, loading</span><br><span class="line"># of MIBs is disabled by default. If you added the MIBs you can reenable</span><br><span class="line"># loading them by commenting out the following line.</span><br><span class="line">mibs :</span><br></pre></td></tr></table></figure><p>为了能让新加的MIB库生效，需要做下修改：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># mibs :</span><br><span class="line"></span><br><span class="line">mibdirs +&#x2F;usr&#x2F;share&#x2F;mibs&#x2F;h3c_mibs</span><br><span class="line">mibdirs +&#x2F;usr&#x2F;share&#x2F;mibs&#x2F;another_mib_dir  # for example</span><br><span class="line"></span><br><span class="line">mibs +ALL</span><br></pre></td></tr></table></figure><p>稍微解释下：</p><ul><li>注释掉了原有的mib : 这行，让系统可以加载第三方的库；</li><li>mibdirs参数用于指定加载的MIB库路径，如果有多个MIB库的目录，可以多次使用这个参数</li><li>mibs +ALL参数指定了在所有的mib文件中来进行查找。</li></ul><p>配置文件修改完成后，保存退出即可，无需重启啥服务。</p><h1 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h1><p>再次测试翻译OID，在正确放置mib文件和正确配置的情况下，是可以成功翻译出结果的：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">root@knktc.com:&#x2F;root# snmptranslate -L n .1.3.6.1.4.1.25506.2.38.1.6.3.0.1</span><br><span class="line">HH3C-TRAP-MIB::hh3cPeriodicalTrap</span><br></pre></td></tr></table></figure><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul><li>telegraf的snmp trap插件官网是：<a href="https://github.com/influxdata/telegraf/tree/master/plugins/inputs/snmp_trap">https://github.com/influxdata/telegraf/tree/master/plugins/inputs/snmp_trap</a></li><li>snmp.conf配置文件的更多内容可参考man page的帮助：<a href="https://linux.die.net/man/5/snmp.conf">https://linux.die.net/man/5/snmp.conf</a></li></ul>]]></content>
     
@@ -531,33 +558,6 @@
     <category term="mibs" scheme="https://knktc.com/tags/mibs/"/>
     
     <category term="telegraf" scheme="https://knktc.com/tags/telegraf/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Git命令使用不同的SSH密钥</title>
-    <link href="https://knktc.com/2022/03/21/git-use-different-ssh-key/"/>
-    <id>https://knktc.com/2022/03/21/git-use-different-ssh-key/</id>
-    <published>2022-03-21T14:55:38.000Z</published>
-    <updated>2022-03-23T14:34:28.150Z</updated>
-    
-    <content type="html"><![CDATA[<p>最近要在自动构建中加入个打tag的操作，却发现可能是gitlab的bug，之前加过的默认deploy key怎么都找不到了。没办法，只好在打包服务器上再创建一个SSH密钥对，让执行git命令时使用这个新的SSH密钥。</p><span id="more"></span><p>以下的示例假设我们要访问的git服务器地址为：gitlab.knktc.com 。</p><p>首先使用以下命令创建一个新的SSH密钥对：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p &#x2F;home&#x2F;knktc&#x2F;gitlab_ssh_keys</span><br><span class="line">ssh-keygen -f &#x2F;home&#x2F;knktc&#x2F;gitlab_ssh_keys&#x2F;id_rsa</span><br></pre></td></tr></table></figure><p>这个示例中，新的SSH私钥已经存储到了/home/knktc/gitlab_ssh_keys/id_rsa这个路径了。</p><p>然后在当前用户的根目录下创建ssh config文件：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim ~&#x2F;ssh&#x2F;config</span><br></pre></td></tr></table></figure><p>填入以下的配置：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Host gitlab.knktc.com</span><br><span class="line">    IdentityFile &#x2F;home&#x2F;knktc&#x2F;gitlab_ssh_keys&#x2F;id_rsa</span><br></pre></td></tr></table></figure><p>这个配置的意思是：如果使用ssh访问主机名为gitlab.knktc.com，则使用刚才新创建的密钥。</p><p>最后测试下clone项目：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone git@gitlab.knktc.com:blog&#x2F;knktc-com.git</span><br></pre></td></tr></table></figure><p>OK，已经成功了。</p><p>更多关于ssh config配置文件的细节，可参考：<a href="https://linux.die.net/man/5/ssh_config">https://linux.die.net/man/5/ssh_config</a></p>]]></content>
-    
-    
-    <summary type="html">&lt;p&gt;最近要在自动构建中加入个打tag的操作，却发现可能是gitlab的bug，之前加过的默认deploy key怎么都找不到了。没办法，只好在打包服务器上再创建一个SSH密钥对，让执行git命令时使用这个新的SSH密钥。&lt;/p&gt;</summary>
-    
-    
-    
-    
-    <category term="ssh" scheme="https://knktc.com/tags/ssh/"/>
-    
-    <category term="git" scheme="https://knktc.com/tags/git/"/>
-    
-    <category term="private" scheme="https://knktc.com/tags/private/"/>
-    
-    <category term="public" scheme="https://knktc.com/tags/public/"/>
-    
-    <category term="key" scheme="https://knktc.com/tags/key/"/>
     
   </entry>
   
