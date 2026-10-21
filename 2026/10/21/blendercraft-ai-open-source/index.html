@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"knktc.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="一篇宣布用 AI 复刻 Blender 的 Reddit 帖子，把 AI 复刻潮、开源社区和只看标题的传播方式，一起拉进了笑话里。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="19 个 AI Agent，一个周末，复刻 Blender？先别急着转发">
+<meta property="og:url" content="https://knktc.com/2026/10/21/blendercraft-ai-open-source/">
+<meta property="og:site_name" content="knktc的杂乱空间">
+<meta property="og:description" content="一篇宣布用 AI 复刻 Blender 的 Reddit 帖子，把 AI 复刻潮、开源社区和只看标题的传播方式，一起拉进了笑话里。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://knktc.com/2026/10/21/blendercraft-ai-open-source/blender-on-reddit-2.webp">
+<meta property="og:image" content="https://knktc.com/2026/10/21/blendercraft-ai-open-source/artcraft-on-x.webp">
+<meta property="article:published_time" content="2026-10-21T04:00:00.000Z">
+<meta property="article:modified_time" content="2026-10-21T00:57:31.531Z">
+<meta property="article:author" content="knktc">
+<meta property="article:tag" content="ai">
+<meta property="article:tag" content="blender">
+<meta property="article:tag" content="开源">
+<meta property="article:tag" content="artcraft">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://knktc.com/2026/10/21/blendercraft-ai-open-source/blender-on-reddit-2.webp">
+
+<link rel="canonical" href="https://knktc.com/2026/10/21/blendercraft-ai-open-source/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+<link rel="alternate" hreflang="zh-CN" href="&#x2F;2026&#x2F;10&#x2F;21&#x2F;blendercraft-ai-open-source&#x2F;">
+<link rel="alternate" hreflang="en" href="&#x2F;en&#x2F;2026&#x2F;10&#x2F;21&#x2F;blendercraft-ai-open-source&#x2F;">
+<link rel="alternate" hreflang="x-default" href="&#x2F;2026&#x2F;10&#x2F;21&#x2F;blendercraft-ai-open-source&#x2F;">
+
+  <title>19 个 AI Agent，一个周末，复刻 Blender？先别急着转发 | knktc的杂乱空间</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a23b2d1c6159a3a6c798edbc7f9211f9";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="knktc的杂乱空间" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">knktc的杂乱空间</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">python,cloud,linux...</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://knktc.com/2026/10/21/blendercraft-ai-open-source/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/sonic_avatar.png">
+      <meta itemprop="name" content="knktc">
+      <meta itemprop="description" content="关注linux,云计算,python，杂乱之地...">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="knktc的杂乱空间">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          19 个 AI Agent，一个周末，复刻 Blender？先别急着转发
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2026-10-21 12:00:00 / 修改时间：08:57:31" itemprop="dateCreated datePublished" datetime="2026-10-21T12:00:00+08:00">2026-10-21</time>
+            </span>
+
+          
+            <div class="post-description">一篇宣布用 AI 复刻 Blender 的 Reddit 帖子，把 AI 复刻潮、开源社区和只看标题的传播方式，一起拉进了笑话里。</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <img src="blender-on-reddit-2.webp" alt="Reddit 上宣布用 AI 复刻 Blender 的帖子" width="480" style="max-width: 100%; height: auto;">
+
+<p>前几天才刚聊过 ArtCraft 用 AI 复刻各种软件，紧接着就在 Reddit 的 r/blender 看到了这么一篇帖子。</p>
+<p>19 个自主运行的 Claude Agent，干了一个周末，复刻 Blender，还把它开源了。</p>
+<p>这套说法最近实在太熟悉了。先看看作者是怎么宣布的。</p>
+<span id="more"></span>
+
+<h2 id="我们做到了，隆重推出-BlenderCraft"><a href="#我们做到了，隆重推出-BlenderCraft" class="headerlink" title="我们做到了，隆重推出 BlenderCraft"></a>我们做到了，隆重推出 BlenderCraft</h2><p>下面是<a target="_blank" rel="noopener" href="https://www.reddit.com/r/blender/comments/1x79j0p/we_did_it_we_reverseengineered_blender_with_ai/">原帖</a>前半部分的翻译：</p>
+<blockquote>
+<p><strong>我们做到了！我们用 AI 逆向工程了 Blender，并将它开源。隆重介绍 BlenderCraft 🚀</strong></p>
+<p>经过整整一个周末，运行了 19 个自主 Claude Agent，烧掉了多到不负责任的 Token，我们自豪地宣布：BlenderCraft 来了。</p>
+<p>一个 100% 免费、开源，以洁净室方式重新实现的 Blender。</p>
+<p>我们取得了不可思议的成果：</p>
+<ul>
+<li>✅ 与 Blender 的功能 100% 对齐</li>
+<li>✅ 建模、雕刻、动画、几何节点</li>
+<li>✅ Cycles 和 Eevee 渲染</li>
+<li>✅ 原生支持 .blend 文件</li>
+<li>✅ 支持 Windows、macOS 和 Linux</li>
+<li>✅ 没有订阅，没有付费墙，永久免费</li>
+</ul>
+</blockquote>
+<p>如果到这里就停下，是不是已经可以配上一句“传统软件行业要变天了”？</p>
+<p>还有 Agent 数量、开发时长和 Token 消耗，整套发布文案的要素都齐了。</p>
+<p>不过，继续往下看。</p>
+<h2 id="最大的突破：找到了源代码"><a href="#最大的突破：找到了源代码" class="headerlink" title="最大的突破：找到了源代码"></a>最大的突破：找到了源代码</h2><p>作者接着写道：</p>
+<blockquote>
+<p>我们甚至成功地几乎逐行复现了原始源代码。</p>
+<p>我们最大的突破，是发现了一个神秘的公开仓库，里面包含全部源代码：</p>
+<p><a target="_blank" rel="noopener" href="https://projects.blender.org/blender/blender">https://projects.blender.org/blender/blender</a></p>
+<p>原来它从 2002 年 10 月 13 日就在那里了。</p>
+<p><strong>24 年前。</strong></p>
+<p>所以，是的，我们其实什么也没开发。</p>
+</blockquote>
+<p>好吧，Blender 本来就是开源软件。</p>
+<p>前面的 19 个 Agent、一个周末和惊人的 Token 消耗，全是这个段子的铺垫。所谓“100% 功能对齐”“原生支持 .blend”，现在也都有了非常合理的解释。</p>
+<p>原帖最后收起玩笑，向 Ton Roosendaal、Blender 基金会，以及长期参与开发和贡献的人致敬：在大家庆祝 AI 让软件免费、开源之前，这些人已经做了几十年。</p>
+<p>这个笑话的落点也就很清楚了：当“用 AI 把昂贵软件变成免费开源软件”成为一种流行叙事时，有些项目早就在做这件事了。</p>
+<h2 id="评论区里，有人接梗，有人已经被标题带走了"><a href="#评论区里，有人接梗，有人已经被标题带走了" class="headerlink" title="评论区里，有人接梗，有人已经被标题带走了"></a>评论区里，有人接梗，有人已经被标题带走了</h2><p>评论区当然少不了配合演出的人。</p>
+<p>有人说，终于可以取消 Blender 的月费订阅了；有人追问需不需要云账号；还有人感叹，终于能免费使用这款免费软件。</p>
+<p>这些话放在这里很好笑，也能看出大家对订阅、账号和付费墙有多熟悉。“永久免费”这几个字，已经足够让人自动补出一整套商业软件的故事。</p>
+<p>但比这些接梗更让我在意的，是下面几组评论。</p>
+<h3 id="“我怕很多人根本看不到笑点”"><a href="#“我怕很多人根本看不到笑点”" class="headerlink" title="“我怕很多人根本看不到笑点”"></a>“我怕很多人根本看不到笑点”</h3><p>用户 Neethis 写道：</p>
+<blockquote>
+<p>我担心大家不会读到足够靠后的位置，根本看不出这是个笑话，哈哈。</p>
+</blockquote>
+<p>下面还真有人承认：</p>
+<blockquote>
+<p>我光看标题，就本能地点了踩，笑死。</p>
+</blockquote>
+<p>另一位读者说，自己一度怀疑记忆出了问题，因为明明记得 Blender 本来就是开源的。</p>
+<p>这几条放在一起，几乎把这篇帖子的传播过程都演出来了。</p>
+<p>看到标题，有人准备赞叹 AI 的进步，有人准备批评 AI 的炒作，还有人先愣一下：Blender 难道不是开源的吗？等读到后面，才发现大家刚才接收到的根本不是同一件事。</p>
+<p>我估计真正传播出去时，也会有不少人停在标题或截图的上半段，顺手评论、转发。未必都是故意断章取义，很多时候只是这个标题刚好符合了自己已经相信的东西。</p>
+<p>尤其这类帖子，把笑点留在最后，反而把最适合单独传播的那一段放在了最前面。截图少截几行，玩笑就很容易长成一条“行业新闻”。</p>
+<h3 id="“为什么不把能力用在现有项目上？”"><a href="#“为什么不把能力用在现有项目上？”" class="headerlink" title="“为什么不把能力用在现有项目上？”"></a>“为什么不把能力用在现有项目上？”</h3><p>另一组讨论就认真得多了。</p>
+<p>有人提出：既然已经开发了这么多年，能不能借这个机会从头设计一次，用今天对产品的理解，重做一个更清爽的版本？</p>
+<p>这是个值得讨论的问题。老软件确实可能背着历史包袱，重写也确实能打开一些原先很难尝试的方向。</p>
+<p>但发帖者 ofdavarci 的回复是，他更希望大家参与已有项目，而不是各自从零再造一份。他甚至设想，可以把 OpenAI 或 Anthropic 的额度捐给 Blender 基金会，让真正理解项目的开发者拿去改进 Blender。</p>
+<p>接着有人提醒：这件事已经有一种通用的实现方式了，叫捐钱。项目自己会决定怎样使用资源。</p>
+<p>作者继续接梗：</p>
+<blockquote>
+<p>你说得对，我刚刚逆向工程了货币，把它重新发明成了 Token。🚀</p>
+</blockquote>
+<p>这个来回很好笑，但我觉得它把问题推进了一步：如果真想让一个开源项目变好，资源交给谁、用在哪里，比发布时挂了几个 Agent 更值得关心。</p>
+<h3 id="“贡献代码，我就当不了创造者了”"><a href="#“贡献代码，我就当不了创造者了”" class="headerlink" title="“贡献代码，我就当不了创造者了”"></a>“贡献代码，我就当不了创造者了”</h3><p>还有一条评论，更直接地戳到了另开门户的诱惑：</p>
+<blockquote>
+<p>可我要是去贡献代码，就不会被当成创造者了啊。</p>
+</blockquote>
+<p>这当然也是反话，但它解释了一部分传播上的差别。</p>
+<p>“我修好了 Blender 的一个 Bug”和“我做出了 BlenderCraft”，显然后者更容易讲成一个故事。前者的成果融进了原有项目，后者可以拥有新名字、新主页，以及一个站在台前的创造者。</p>
+<p>这不等于每个新项目都是为了抢声望。不过，社交平台更容易奖励什么，确实可能影响大家把精力投向哪里。</p>
+<p>以上评论均选自<a target="_blank" rel="noopener" href="https://www.reddit.com/r/blender/comments/1x79j0p/we_did_it_we_reverseengineered_blender_with_ai/">原帖评论区</a>，按话题整理并翻译，不代表整个社区的态度。</p>
+<h2 id="ArtCraft-也来转发了"><a href="#ArtCraft-也来转发了" class="headerlink" title="ArtCraft 也来转发了"></a>ArtCraft 也来转发了</h2><p>然后，更有意思的一幕出现了。</p>
+<img src="artcraft-on-x.webp" alt="ArtCraft 在 X 上转发 BlenderCraft 帖子的截图" width="640" style="max-width: 100%; height: auto;">
+
+<p>ArtCraft 在 X 上转发了这个帖子，配文是：</p>
+<blockquote>
+<p>We see you @Blender! Congrats on the launch</p>
+<p>看到你了，@Blender！恭喜发布。</p>
+</blockquote>
+<p>前几天刚聊过它的 AI 复刻，这会儿一个叫 BlenderCraft 的段子就出现了，连名字都很应景。它自己又来转发，多少有点大家一起入戏的感觉。</p>
+<p>评论里有不少人在提醒 ArtCraft：这是个 joke。而从它的回应来看，它也知道这是个 joke。所以我更倾向于把这理解成明知是梗、主动接梗。</p>
+<p>不过，它究竟想表达什么，我也不敢替它下结论。可能是在自嘲，也可能是顺势参与话题，或者只想轻轻松松地打个招呼。</p>
+<p>但这个画面本身很有意思：一篇调侃 AI 复刻潮的帖子，被身处这股热潮中的账号接过去，又传播了一轮。</p>
+<p>懂梗的人看到的是互动；只扫一眼的人，可能又收获了一条“AI 复刻 Blender”的消息。转发者懂不懂，与转发之后读者会怎么理解，是两件不同的事。</p>
+<h2 id="已经开源的软件，还需要一个-AI-复刻版吗？"><a href="#已经开源的软件，还需要一个-AI-复刻版吗？" class="headerlink" title="已经开源的软件，还需要一个 AI 复刻版吗？"></a>已经开源的软件，还需要一个 AI 复刻版吗？</h2><p>笑完之后，我反而更想聊这个问题。</p>
+<p>对已经开源的软件，AI 的能力可以用来新做一个项目，也可以用来参与原项目。前一条路容易获得一个响亮的新名字，后一条路则有机会把能力直接加到已经有人使用、有人维护的软件里。</p>
+<p>我并不觉得另开门户天然没有价值。如果有人想尝试完全不同的交互方式，专注某种工作流，或者验证原有架构很难承载的想法，独立项目或 fork 都可能有意义。AI 降低尝试成本，对这种探索当然是好事。</p>
+<p>但“重新做一遍”究竟解决什么问题，还是得说清楚。只是做出一个相似界面，和让用户把手头的真实项目迁过去，差得可能很远。</p>
+<h3 id="源代码能带走多少知识？"><a href="#源代码能带走多少知识？" class="headerlink" title="源代码能带走多少知识？"></a>源代码能带走多少知识？</h3><p>成熟软件多年积累的知识，有一部分确实体现在代码里。还有一些留在测试、Bug 报告、设计讨论和用户反馈中，或者留在维护者的经验里。</p>
+<p>比如，一段看着绕远的处理，也许曾经修复过一种少见文件的兼容问题。一个显得别扭的选项，也许仍然是某些用户工作流里不可缺少的一环。重写时把这些地方“简化”掉，很可能要等真实用户遇到问题，才知道当初为什么会有它。</p>
+<p>新项目当然可以借助 AI 去读这些材料、梳理历史，把其中的经验迁移过去。但它需要有意识地做这件事，并用真实文件、真实任务去验证。源代码可获取，并不意味着产品背后的知识会自动完整迁移。</p>
+<p>沿用现有代码的 fork，可以保留更多已经实现的行为；独立重写，则有机会换一种设计，也要承担重新找回那些细节的工作。这两种做法，不能都用一句“复刻成功”就概括过去。</p>
+<h2 id="看到-AI-复刻，先往下翻几屏"><a href="#看到-AI-复刻，先往下翻几屏" class="headerlink" title="看到 AI 复刻，先往下翻几屏"></a>看到 AI 复刻，先往下翻几屏</h2><p>这个帖子最让我觉得有趣的地方，是它几乎不需要编造新的宣传话术。把最近熟悉的那些词排在一起，再把 Blender 放进去，反差就已经出来了。</p>
+<p>我仍然很期待 AI 带来的新软件，也期待它能让更多人参与开源。只是下次再看到“几个 Agent、几天时间、完整复刻某某软件”，我大概会多往下翻几屏。</p>
+<p>看看它到底做出了什么，解决了什么问题，已有项目的贡献有没有被好好交代，以及第一批用户用起来以后，项目还会怎样继续。</p>
+<p>至于 BlenderCraft，这次所谓最大的技术突破，是找到了 Blender 的源代码。</p>
+<p>顺着那个链接走过去，已经有人在那里干了二十多年。</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>如果我的文字帮到了您，那么可不可以请我喝罐可乐？</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechat.png" alt="knktc 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="knktc 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-6959365962327411"
+     data-ad-slot="4588493450"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>knktc
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://knktc.com/2026/10/21/blendercraft-ai-open-source/" title="19 个 AI Agent，一个周末，复刻 Blender？先别急着转发">https://knktc.com/2026/10/21/blendercraft-ai-open-source/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/ai/" rel="tag"># ai</a>
+              <a href="/tags/blender/" rel="tag"># blender</a>
+              <a href="/tags/%E5%BC%80%E6%BA%90/" rel="tag"># 开源</a>
+              <a href="/tags/artcraft/" rel="tag"># artcraft</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2026/10/12/kubernetes-swap-monitoring-in-ai-era/" rel="prev" title="当年没给 Kubernetes 节点留的 swap 监控位，现在该补上了">
+      <i class="fa fa-chevron-left"></i> 当年没给 Kubernetes 节点留的 swap 监控位，现在该补上了
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%88%91%E4%BB%AC%E5%81%9A%E5%88%B0%E4%BA%86%EF%BC%8C%E9%9A%86%E9%87%8D%E6%8E%A8%E5%87%BA-BlenderCraft"><span class="nav-number">1.</span> <span class="nav-text">我们做到了，隆重推出 BlenderCraft</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E5%A4%A7%E7%9A%84%E7%AA%81%E7%A0%B4%EF%BC%9A%E6%89%BE%E5%88%B0%E4%BA%86%E6%BA%90%E4%BB%A3%E7%A0%81"><span class="nav-number">2.</span> <span class="nav-text">最大的突破：找到了源代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%84%E8%AE%BA%E5%8C%BA%E9%87%8C%EF%BC%8C%E6%9C%89%E4%BA%BA%E6%8E%A5%E6%A2%97%EF%BC%8C%E6%9C%89%E4%BA%BA%E5%B7%B2%E7%BB%8F%E8%A2%AB%E6%A0%87%E9%A2%98%E5%B8%A6%E8%B5%B0%E4%BA%86"><span class="nav-number">3.</span> <span class="nav-text">评论区里，有人接梗，有人已经被标题带走了</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%80%9C%E6%88%91%E6%80%95%E5%BE%88%E5%A4%9A%E4%BA%BA%E6%A0%B9%E6%9C%AC%E7%9C%8B%E4%B8%8D%E5%88%B0%E7%AC%91%E7%82%B9%E2%80%9D"><span class="nav-number">3.1.</span> <span class="nav-text">“我怕很多人根本看不到笑点”</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%80%9C%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E6%8A%8A%E8%83%BD%E5%8A%9B%E7%94%A8%E5%9C%A8%E7%8E%B0%E6%9C%89%E9%A1%B9%E7%9B%AE%E4%B8%8A%EF%BC%9F%E2%80%9D"><span class="nav-number">3.2.</span> <span class="nav-text">“为什么不把能力用在现有项目上？”</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%80%9C%E8%B4%A1%E7%8C%AE%E4%BB%A3%E7%A0%81%EF%BC%8C%E6%88%91%E5%B0%B1%E5%BD%93%E4%B8%8D%E4%BA%86%E5%88%9B%E9%80%A0%E8%80%85%E4%BA%86%E2%80%9D"><span class="nav-number">3.3.</span> <span class="nav-text">“贡献代码，我就当不了创造者了”</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ArtCraft-%E4%B9%9F%E6%9D%A5%E8%BD%AC%E5%8F%91%E4%BA%86"><span class="nav-number">4.</span> <span class="nav-text">ArtCraft 也来转发了</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B7%B2%E7%BB%8F%E5%BC%80%E6%BA%90%E7%9A%84%E8%BD%AF%E4%BB%B6%EF%BC%8C%E8%BF%98%E9%9C%80%E8%A6%81%E4%B8%80%E4%B8%AA-AI-%E5%A4%8D%E5%88%BB%E7%89%88%E5%90%97%EF%BC%9F"><span class="nav-number">5.</span> <span class="nav-text">已经开源的软件，还需要一个 AI 复刻版吗？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%BA%90%E4%BB%A3%E7%A0%81%E8%83%BD%E5%B8%A6%E8%B5%B0%E5%A4%9A%E5%B0%91%E7%9F%A5%E8%AF%86%EF%BC%9F"><span class="nav-number">5.1.</span> <span class="nav-text">源代码能带走多少知识？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9C%8B%E5%88%B0-AI-%E5%A4%8D%E5%88%BB%EF%BC%8C%E5%85%88%E5%BE%80%E4%B8%8B%E7%BF%BB%E5%87%A0%E5%B1%8F"><span class="nav-number">6.</span> <span class="nav-text">看到 AI 复刻，先往下翻几屏</span></a></li></ol></div>
+          <div class="post-sidebar-wechat motion-element">
+            <img
+              class="post-sidebar-wechat-image"
+              src="/images/wechat-mp-qrcode.png"
+              alt="微信扫码关注我的公众号"
+              loading="lazy"
+            >
+            <p class="post-sidebar-wechat-name">中年工程师苟活指南</p>
+            <p class="post-sidebar-wechat-desc">微信扫码关注，获取更多新文章和实战折腾记录。</p>
+          </div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="knktc"
+      src="/images/sonic_avatar.png">
+  <p class="site-author-name" itemprop="name">knktc</p>
+  <div class="site-description" itemprop="description">关注linux,云计算,python，杂乱之地...</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">82</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">253</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/knktc" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;knktc" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/knktc" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;knktc" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+<div class="wechat-mp-widget motion-element">
+  <img
+    class="wechat-mp-widget-image"
+    src="/images/wechat-mp-qrcode.png"
+    alt="微信扫码关注我的公众号"
+    loading="lazy"
+  >
+  <p class="wechat-mp-widget-name">中年工程师苟活指南</p>
+  <p class="wechat-mp-widget-desc">微信扫码关注，第一时间看到新文章和折腾记录。</p>
+</div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">鄂ICP备2021019593号-1 </a>
+      <img src="/images/beian.png" style="display: inline-block;"><a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=42018502005554" rel="noopener" target="_blank">鄂公网安备 42018502005554号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">knktc</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

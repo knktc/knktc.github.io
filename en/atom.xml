@@ -6,7 +6,7 @@
   <link href="https://knktc.com/en/atom.xml" rel="self"/>
   
   <link href="https://knktc.com/en/"/>
-  <updated>2026-10-12T01:25:04.150Z</updated>
+  <updated>2026-10-21T00:57:31.547Z</updated>
   <id>https://knktc.com/en/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>19 AI Agents, One Weekend, a Blender Clone? Read Before You Repost.</title>
+    <link href="https://knktc.com/en/2026/10/21/blendercraft-ai-open-source/"/>
+    <id>https://knktc.com/en/2026/10/21/blendercraft-ai-open-source/</id>
+    <published>2026-10-21T04:00:00.000Z</published>
+    <updated>2026-10-21T00:57:31.547Z</updated>
+    
+    <content type="html"><![CDATA[<img src="blender-on-reddit-2.webp" alt="A Reddit post announcing an AI remake of Blender" width="480" style="max-width: 100%; height: auto;"><p>Just a few days after I wrote about ArtCraft using AI to recreate all kinds of software, this post turned up on Reddit’s r/blender.</p><p>Nineteen autonomous Claude agents. One weekend. Blender recreated and released as open source.</p><p>That pitch has started to sound awfully familiar lately. Let’s see how the author announced it.</p><span id="more"></span><h2 id="We-did-it-Introducing-BlenderCraft"><a href="#We-did-it-Introducing-BlenderCraft" class="headerlink" title="We did it. Introducing BlenderCraft."></a>We did it. Introducing BlenderCraft.</h2><p>Here’s the first half of the <a href="https://www.reddit.com/r/blender/comments/1x79j0p/we_did_it_we_reverseengineered_blender_with_ai/">original post</a>:</p><blockquote><p><strong>WE DID IT! We reverse-engineered Blender with AI and made it open source. Introducing BlenderCraft 🚀</strong></p><p>After an entire weekend of running 19 autonomous Claude agents and burning an irresponsible amount of tokens, we’re proud to announce BlenderCraft.</p><p>A 100% free, open-source, clean-room reimplementation of Blender.</p><p>We achieved something incredible:</p><ul><li>✅ 100% feature parity with Blender</li><li>✅ Modeling, sculpting, animation, Geometry Nodes</li><li>✅ Cycles and Eevee rendering</li><li>✅ Native .blend file support</li><li>✅ Windows, macOS, and Linux</li><li>✅ No subscriptions. No paywalls. Free forever.</li></ul></blockquote><p>If you stopped here, wouldn’t it be tempting to repost it with something like “The software industry will never be the same”?</p><p>The agent count, development time, and token consumption are all there. Every ingredient for a launch announcement.</p><p>But keep reading.</p><h2 id="The-biggest-breakthrough-finding-the-source-code"><a href="#The-biggest-breakthrough-finding-the-source-code" class="headerlink" title="The biggest breakthrough: finding the source code"></a>The biggest breakthrough: finding the source code</h2><p>The author continues:</p><blockquote><p>We even managed to reproduce the original source code almost line by line.</p><p>Our biggest breakthrough came when we discovered a mysterious public repository containing the entire source code:</p><p><a href="https://projects.blender.org/blender/blender">https://projects.blender.org/blender/blender</a></p><p>Apparently, it’s been there since October 13, 2002.</p><p><strong>24 YEARS AGO.</strong></p><p>So yeah, we didn’t actually build anything.</p></blockquote><p>Right. Blender was already open source.</p><p>The 19 agents, the weekend, and the outrageous token bill were all part of the setup. “100% feature parity” and “native .blend file support” suddenly make perfect sense, too.</p><p>At the end, the author drops the joke and pays tribute to Ton Roosendaal, the Blender Foundation, and the people who have spent years developing and contributing to Blender. Long before people started celebrating AI for making software free and open source, they had already been doing it for decades.</p><p>The point lands pretty clearly: while “using AI to turn expensive software into free, open-source software” has become a popular story, some projects have been doing that work all along.</p><h2 id="Some-people-played-along-Others-had-already-reacted-to-the-headline"><a href="#Some-people-played-along-Others-had-already-reacted-to-the-headline" class="headerlink" title="Some people played along. Others had already reacted to the headline."></a>Some people played along. Others had already reacted to the headline.</h2><p>Naturally, plenty of commenters kept the joke going.</p><p>Someone said they could finally cancel their monthly Blender subscription. Someone else asked whether they’d need a cloud account. Another celebrated finally being able to use this free software for free.</p><p>It’s funny in context, and it also shows how familiar subscriptions, accounts, and paywalls have become. “Free forever” is enough to make people fill in an entire backstory about commercial software.</p><p>But a few other exchanges caught my attention more.</p><h3 id="“I-fear-people-are-not-going-to-read-far-enough-to-get-the-joke”"><a href="#“I-fear-people-are-not-going-to-read-far-enough-to-get-the-joke”" class="headerlink" title="“I fear people are not going to read far enough to get the joke”"></a>“I fear people are not going to read far enough to get the joke”</h3><p>Neethis wrote:</p><blockquote><p>I fear people are not going to read far enough to get the joke lol</p></blockquote><p>And someone below actually admitted:</p><blockquote><p>I instinctually downvoted just from the title alone LMAO</p></blockquote><p>Another reader said they briefly questioned their own memory, because they could have sworn Blender was already open source.</p><p>Put those comments together, and you can almost watch the post spreading.</p><p>Some people see the headline and prepare to applaud AI’s progress. Others prepare to criticize the hype. Others pause: wasn’t Blender open source already? Only once they read further do they realize they weren’t all reacting to the same thing.</p><p>I suspect plenty of people encountering this post will stop at the headline or the top half of a screenshot, then leave a comment or repost it. That doesn’t have to be deliberate misrepresentation. Often, the headline just happens to fit something they already believe.</p><p>Posts like this save the punchline for the end while putting the most shareable part at the beginning. Crop a few lines off a screenshot, and a joke can easily turn into “industry news.”</p><h3 id="“Why-not-put-those-resources-into-existing-projects-”"><a href="#“Why-not-put-those-resources-into-existing-projects-”" class="headerlink" title="“Why not put those resources into existing projects?”"></a>“Why not put those resources into existing projects?”</h3><p>Another exchange took the discussion more seriously.</p><p>One person asked: after so many years of development, could starting over be worthwhile? Could we use what we now understand about the product to design a cleaner version from scratch?</p><p>That’s a fair question. Older software can carry historical baggage, and a rewrite can open up directions that were previously difficult to explore.</p><p>But the post’s author, ofdavarci, replied that they’d rather see people contribute to existing projects than each build their own version from scratch. They even imagined donating OpenAI or Anthropic credits to the Blender Foundation so developers who understand the project could use them to improve Blender.</p><p>Someone pointed out that a general-purpose way to do this already exists: donate money, and let the project decide how best to use it.</p><p>The author kept the joke going:</p><blockquote><p>You’re right, I just reverse-engineered money and reinvented it as tokens. 🚀</p></blockquote><p>It’s a funny exchange, but it also moves the discussion forward. If the goal is to improve an open-source project, who receives the resources and how they use them deserve more attention than the number of agents in the launch announcement.</p><h3 id="“If-I-contribute-I-won’t-be-recognized-as-the-creator”"><a href="#“If-I-contribute-I-won’t-be-recognized-as-the-creator”" class="headerlink" title="“If I contribute, I won’t be recognized as the creator”"></a>“If I contribute, I won’t be recognized as the creator”</h3><p>Another comment gets straight to the appeal of starting your own project:</p><blockquote><p>Yeah but if I contribute then I won’t be recognized as the creator, duh</p></blockquote><p>It’s sarcastic, of course, but it helps explain why some kinds of work spread more easily than others.</p><p>“I fixed a Blender bug” and “I built BlenderCraft” make very different stories. The first becomes part of an existing project. The second gets a new name, a new homepage, and a creator standing in the spotlight.</p><p>That doesn’t mean every new project is chasing recognition. But what social platforms reward can influence where people choose to put their effort.</p><p>These comments come from the <a href="https://www.reddit.com/r/blender/comments/1x79j0p/we_did_it_we_reverseengineered_blender_with_ai/">original thread</a> and are grouped by topic here. They don’t represent the views of the whole community.</p><h2 id="ArtCraft-reposted-it-too"><a href="#ArtCraft-reposted-it-too" class="headerlink" title="ArtCraft reposted it, too"></a>ArtCraft reposted it, too</h2><p>Then things got a little more interesting.</p><img src="artcraft-on-x.webp" alt="ArtCraft sharing the BlenderCraft post on X" width="640" style="max-width: 100%; height: auto;"><p>ArtCraft shared the post on X with this caption:</p><blockquote><p>We see you @Blender! Congrats on the launch</p></blockquote><p>I’d just been writing about its AI recreations, and now a joke called BlenderCraft appears. Even the name fits. With ArtCraft joining in, it starts to feel like everyone is playing a part.</p><p>Quite a few people in the replies reminded ArtCraft that this was a joke. Judging by its responses, it knew that, too. So I lean toward reading this as knowingly playing along.</p><p>What exactly it wanted to convey is harder to say. It might have been poking fun at itself, joining the conversation, or simply offering a lighthearted greeting.</p><p>The scene itself is interesting, though: a post teasing the AI cloning craze gets picked up by an account right in the middle of it, and goes around again.</p><p>People who get the joke see an exchange. People who only glance at it may walk away with another “AI recreated Blender” story. Whether the person sharing it gets the joke and how the next reader interprets it are separate questions.</p><h2 id="Does-open-source-software-need-an-AI-remake"><a href="#Does-open-source-software-need-an-AI-remake" class="headerlink" title="Does open-source software need an AI remake?"></a>Does open-source software need an AI remake?</h2><p>Once the joke is over, this is the question I find myself wanting to discuss.</p><p>For software that’s already open source, AI can help someone start a new project or contribute to the existing one. The first route makes it easier to claim a memorable new name. The second can put those capabilities directly into software that people already use and maintain.</p><p>I don’t think starting a separate project is inherently pointless. An independent project or fork can make sense if someone wants to try a completely different interface, focus on a particular workflow, or test ideas that the existing architecture struggles to accommodate. AI making those experiments cheaper is a good thing.</p><p>But the question remains: what problem does doing it all over again solve? Building a similar-looking interface and getting users to move their real projects over can be very different achievements.</p><h3 id="How-much-knowledge-comes-with-the-source-code"><a href="#How-much-knowledge-comes-with-the-source-code" class="headerlink" title="How much knowledge comes with the source code?"></a>How much knowledge comes with the source code?</h3><p>Some of the knowledge accumulated over years of development is captured in the code. Some lives in tests, bug reports, design discussions, and user feedback. Some lives in the maintainers’ experience.</p><p>A seemingly roundabout piece of code might have fixed a compatibility problem with an unusual file. An awkward-looking option might still be essential to someone’s workflow. If a rewrite “simplifies” those things away, it may take a real user running into trouble to reveal why they existed in the first place.</p><p>A new project can certainly use AI to read those materials, trace the history, and carry that experience forward. But it has to make a deliberate effort and validate the result with real files and real tasks. Access to the source code doesn’t automatically transfer all the knowledge behind the product.</p><p>A fork that keeps the existing code can preserve more of its implemented behavior. An independent rewrite creates room for a different design, while taking on the work of rediscovering those details. “Successfully cloned” is too broad a label to explain both approaches.</p><h2 id="See-an-AI-clone-Scroll-a-little-further"><a href="#See-an-AI-clone-Scroll-a-little-further" class="headerlink" title="See an AI clone? Scroll a little further."></a>See an AI clone? Scroll a little further.</h2><p>What I find funniest about this post is how little new marketing language it had to invent. Put together the phrases we’ve been hearing lately, drop Blender into the announcement, and the absurdity takes care of itself.</p><p>I’m still excited about the new software AI might make possible, and about more people being able to contribute to open source. But the next time I see “a few agents, a few days, a complete recreation of some major application,” I’ll probably scroll a little further.</p><p>What did they actually build? What problem does it solve? Are the contributions of existing projects properly acknowledged? And once the first users start working with it, where does the project go from there?</p><p>As for BlenderCraft, its biggest supposed technical breakthrough was finding Blender’s source code.</p><p>Follow that link, and you’ll find people who’ve already been working there for more than twenty years.</p>]]></content>
+    
+    
+    <summary type="html">A Reddit post announcing an AI remake of Blender turns the AI cloning craze, open source, and headline-only reactions into one elaborate joke.</summary>
+    
+    
+    
+    
+    <category term="ai" scheme="https://knktc.com/en/tags/ai/"/>
+    
+    <category term="blender" scheme="https://knktc.com/en/tags/blender/"/>
+    
+    <category term="open-source" scheme="https://knktc.com/en/tags/open-source/"/>
+    
+    <category term="artcraft" scheme="https://knktc.com/en/tags/artcraft/"/>
+    
+  </entry>
   
   <entry>
     <title>We Left Swap Out of Our Kubernetes Dashboard. It&#39;s Time to Add It.</title>
@@ -31,13 +56,13 @@
     
     
     
+    <category term="ai" scheme="https://knktc.com/en/tags/ai/"/>
+    
     <category term="linux" scheme="https://knktc.com/en/tags/linux/"/>
     
     <category term="kubernetes" scheme="https://knktc.com/en/tags/kubernetes/"/>
     
     <category term="swap" scheme="https://knktc.com/en/tags/swap/"/>
-    
-    <category term="ai" scheme="https://knktc.com/en/tags/ai/"/>
     
     <category term="monitoring" scheme="https://knktc.com/en/tags/monitoring/"/>
     
@@ -264,13 +289,13 @@
     
     
     
+    <category term="open-source" scheme="https://knktc.com/en/tags/open-source/"/>
+    
     <category term="go" scheme="https://knktc.com/en/tags/go/"/>
     
     <category term="tiny-requestbin" scheme="https://knktc.com/en/tags/tiny-requestbin/"/>
     
     <category term="requestbin" scheme="https://knktc.com/en/tags/requestbin/"/>
-    
-    <category term="open-source" scheme="https://knktc.com/en/tags/open-source/"/>
     
   </entry>
   
@@ -510,33 +535,6 @@
     <category term="mibs" scheme="https://knktc.com/en/tags/mibs/"/>
     
     <category term="telegraf" scheme="https://knktc.com/en/tags/telegraf/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Using a different SSH key for Git commands</title>
-    <link href="https://knktc.com/en/2022/03/21/git-use-different-ssh-key/"/>
-    <id>https://knktc.com/en/2022/03/21/git-use-different-ssh-key/</id>
-    <published>2022-03-21T14:55:38.000Z</published>
-    <updated>2026-04-22T01:34:32.297Z</updated>
-    
-    <content type="html"><![CDATA[<p>I recently needed to add a tagging step to an automated build, but for some reason the default deploy key that had been configured before was no longer available, possibly due to a GitLab bug.</p><p>So I ended up creating a new SSH key pair on the build server and configuring Git-related SSH access to use that new key explicitly.</p><span id="more"></span><p>In the examples below, assume the Git server hostname is <code>gitlab.knktc.com</code>.</p><p>First, create a new SSH key pair:</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /home/knktc/gitlab_ssh_keys</span><br><span class="line">ssh-keygen -f /home/knktc/gitlab_ssh_keys/id_rsa</span><br></pre></td></tr></table></figure><p>In this example, the new private key is stored at:</p><p><code>/home/knktc/gitlab_ssh_keys/id_rsa</code></p><p>Then create or edit the SSH config file under the current user’s home directory:</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim ~/.ssh/config</span><br></pre></td></tr></table></figure><p>Add the following configuration:</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Host gitlab.knktc.com</span><br><span class="line">    IdentityFile &#x2F;home&#x2F;knktc&#x2F;gitlab_ssh_keys&#x2F;id_rsa</span><br></pre></td></tr></table></figure><p>This means that when connecting to <code>gitlab.knktc.com</code> over SSH, the newly created key will be used.</p><p>Finally, test cloning the repository:</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> git@gitlab.knktc.com:blog/knktc-com.git</span><br></pre></td></tr></table></figure><p>That should work.</p><p>For more details about SSH config, see:</p><p><a href="https://linux.die.net/man/5/ssh_config">https://linux.die.net/man/5/ssh_config</a></p>]]></content>
-    
-    
-    <summary type="html">How to make Git use a separate SSH key for a specific Git server by adding an entry to your SSH config.</summary>
-    
-    
-    
-    
-    <category term="git" scheme="https://knktc.com/en/tags/git/"/>
-    
-    <category term="ssh" scheme="https://knktc.com/en/tags/ssh/"/>
-    
-    <category term="private" scheme="https://knktc.com/en/tags/private/"/>
-    
-    <category term="public" scheme="https://knktc.com/en/tags/public/"/>
-    
-    <category term="key" scheme="https://knktc.com/en/tags/key/"/>
     
   </entry>
   
