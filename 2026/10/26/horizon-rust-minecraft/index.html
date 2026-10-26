@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"knktc.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Horizon 想用 Rust 还原 Minecraft 的规则与世界。四千多次提交、原版资源、AI 控制与性能测试之外，我更想知道：玩家为什么需要它？">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Rust 重写一切，这次轮到了 Minecraft">
+<meta property="og:url" content="https://knktc.com/2026/10/26/horizon-rust-minecraft/">
+<meta property="og:site_name" content="knktc的杂乱空间">
+<meta property="og:description" content="Horizon 想用 Rust 还原 Minecraft 的规则与世界。四千多次提交、原版资源、AI 控制与性能测试之外，我更想知道：玩家为什么需要它？">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://knktc.com/2026/10/26/horizon-rust-minecraft/website.png">
+<meta property="og:image" content="https://knktc.com/2026/10/26/horizon-rust-minecraft/project-github.jpeg">
+<meta property="article:published_time" content="2026-10-26T04:00:00.000Z">
+<meta property="article:modified_time" content="2026-10-26T04:15:32.519Z">
+<meta property="article:author" content="knktc">
+<meta property="article:tag" content="开源">
+<meta property="article:tag" content="Minecraft">
+<meta property="article:tag" content="Rust">
+<meta property="article:tag" content="AI">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://knktc.com/2026/10/26/horizon-rust-minecraft/website.png">
+
+<link rel="canonical" href="https://knktc.com/2026/10/26/horizon-rust-minecraft/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+<link rel="alternate" hreflang="zh-CN" href="&#x2F;2026&#x2F;10&#x2F;26&#x2F;horizon-rust-minecraft&#x2F;">
+<link rel="alternate" hreflang="en" href="&#x2F;en&#x2F;2026&#x2F;10&#x2F;26&#x2F;horizon-rust-minecraft&#x2F;">
+<link rel="alternate" hreflang="x-default" href="&#x2F;2026&#x2F;10&#x2F;26&#x2F;horizon-rust-minecraft&#x2F;">
+
+  <title>Rust 重写一切，这次轮到了 Minecraft | knktc的杂乱空间</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a23b2d1c6159a3a6c798edbc7f9211f9";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="knktc的杂乱空间" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">knktc的杂乱空间</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">python,cloud,linux...</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://knktc.com/2026/10/26/horizon-rust-minecraft/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/sonic_avatar.png">
+      <meta itemprop="name" content="knktc">
+      <meta itemprop="description" content="关注linux,云计算,python，杂乱之地...">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="knktc的杂乱空间">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Rust 重写一切，这次轮到了 Minecraft
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2026-10-26 12:00:00 / 修改时间：12:15:32" itemprop="dateCreated datePublished" datetime="2026-10-26T12:00:00+08:00">2026-10-26</time>
+            </span>
+
+          
+            <div class="post-description">Horizon 想用 Rust 还原 Minecraft 的规则与世界。四千多次提交、原版资源、AI 控制与性能测试之外，我更想知道：玩家为什么需要它？</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>最近看到一个挺有意思的项目：<a target="_blank" rel="noopener" href="https://github.com/ludovic111/horizon">Horizon</a>，有人开始用 Rust 重写 Minecraft 了。</p>
+<p>点进<a target="_blank" rel="noopener" href="https://playhorizon.dev/">官网</a>，第一感觉是：这网站怎么比 Minecraft 官网还 Minecraft。</p>
+<p>石头纹理的背景、像素风景，再配上熟悉的方块世界截图，还没开始看项目介绍，就已经有点想进游戏挖两块土了。至少在网站的氛围上，作者挺懂 Minecraft 玩家的。</p>
+<p><img src="website.png" alt="Horizon 官网：熟悉的游戏，用 Rust 重写"></p>
+<p>看着这些画面，我有点好奇，也有点困惑。</p>
+<p>现在复刻软件、复刻游戏的项目越来越多。把一个复杂系统重新做出来，当然很厉害。可等“厉害”说完，还是想问一句：然后呢？玩家为什么要换过去？</p>
+<span id="more"></span>
+
+<h2 id="三周，四千多次提交"><a href="#三周，四千多次提交" class="headerlink" title="三周，四千多次提交"></a>三周，四千多次提交</h2><p>Horizon 从 10 月初出现在 GitHub 上，到现在也就三周左右，已经有了四千多次提交。</p>
+<p>翻看早期记录，它最初还是一个 Minecraft 反编译与 Rust 优化实验室。没过几天，Rust 重写分支就<a target="_blank" rel="noopener" href="https://github.com/ludovic111/horizon/pull/34">合入了主线</a>，已经能生成世界、挖矿、合成、使用容器和保存存档。现在连启动器、服务端、模组系统和官网都做起来了。</p>
+<p><img src="project-github.jpeg" alt="Horizon 的早期 GitHub 项目宣传图"></p>
+<p>开发速度确实很快。项目也交代了怎么做到的：Ludovic Marie 负责方向与发布，大部分代码由他运行的 Claude Agent 和贡献者使用的 AI 工具编写，也有人手写代码。每一行代码并不都会经过人工阅读，项目很依赖自动化检查与原版对照测试。</p>
+<p>这让提交次数多了另一层含义：代码产出的速度提上来了，检查和维护能不能跟上，就变得更重要了。</p>
+<h2 id="它要的是原版世界，连生成结果也想一样"><a href="#它要的是原版世界，连生成结果也想一样" class="headerlink" title="它要的是原版世界，连生成结果也想一样"></a>它要的是原版世界，连生成结果也想一样</h2><p>Horizon 面向的是 Minecraft: Java Edition 26.3。它想还原原版，也就是 vanilla 的行为，包括规则、存档和世界生成。</p>
+<p>这里的 vanilla 不是一种特殊世界模式，而是没有额外模组修改的原版。它的目标包括普通世界的生成，并非只做一张看起来像 Minecraft 的方块地图。</p>
+<p>如果只是做一款方块游戏，山长什么样、村庄放在哪里，都可以自己设计。Horizon 给自己出的题更难：同一个输入，尽量交出和原版一样的结果。</p>
+<p>这件事也有实际用途。玩家已经熟悉的种子、存档和玩法，只有在规则足够一致时才容易延续。改写语言以后，如果连红石装置和世界生成都变了，迁移成本就会落到玩家身上。</p>
+<p>它用的方法叫差分测试：让 Horizon 和真正的原版接受相同输入，再比较输出。官网的世界生成状态表称，测试覆盖三个维度、225 个结构点位、2,352 个完整区块，这些样本的比较结果一致。</p>
+<p>但网页上的“100%”要连着旁边的小字读。项目自己也说，这只代表<strong>被测试实际比较到的部分</strong>，无法证明所有种子、所有位置、所有操作都没有差异。</p>
+<h2 id="是的，要先启动一次原版"><a href="#是的，要先启动一次原版" class="headerlink" title="是的，要先启动一次原版"></a>是的，要先启动一次原版</h2><p>这个问题可以确认。<a target="_blank" rel="noopener" href="https://playhorizon.dev/docs/install">安装文档</a>要求：拥有 Minecraft Java Edition 26.3，并且先启动一次，让启动器把需要的文件下载到本机。用官方启动器或 Prism 等兼容启动器都可以。</p>
+<p>之后由 Horizon 的启动器进行一次 Prepare，从你的本地安装中准备所需资源。项目声明自身不附带 Minecraft 的代码、素材和数据，需要玩家自己的合法副本。</p>
+<p>因此，看到熟悉的方块和生物，不意味着作者又把整套美术资源画了一遍。</p>
+<p>首次准备会用到 Java 25。<a target="_blank" rel="noopener" href="https://playhorizon.dev/docs/faq">FAQ</a>解释说，它会运行原版的数据生成器，读取诸如物品默认组件等数据。准备好以后，Horizon 的游戏和服务端本身不需要 Java。</p>
+<p>这里还有一点文档更新的时差：安装页仍写着 JDK 25，但最新主线的<a target="_blank" rel="noopener" href="https://github.com/ludovic111/horizon/blob/ef4018805efb032632b2b41659bc674747f27961/crates/horizon-prepare/src/main.rs">准备工具说明</a>已经区分，发行包预编译了导出程序，只需要 Java 运行时；开发或修改导出程序才需要完整 JDK。不能据此要求每个玩家都另外装一套开发环境。</p>
+<p>所以，这套流程也比“拿几张贴图来用”复杂一些。运行时代码重写了，初始化仍然借助原版提供的数据。</p>
+<p>看到这里，我原本想感叹一句：看来玩法可以各种复刻，创意还是没法直接复刻啊。</p>
+<p>想了想，这句话更适合留作疑问。复用原版素材，能说明它依托于 Minecraft 已经建立的世界，却不能证明作者缺乏创意。Horizon 选择的任务就是兼容原版，本来就会主动克制玩法上的变化。</p>
+<p>让我在意的是另一件事：AI 把“照着已有目标重新实现”的门槛降下来以后，我们会得到多少值得长期使用的新东西？</p>
+<h2 id="除了重写，还加了些什么？"><a href="#除了重写，还加了些什么？" class="headerlink" title="除了重写，还加了些什么？"></a>除了重写，还加了些什么？</h2><p>按<a target="_blank" rel="noopener" href="https://playhorizon.dev/docs/">项目自己的介绍</a>，Horizon 希望在保留原版玩法的同时，启动更快、少占些内存，运行也更流畅。这些都是比“换成 Rust”更容易让人感受到的好处。</p>
+<p>它还把一些 Java 原版没有内置的功能加了进来，比如画质预设、更远的地形显示、原生手柄支持，以及可选的小地图、画面缩放和动态光源。想和朋友一起玩，也有邀请码分享世界的功能。对不想折腾模组的人来说，这些开箱就能用的小功能，可能比底层用了什么语言更有吸引力。</p>
+<p>至于性能，项目用 Rust 原生运行，把区块生成、光照和网格处理放到工作线程，也在减少渲染调用。实际效果如何，还得看测试。</p>
+<p>Horizon 已经发布了客户端<a target="_blank" rel="noopener" href="https://playhorizon.dev/benchmarks">对比数据</a>，并非只有语言层面的口号。它安排相同机器、世界种子、视距与相机路线进行测试，也公开说明了条件限制。</p>
+<p>例如，RTX 4080 桌机上，视距 12 时 Horizon 的平均帧率是 2,993，Java 原版是 2,600；视距到 32，结果变成 Horizon 672、Java 849。对应的游玩内存则是 1.6 GB 和 3.3 GB，Horizon 更省。</p>
+<p>这组数据比“Rust 吊打 Java”有意思得多：内存优势和帧率优势，并不总是一起出现。</p>
+<p>还要记住，这些是项目自己测的，次数有限，部分机器测试时还运行着其他任务。官网硬件选择器给出的部分结果属于估算，也不能当成那台硬件已经实测过。</p>
+<p>服务器方面，它还拿自己与原版、Paper、Fabric 加 Lithium 做了同负载对比。报告中 Horizon 有内存和部分负载表现的优势，Paper 的平均 tick 时间却在每个人数档位都更短。</p>
+<p>性能值得继续看，但玩家已经有优化模组和服务端可选。对一个已有生态而言，新实现最终需要回答的，是相比这些方案还能多带来什么。</p>
+<h2 id="让-AI-自己进游戏挖矿"><a href="#让-AI-自己进游戏挖矿" class="headerlink" title="让 AI 自己进游戏挖矿"></a>让 AI 自己进游戏挖矿</h2><p>Horizon 有一套 <code>horizon-ctl</code>，可以读取游戏状态、找方块、寻路、挖掘、操作背包、截图和查看日志。同一套命令还能通过 MCP 提供给 Agent。</p>
+<p>这样一来，AI 不用只盯着屏幕猜发生了什么，也能直接拿到结构化的状态，再发出游戏操作。<a target="_blank" rel="noopener" href="https://github.com/ludovic111/horizon/blob/905464e2b3a1561afc037389a038758022444553/docs/native-client.md">客户端指南</a>介绍了这套接口。</p>
+<p>挺有意思的是，这么年轻的项目，就已经把 Agent 支持做进去了。现在开发软件，AI Agent 也成了优先考虑的使用者：除了人用起来顺不顺手，还要考虑它能不能读懂状态、调用功能。在 Horizon 这里，玩家还在研究怎么安装，Agent 进游戏砍树的接口就已经准备好了。</p>
+<p>Mojang 官方的 <a target="_blank" rel="noopener" href="https://github.com/Mojang/minecraft-creator-tools">Minecraft Creator Tools</a> 也有 MCP，主要帮人制作和测试基岩版的附加内容，也能操作游戏会话。Horizon 则更偏向让 AI 像玩家一样行动：走到树边、砍木头、整理背包，再继续下一步。两者各有侧重，没必要争谁的功能更多。</p>
+<p>这部分倒是让我看到了一个有意思的方向：游戏除了给人玩，也可以提供方便程序观察与操作的接口。用于自动化测试、复现问题，甚至研究 Agent 能力，都有想象空间。具体能做到多可靠，还得拿任务去试。</p>
+<h2 id="跑得很快，也已经碰到了需要返工的事"><a href="#跑得很快，也已经碰到了需要返工的事" class="headerlink" title="跑得很快，也已经碰到了需要返工的事"></a>跑得很快，也已经碰到了需要返工的事</h2><p>Horizon 也已经遇到了返工：一位 Iris 开发者指出它的 shader pack 代码参考了 Iris 源码，项目随后<a target="_blank" rel="noopener" href="https://github.com/ludovic111/horizon/pull/1561">移除了这部分实现</a>，准备重新做。</p>
+<p>这让我想起之前做 EnvMate 的时候。发布之后，我才发现网上已经有产品的界面和它非常相似。AI 做出来的设计，原来早就有了相似的样子，只是我当时不知道。</p>
+<p>当然，界面相似不代表就能确定 AI 抄了谁。但它到底参考了什么，又把哪些见过的东西带进了设计里，我们其实也不清楚。东西做出来很快，发现这些问题却可能要等到发布以后。</p>
+<h2 id="老玩家搬得过去吗？"><a href="#老玩家搬得过去吗？" class="headerlink" title="老玩家搬得过去吗？"></a>老玩家搬得过去吗？</h2><p>玩了这么多年 Minecraft，大家早就有了自己的环境：建到一半的世界、装习惯的模组、常去的服务器，还有一起玩的朋友。换个客户端容易，把这些一起搬过去就没那么简单了。</p>
+<p>存档算是有希望接上的一部分。Horizon 使用原版存档格式，项目也提供了旧世界的升级支持。但模组就麻烦了：Fabric、Forge、NeoForge 的 Java 模组不能直接在里面运行。它能接续部分素材和数据，模组里的机器、逻辑和各种特殊玩法，却不会跟着自动搬过来。熟悉的整合包，很可能换过去就不是原来那套体验了。<a target="_blank" rel="noopener" href="https://playhorizon.dev/docs/mods">模组说明</a>也承认了这些限制。</p>
+<p>联机还有一道坎。Horizon 客户端目前不能登录 Microsoft 账号，因此进不了需要账号验证的服务器，现阶段主要能加入离线模式的服务器。对于已经有固定服务器和朋友的玩家，这比帧率高了多少更影响选择。</p>
+<p>Horizon 也重写了服务端，并提供了<a target="_blank" rel="noopener" href="https://playhorizon.dev/docs/hosting">开服文档</a>。想自己开服和朋友一起玩的，也可以试试这套 Rust 服务端，原版 26.3 客户端同样能加入。</p>
+<h2 id="重写之后呢？"><a href="#重写之后呢？" class="headerlink" title="重写之后呢？"></a>重写之后呢？</h2><p>我对 Minecraft 的生态了解不多，只是家里小孩特别喜欢玩，我自己平时玩的也就是国内网易代理的版本。Horizon 能不能吸引老玩家换过去，我说不上来。不过，几周时间做到这一步，确实让我挺好奇。</p>
+<p>不过，看了这么多 AI 复刻项目，我还是会好奇：把熟悉的东西重新写一遍之后，还能带来什么？更省资源、更方便开服，或者让 Agent 陪着一起玩，这些都可能成为继续做下去的理由。</p>
+<p>复刻本身也可以是一件好玩的事。只是比起又复刻了什么，我现在更想看看，接下来会长出什么新东西。</p>
+<hr>
+<p>资料核对截至 2026 年 10 月 26 日。本文依据项目公开文档、源码与开发者发布的测试数据整理，尚未安装实测。网页视觉素材来源见<a target="_blank" rel="noopener" href="https://playhorizon.dev/LEGAL.md">官网素材说明</a>。</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>如果我的文字帮到了您，那么可不可以请我喝罐可乐？</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechat.png" alt="knktc 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="knktc 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-6959365962327411"
+     data-ad-slot="4588493450"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>knktc
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://knktc.com/2026/10/26/horizon-rust-minecraft/" title="Rust 重写一切，这次轮到了 Minecraft">https://knktc.com/2026/10/26/horizon-rust-minecraft/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%BC%80%E6%BA%90/" rel="tag"># 开源</a>
+              <a href="/tags/Minecraft/" rel="tag"># Minecraft</a>
+              <a href="/tags/Rust/" rel="tag"># Rust</a>
+              <a href="/tags/AI/" rel="tag"># AI</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2026/10/21/blendercraft-ai-open-source/" rel="prev" title="19 个 AI Agent，一个周末，复刻 Blender？先别急着转发">
+      <i class="fa fa-chevron-left"></i> 19 个 AI Agent，一个周末，复刻 Blender？先别急着转发
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E5%91%A8%EF%BC%8C%E5%9B%9B%E5%8D%83%E5%A4%9A%E6%AC%A1%E6%8F%90%E4%BA%A4"><span class="nav-number">1.</span> <span class="nav-text">三周，四千多次提交</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%83%E8%A6%81%E7%9A%84%E6%98%AF%E5%8E%9F%E7%89%88%E4%B8%96%E7%95%8C%EF%BC%8C%E8%BF%9E%E7%94%9F%E6%88%90%E7%BB%93%E6%9E%9C%E4%B9%9F%E6%83%B3%E4%B8%80%E6%A0%B7"><span class="nav-number">2.</span> <span class="nav-text">它要的是原版世界，连生成结果也想一样</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%98%AF%E7%9A%84%EF%BC%8C%E8%A6%81%E5%85%88%E5%90%AF%E5%8A%A8%E4%B8%80%E6%AC%A1%E5%8E%9F%E7%89%88"><span class="nav-number">3.</span> <span class="nav-text">是的，要先启动一次原版</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%A4%E4%BA%86%E9%87%8D%E5%86%99%EF%BC%8C%E8%BF%98%E5%8A%A0%E4%BA%86%E4%BA%9B%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">4.</span> <span class="nav-text">除了重写，还加了些什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%A9-AI-%E8%87%AA%E5%B7%B1%E8%BF%9B%E6%B8%B8%E6%88%8F%E6%8C%96%E7%9F%BF"><span class="nav-number">5.</span> <span class="nav-text">让 AI 自己进游戏挖矿</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B7%91%E5%BE%97%E5%BE%88%E5%BF%AB%EF%BC%8C%E4%B9%9F%E5%B7%B2%E7%BB%8F%E7%A2%B0%E5%88%B0%E4%BA%86%E9%9C%80%E8%A6%81%E8%BF%94%E5%B7%A5%E7%9A%84%E4%BA%8B"><span class="nav-number">6.</span> <span class="nav-text">跑得很快，也已经碰到了需要返工的事</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%80%81%E7%8E%A9%E5%AE%B6%E6%90%AC%E5%BE%97%E8%BF%87%E5%8E%BB%E5%90%97%EF%BC%9F"><span class="nav-number">7.</span> <span class="nav-text">老玩家搬得过去吗？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%87%8D%E5%86%99%E4%B9%8B%E5%90%8E%E5%91%A2%EF%BC%9F"><span class="nav-number">8.</span> <span class="nav-text">重写之后呢？</span></a></li></ol></div>
+          <div class="post-sidebar-wechat motion-element">
+            <img
+              class="post-sidebar-wechat-image"
+              src="/images/wechat-mp-qrcode.png"
+              alt="微信扫码关注我的公众号"
+              loading="lazy"
+            >
+            <p class="post-sidebar-wechat-name">中年工程师苟活指南</p>
+            <p class="post-sidebar-wechat-desc">微信扫码关注，获取更多新文章和实战折腾记录。</p>
+          </div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="knktc"
+      src="/images/sonic_avatar.png">
+  <p class="site-author-name" itemprop="name">knktc</p>
+  <div class="site-description" itemprop="description">关注linux,云计算,python，杂乱之地...</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">83</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">256</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/knktc" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;knktc" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/knktc" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;knktc" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+<div class="wechat-mp-widget motion-element">
+  <img
+    class="wechat-mp-widget-image"
+    src="/images/wechat-mp-qrcode.png"
+    alt="微信扫码关注我的公众号"
+    loading="lazy"
+  >
+  <p class="wechat-mp-widget-name">中年工程师苟活指南</p>
+  <p class="wechat-mp-widget-desc">微信扫码关注，第一时间看到新文章和折腾记录。</p>
+</div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">鄂ICP备2021019593号-1 </a>
+      <img src="/images/beian.png" style="display: inline-block;"><a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=42018502005554" rel="noopener" target="_blank">鄂公网安备 42018502005554号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">knktc</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
