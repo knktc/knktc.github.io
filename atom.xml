@@ -6,7 +6,7 @@
   <link href="https://knktc.com/atom.xml" rel="self"/>
   
   <link href="https://knktc.com/"/>
-  <updated>2026-10-26T04:15:32.519Z</updated>
+  <updated>2026-11-04T15:10:25.054Z</updated>
   <id>https://knktc.com/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>用 Rust 复刻一切的 ArtCraft，把厨具和配方也开源了</title>
+    <link href="https://knktc.com/2026/11/04/craft-anything/"/>
+    <id>https://knktc.com/2026/11/04/craft-anything/</id>
+    <published>2026-11-04T13:00:00.000Z</published>
+    <updated>2026-11-04T15:10:25.054Z</updated>
+    
+    <content type="html"><![CDATA[<img src="craft-anything-installation.webp" alt="Craft Anything 0.3.0 的软件介绍界面" width="760" style="max-width: 100%; height: auto;"><p>前阵子写 BlenderCraft 那个段子的时候，ArtCraft 还在忙着用 Rust 做各种软件。修图有 PhotoCraft，剪视频有 FilmCraft，写文档有 WordCraft。看它们一个个冒出来，我更好奇的是，这帮人每次到底怎么开工？</p><p>现在他们出了个 Craft Anything。ArtCraft 联合创始人 Michael 在 Reddit 发布帖的标题里直接交代了缘由。按他的说法，Anthropic 封锁了之前大火的 REA（Reverse Engineer Anything），他们索性自己做了一套，叫 Craft Anything。 <a href="https://www.reddit.com/r/ArtCraftAI/comments/1xkvppr/in_response_to_anthropic_blocking_rea_we/">Reddit 发布帖</a></p><p>Michael 在正文里还说，这次放出来的是他们做第一批 Craft 应用时用过的工具。相当于之前一直在端菜，这次把厨具和配方也一起打包了。 <a href="https://github.com/storytold/craft-anything">Craft Anything 源码</a></p><p>我拿了两样东西去试。一个是 V2EX，想看看它能不能变成 Minecraft 玩家论坛。另一个是我留着的老 Windows 小工具 <code>Hash.exe</code>，想看看它能不能在 Mac 上有个新版本。</p><span id="more"></span><h2 id="第一次打开-Craft-Anything"><a href="#第一次打开-Craft-Anything" class="headerlink" title="第一次打开 Craft Anything"></a>第一次打开 Craft Anything</h2><p>我装好 Mac 版，第一次打开时，启动向导就检测到了本机的 Claude Code 和 OpenCode。</p><img src="support-agent.webp" alt="首次启动时的构建助手选择界面，显示 Claude Code、OpenCode、Kimi 和暂不使用 AI" width="680" style="max-width: 100%; height: auto;"><p>还好我手头已经有配了 DeepSeek 的 OpenCode，直接选它就能开始试。</p><p>选完构建助手，向导接着问「你想用它做什么？」它列了几种用途，比如看看软件是怎么工作的、让不同软件互通、对获准检查的软件做安全研究，或者让旧软件继续用下去。最后这一项正好对应我后面拿来试的 <code>Hash.exe</code>。</p><img src="purpose-of-craft-anything.webp" alt="Craft Anything 首次启动向导列出的用途，包括学习工作原理、软件互通、安全研究和保留旧软件" width="680" style="max-width: 100%; height: auto;"><h2 id="厨具是逆向工具，配方是工作流"><a href="#厨具是逆向工具，配方是工作流" class="headerlink" title="厨具是逆向工具，配方是工作流"></a>厨具是逆向工具，配方是工作流</h2><p>给 Craft Anything 一个网址或者程序文件，再说清楚你想保留什么、改掉什么，它就会按界面上的四个阶段往下走。</p><img src="workflow-progress.png" alt="Craft Anything 的项目进度，研究已完成，正在构建，后面还有检查和就绪" width="294" style="max-width: 100%; height: auto;"><ol><li><strong>研究</strong>。先看原件。网站可以采集截图、可见文字和布局。分析桌面程序时，深度模式下的 Rust 引擎还可以读二进制、查字符串和交叉引用，或者把函数反编译成伪 C。</li><li><strong>构建</strong>。编码助手拿着这些线索和你的要求写出一个新项目。比如后面那个 V2EX 实验，我只想保留论坛的页面结构，内容和风格都可以换。</li><li><strong>检查</strong>。把生成的版本跑起来，看看还有哪些差异。网页默认会在三种宽度下做对照，还会检查部分菜单和弹窗。发现差异后，可以把结果交给助手再改一轮。</li><li><strong>就绪</strong>。可以打开生成的网站或应用自己试用，有想改的地方也可以继续提。内置检查覆盖哪些内容，取决于你做的是网页、应用还是游戏。 <a href="https://github.com/storytold/craft-anything/blob/v0.3.0/docs/STATUS.md#L20-L35">项目状态与检查方式</a></li></ol><p>能用哪些工具，取决于你选的模式。「净室」模式主要从外面观察，网页就看访客能看到的东西。「深度」模式才会读取原件的内部文件和代码。用内置工具做分析可以不接 AI，要生成一套新代码时，再让编码助手进来。 <a href="https://github.com/storytold/craft-anything/blob/v0.3.0/crates/engine/src/clean_room.rs">净室工具白名单</a></p><h2 id="给-V2EX-换成-Minecraft-风格"><a href="#给-V2EX-换成-Minecraft-风格" class="headerlink" title="给 V2EX 换成 Minecraft 风格"></a>给 V2EX 换成 Minecraft 风格</h2><p>我先从复制网站开始，做个简单测试。把 V2EX 的网址填进去，选了「净室」，让它给 V2EX 换个 Minecraft 风格。为了省点 token，我跟它说，发帖、编辑什么的都不用做，编点假数据填进去就行。</p><img src="create-a-minecraft-v2ex.webp" alt="在 Craft Anything 的净室模式下输入 V2EX 地址和 Minecraft 风格需求" width="680" style="max-width: 100%; height: auto;"><p>点了开始，就看着它一顿操作，一会儿访问网页，一会儿截图。最后还真给我做了个网站出来，叫 MCRAFT。布局还是那个熟悉的 V2EX，点开一看，大家已经在讨论红石机器和服务器了。</p><img src="mc-style-v2ex.webp" alt="本地生成的 MCRAFT 首页，包含像素头像、红石讨论和方块服务器广告" width="760" style="max-width: 100%; height: auto;"><h2 id="给老工具-Hash-exe-做个-Mac-版"><a href="#给老工具-Hash-exe-做个-Mac-版" class="headerlink" title="给老工具 Hash.exe 做个 Mac 版"></a>给老工具 Hash.exe 做个 Mac 版</h2><p>做完网页，我想再拿个老 Windows 软件试试，就想到了 <code>Hash.exe</code>。这个算哈希的小工具有些年头了，不少老程序员应该都用过。我把手里的 <code>.exe</code> 丢进去，看看它能不能给我做个 Mac 版。</p><p>这回我选了「深度」，它马上问我要不要装 Ghidra。不装也能接着做，它自己有个反编译器，只是出来的结果会粗一点。</p><img src="ghidra-required.webp" alt="深度模式提示可选安装 Ghidra，也可使用内置反编译器" width="680" style="max-width: 100%; height: auto;"><p>它对着这个老程序分析了半天，日志里刷出来一大堆反编译信息。等它忙完，还真做出了一个能在 macOS 上跑的 Hash。</p><img src="mac-version-hash-exe.webp" alt="新做的 macOS Hash 应用计算旧版 Hash.exe 的四种哈希" width="740" style="max-width: 100%; height: auto;"><p>功能还原得还可以，界面就比较一般了。Mac 版用的是 egui，灰底、凸起的按钮和绿色分段进度条都做出来了，能看出是想往 Windows XP 那种老软件的样子靠，但整体看起来还是少了点当年的质感。</p><h2 id="「就这样吧」"><a href="#「就这样吧」" class="headerlink" title="「就这样吧」"></a>「就这样吧」</h2><p>Craft Anything 本身用起来也还有点粗糙。我装的是 Mac 版，窗口右上角却摆着一排 Windows 风格的最小化、最大化和关闭按钮。中文字体看着也有点怪，这些细节还得慢慢磨。</p><img src="windows-style-button.webp" alt="Craft Anything 的 macOS 版使用了 Windows 风格的窗口按钮" width="570" style="max-width: 100%; height: auto;"><p>至于这会不会又是一个噱头，试完这两次我还真说不好。用下来感觉，它是把一套 skill 和截图、反编译这些工具装进了一个 GUI。点几下就能跑，省了自己把工具串起来的功夫。但如果手头已经有一套用顺了的 Codex 或 Claude Code 工作流，换过来能好用多少，我暂时没感觉出来。</p><p>不过有个按钮我倒是很喜欢。暂停以后，左边是「继续」，右边是「就这样吧」。</p><img src="chinese-trans.webp" alt="构建暂停后显示「继续」和「就这样吧」两个按钮" width="760" style="max-width: 100%; height: auto;"><p>让 AI 来回改了几轮，每一轮都还有点东西能改，但自己已经不太想再解释一遍了。这时候看见「就这样吧」，多少有点被说中了。</p><p><em>体验版本：0.3.0 · 2026年11月3日</em></p>]]></content>
+    
+    
+    <summary type="html">ArtCraft 发布了 Craft Anything，把调查、构建和检查串成一套工具。我拿 V2EX 和一个老 Windows 程序试了试。</summary>
+    
+    
+    
+    
+    <category term="rust" scheme="https://knktc.com/tags/rust/"/>
+    
+    <category term="ai" scheme="https://knktc.com/tags/ai/"/>
+    
+    <category term="开源" scheme="https://knktc.com/tags/%E5%BC%80%E6%BA%90/"/>
+    
+    <category term="artcraft" scheme="https://knktc.com/tags/artcraft/"/>
+    
+  </entry>
   
   <entry>
     <title>Rust 重写一切，这次轮到了 Minecraft</title>
@@ -58,11 +83,11 @@
     
     <category term="ai" scheme="https://knktc.com/tags/ai/"/>
     
-    <category term="blender" scheme="https://knktc.com/tags/blender/"/>
-    
     <category term="开源" scheme="https://knktc.com/tags/%E5%BC%80%E6%BA%90/"/>
     
     <category term="artcraft" scheme="https://knktc.com/tags/artcraft/"/>
+    
+    <category term="blender" scheme="https://knktc.com/tags/blender/"/>
     
   </entry>
   
@@ -81,9 +106,9 @@
     
     
     
-    <category term="ai" scheme="https://knktc.com/tags/ai/"/>
-    
     <category term="linux" scheme="https://knktc.com/tags/linux/"/>
+    
+    <category term="ai" scheme="https://knktc.com/tags/ai/"/>
     
     <category term="kubernetes" scheme="https://knktc.com/tags/kubernetes/"/>
     
@@ -187,11 +212,11 @@
     
     
     
-    <category term="chrome" scheme="https://knktc.com/tags/chrome/"/>
-    
     <category term="codex" scheme="https://knktc.com/tags/codex/"/>
     
     <category term="vibe-coding" scheme="https://knktc.com/tags/vibe-coding/"/>
+    
+    <category term="chrome" scheme="https://knktc.com/tags/chrome/"/>
     
     <category term="extension" scheme="https://knktc.com/tags/extension/"/>
     
@@ -529,33 +554,6 @@
     <category term="cloudflare" scheme="https://knktc.com/tags/cloudflare/"/>
     
     <category term="nginx" scheme="https://knktc.com/tags/nginx/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>使用镜像来加快Poetry的安装</title>
-    <link href="https://knktc.com/2022/04/22/set-mirror-when-installing-poerty/"/>
-    <id>https://knktc.com/2022/04/22/set-mirror-when-installing-poerty/</id>
-    <published>2022-04-22T05:52:52.000Z</published>
-    <updated>2022-04-25T05:03:15.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>首先添加下全局的pip代理：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip config --user setglobal.index-url https:&#x2F;&#x2F;pypi.tuna.tsinghua.edu.cn&#x2F;simple</span><br></pre></td></tr></table></figure><p>然后下载安装脚本到本地(比如保存成install-poetry.py文件)：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -sSL https:&#x2F;&#x2F;install.python-poetry.org -o install-poetry.py</span><br></pre></td></tr></table></figure><p>打开脚本进行编辑，找到如下这段代码：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">def pip(self, *args, **kwargs) -&gt; subprocess.CompletedProcess:</span><br><span class="line">        return self.python(&quot;-m&quot;, &quot;pip&quot;, &quot;--isolated&quot;, *args, **kwargs)</span><br></pre></td></tr></table></figure><p>把里面的”–isolated”删除掉，然后安装脚本使用pip时就会自动使用之前配置好的镜像了:</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 install install-poetry.py</span><br></pre></td></tr></table></figure>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;首先添加下全局的pip代理：&lt;/p&gt;
-&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;pip config --user setglobal.</summary>
-      
-    
-    
-    
-    
-    <category term="镜像" scheme="https://knktc.com/tags/%E9%95%9C%E5%83%8F/"/>
-    
-    <category term="poetry" scheme="https://knktc.com/tags/poetry/"/>
-    
-    <category term="pip" scheme="https://knktc.com/tags/pip/"/>
     
   </entry>
   

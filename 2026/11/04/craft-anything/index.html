@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"knktc.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="ArtCraft 发布了 Craft Anything，把调查、构建和检查串成一套工具。我拿 V2EX 和一个老 Windows 程序试了试。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="用 Rust 复刻一切的 ArtCraft，把厨具和配方也开源了">
+<meta property="og:url" content="https://knktc.com/2026/11/04/craft-anything/">
+<meta property="og:site_name" content="knktc的杂乱空间">
+<meta property="og:description" content="ArtCraft 发布了 Craft Anything，把调查、构建和检查串成一套工具。我拿 V2EX 和一个老 Windows 程序试了试。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://knktc.com/2026/11/04/craft-anything/craft-anything-installation.webp">
+<meta property="og:image" content="https://knktc.com/2026/11/04/craft-anything/support-agent.webp">
+<meta property="og:image" content="https://knktc.com/2026/11/04/craft-anything/purpose-of-craft-anything.webp">
+<meta property="og:image" content="https://knktc.com/2026/11/04/craft-anything/workflow-progress.png">
+<meta property="og:image" content="https://knktc.com/2026/11/04/craft-anything/create-a-minecraft-v2ex.webp">
+<meta property="og:image" content="https://knktc.com/2026/11/04/craft-anything/mc-style-v2ex.webp">
+<meta property="og:image" content="https://knktc.com/2026/11/04/craft-anything/ghidra-required.webp">
+<meta property="og:image" content="https://knktc.com/2026/11/04/craft-anything/mac-version-hash-exe.webp">
+<meta property="og:image" content="https://knktc.com/2026/11/04/craft-anything/windows-style-button.webp">
+<meta property="og:image" content="https://knktc.com/2026/11/04/craft-anything/chinese-trans.webp">
+<meta property="article:published_time" content="2026-11-04T13:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-04T15:10:25.054Z">
+<meta property="article:author" content="knktc">
+<meta property="article:tag" content="rust">
+<meta property="article:tag" content="ai">
+<meta property="article:tag" content="开源">
+<meta property="article:tag" content="artcraft">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://knktc.com/2026/11/04/craft-anything/craft-anything-installation.webp">
+
+<link rel="canonical" href="https://knktc.com/2026/11/04/craft-anything/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+<link rel="alternate" hreflang="zh-CN" href="&#x2F;2026&#x2F;11&#x2F;04&#x2F;craft-anything&#x2F;">
+<link rel="alternate" hreflang="en" href="&#x2F;en&#x2F;2026&#x2F;11&#x2F;04&#x2F;craft-anything&#x2F;">
+<link rel="alternate" hreflang="x-default" href="&#x2F;2026&#x2F;11&#x2F;04&#x2F;craft-anything&#x2F;">
+
+  <title>用 Rust 复刻一切的 ArtCraft，把厨具和配方也开源了 | knktc的杂乱空间</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a23b2d1c6159a3a6c798edbc7f9211f9";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="knktc的杂乱空间" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">knktc的杂乱空间</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">python,cloud,linux...</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://knktc.com/2026/11/04/craft-anything/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/sonic_avatar.png">
+      <meta itemprop="name" content="knktc">
+      <meta itemprop="description" content="关注linux,云计算,python，杂乱之地...">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="knktc的杂乱空间">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          用 Rust 复刻一切的 ArtCraft，把厨具和配方也开源了
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2026-11-04 21:00:00 / 修改时间：23:10:25" itemprop="dateCreated datePublished" datetime="2026-11-04T21:00:00+08:00">2026-11-04</time>
+            </span>
+
+          
+            <div class="post-description">ArtCraft 发布了 Craft Anything，把调查、构建和检查串成一套工具。我拿 V2EX 和一个老 Windows 程序试了试。</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <img src="craft-anything-installation.webp" alt="Craft Anything 0.3.0 的软件介绍界面" width="760" style="max-width: 100%; height: auto;">
+
+<p>前阵子写 BlenderCraft 那个段子的时候，ArtCraft 还在忙着用 Rust 做各种软件。修图有 PhotoCraft，剪视频有 FilmCraft，写文档有 WordCraft。看它们一个个冒出来，我更好奇的是，这帮人每次到底怎么开工？</p>
+<p>现在他们出了个 Craft Anything。ArtCraft 联合创始人 Michael 在 Reddit 发布帖的标题里直接交代了缘由。按他的说法，Anthropic 封锁了之前大火的 REA（Reverse Engineer Anything），他们索性自己做了一套，叫 Craft Anything。 <a target="_blank" rel="noopener" href="https://www.reddit.com/r/ArtCraftAI/comments/1xkvppr/in_response_to_anthropic_blocking_rea_we/">Reddit 发布帖</a></p>
+<p>Michael 在正文里还说，这次放出来的是他们做第一批 Craft 应用时用过的工具。相当于之前一直在端菜，这次把厨具和配方也一起打包了。 <a target="_blank" rel="noopener" href="https://github.com/storytold/craft-anything">Craft Anything 源码</a></p>
+<p>我拿了两样东西去试。一个是 V2EX，想看看它能不能变成 Minecraft 玩家论坛。另一个是我留着的老 Windows 小工具 <code>Hash.exe</code>，想看看它能不能在 Mac 上有个新版本。</p>
+<span id="more"></span>
+
+<h2 id="第一次打开-Craft-Anything"><a href="#第一次打开-Craft-Anything" class="headerlink" title="第一次打开 Craft Anything"></a>第一次打开 Craft Anything</h2><p>我装好 Mac 版，第一次打开时，启动向导就检测到了本机的 Claude Code 和 OpenCode。</p>
+<img src="support-agent.webp" alt="首次启动时的构建助手选择界面，显示 Claude Code、OpenCode、Kimi 和暂不使用 AI" width="680" style="max-width: 100%; height: auto;">
+
+<p>还好我手头已经有配了 DeepSeek 的 OpenCode，直接选它就能开始试。</p>
+<p>选完构建助手，向导接着问「你想用它做什么？」它列了几种用途，比如看看软件是怎么工作的、让不同软件互通、对获准检查的软件做安全研究，或者让旧软件继续用下去。最后这一项正好对应我后面拿来试的 <code>Hash.exe</code>。</p>
+<img src="purpose-of-craft-anything.webp" alt="Craft Anything 首次启动向导列出的用途，包括学习工作原理、软件互通、安全研究和保留旧软件" width="680" style="max-width: 100%; height: auto;">
+
+<h2 id="厨具是逆向工具，配方是工作流"><a href="#厨具是逆向工具，配方是工作流" class="headerlink" title="厨具是逆向工具，配方是工作流"></a>厨具是逆向工具，配方是工作流</h2><p>给 Craft Anything 一个网址或者程序文件，再说清楚你想保留什么、改掉什么，它就会按界面上的四个阶段往下走。</p>
+<img src="workflow-progress.png" alt="Craft Anything 的项目进度，研究已完成，正在构建，后面还有检查和就绪" width="294" style="max-width: 100%; height: auto;">
+
+<ol>
+<li><strong>研究</strong>。先看原件。网站可以采集截图、可见文字和布局。分析桌面程序时，深度模式下的 Rust 引擎还可以读二进制、查字符串和交叉引用，或者把函数反编译成伪 C。</li>
+<li><strong>构建</strong>。编码助手拿着这些线索和你的要求写出一个新项目。比如后面那个 V2EX 实验，我只想保留论坛的页面结构，内容和风格都可以换。</li>
+<li><strong>检查</strong>。把生成的版本跑起来，看看还有哪些差异。网页默认会在三种宽度下做对照，还会检查部分菜单和弹窗。发现差异后，可以把结果交给助手再改一轮。</li>
+<li><strong>就绪</strong>。可以打开生成的网站或应用自己试用，有想改的地方也可以继续提。内置检查覆盖哪些内容，取决于你做的是网页、应用还是游戏。 <a target="_blank" rel="noopener" href="https://github.com/storytold/craft-anything/blob/v0.3.0/docs/STATUS.md#L20-L35">项目状态与检查方式</a></li>
+</ol>
+<p>能用哪些工具，取决于你选的模式。「净室」模式主要从外面观察，网页就看访客能看到的东西。「深度」模式才会读取原件的内部文件和代码。用内置工具做分析可以不接 AI，要生成一套新代码时，再让编码助手进来。 <a target="_blank" rel="noopener" href="https://github.com/storytold/craft-anything/blob/v0.3.0/crates/engine/src/clean_room.rs">净室工具白名单</a></p>
+<h2 id="给-V2EX-换成-Minecraft-风格"><a href="#给-V2EX-换成-Minecraft-风格" class="headerlink" title="给 V2EX 换成 Minecraft 风格"></a>给 V2EX 换成 Minecraft 风格</h2><p>我先从复制网站开始，做个简单测试。把 V2EX 的网址填进去，选了「净室」，让它给 V2EX 换个 Minecraft 风格。为了省点 token，我跟它说，发帖、编辑什么的都不用做，编点假数据填进去就行。</p>
+<img src="create-a-minecraft-v2ex.webp" alt="在 Craft Anything 的净室模式下输入 V2EX 地址和 Minecraft 风格需求" width="680" style="max-width: 100%; height: auto;">
+
+<p>点了开始，就看着它一顿操作，一会儿访问网页，一会儿截图。最后还真给我做了个网站出来，叫 MCRAFT。布局还是那个熟悉的 V2EX，点开一看，大家已经在讨论红石机器和服务器了。</p>
+<img src="mc-style-v2ex.webp" alt="本地生成的 MCRAFT 首页，包含像素头像、红石讨论和方块服务器广告" width="760" style="max-width: 100%; height: auto;">
+
+<h2 id="给老工具-Hash-exe-做个-Mac-版"><a href="#给老工具-Hash-exe-做个-Mac-版" class="headerlink" title="给老工具 Hash.exe 做个 Mac 版"></a>给老工具 Hash.exe 做个 Mac 版</h2><p>做完网页，我想再拿个老 Windows 软件试试，就想到了 <code>Hash.exe</code>。这个算哈希的小工具有些年头了，不少老程序员应该都用过。我把手里的 <code>.exe</code> 丢进去，看看它能不能给我做个 Mac 版。</p>
+<p>这回我选了「深度」，它马上问我要不要装 Ghidra。不装也能接着做，它自己有个反编译器，只是出来的结果会粗一点。</p>
+<img src="ghidra-required.webp" alt="深度模式提示可选安装 Ghidra，也可使用内置反编译器" width="680" style="max-width: 100%; height: auto;">
+
+<p>它对着这个老程序分析了半天，日志里刷出来一大堆反编译信息。等它忙完，还真做出了一个能在 macOS 上跑的 Hash。</p>
+<img src="mac-version-hash-exe.webp" alt="新做的 macOS Hash 应用计算旧版 Hash.exe 的四种哈希" width="740" style="max-width: 100%; height: auto;">
+
+<p>功能还原得还可以，界面就比较一般了。Mac 版用的是 egui，灰底、凸起的按钮和绿色分段进度条都做出来了，能看出是想往 Windows XP 那种老软件的样子靠，但整体看起来还是少了点当年的质感。</p>
+<h2 id="「就这样吧」"><a href="#「就这样吧」" class="headerlink" title="「就这样吧」"></a>「就这样吧」</h2><p>Craft Anything 本身用起来也还有点粗糙。我装的是 Mac 版，窗口右上角却摆着一排 Windows 风格的最小化、最大化和关闭按钮。中文字体看着也有点怪，这些细节还得慢慢磨。</p>
+<img src="windows-style-button.webp" alt="Craft Anything 的 macOS 版使用了 Windows 风格的窗口按钮" width="570" style="max-width: 100%; height: auto;">
+
+<p>至于这会不会又是一个噱头，试完这两次我还真说不好。用下来感觉，它是把一套 skill 和截图、反编译这些工具装进了一个 GUI。点几下就能跑，省了自己把工具串起来的功夫。但如果手头已经有一套用顺了的 Codex 或 Claude Code 工作流，换过来能好用多少，我暂时没感觉出来。</p>
+<p>不过有个按钮我倒是很喜欢。暂停以后，左边是「继续」，右边是「就这样吧」。</p>
+<img src="chinese-trans.webp" alt="构建暂停后显示「继续」和「就这样吧」两个按钮" width="760" style="max-width: 100%; height: auto;">
+
+<p>让 AI 来回改了几轮，每一轮都还有点东西能改，但自己已经不太想再解释一遍了。这时候看见「就这样吧」，多少有点被说中了。</p>
+<p><em>体验版本：0.3.0 · 2026年11月3日</em></p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>如果我的文字帮到了您，那么可不可以请我喝罐可乐？</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechat.png" alt="knktc 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="knktc 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-6959365962327411"
+     data-ad-slot="4588493450"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>knktc
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://knktc.com/2026/11/04/craft-anything/" title="用 Rust 复刻一切的 ArtCraft，把厨具和配方也开源了">https://knktc.com/2026/11/04/craft-anything/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/rust/" rel="tag"># rust</a>
+              <a href="/tags/ai/" rel="tag"># ai</a>
+              <a href="/tags/%E5%BC%80%E6%BA%90/" rel="tag"># 开源</a>
+              <a href="/tags/artcraft/" rel="tag"># artcraft</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2026/10/26/horizon-rust-minecraft/" rel="prev" title="Rust 重写一切，这次轮到了 Minecraft">
+      <i class="fa fa-chevron-left"></i> Rust 重写一切，这次轮到了 Minecraft
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E6%AC%A1%E6%89%93%E5%BC%80-Craft-Anything"><span class="nav-number">1.</span> <span class="nav-text">第一次打开 Craft Anything</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8E%A8%E5%85%B7%E6%98%AF%E9%80%86%E5%90%91%E5%B7%A5%E5%85%B7%EF%BC%8C%E9%85%8D%E6%96%B9%E6%98%AF%E5%B7%A5%E4%BD%9C%E6%B5%81"><span class="nav-number">2.</span> <span class="nav-text">厨具是逆向工具，配方是工作流</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%99-V2EX-%E6%8D%A2%E6%88%90-Minecraft-%E9%A3%8E%E6%A0%BC"><span class="nav-number">3.</span> <span class="nav-text">给 V2EX 换成 Minecraft 风格</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%99%E8%80%81%E5%B7%A5%E5%85%B7-Hash-exe-%E5%81%9A%E4%B8%AA-Mac-%E7%89%88"><span class="nav-number">4.</span> <span class="nav-text">给老工具 Hash.exe 做个 Mac 版</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E3%80%8C%E5%B0%B1%E8%BF%99%E6%A0%B7%E5%90%A7%E3%80%8D"><span class="nav-number">5.</span> <span class="nav-text">「就这样吧」</span></a></li></ol></div>
+          <div class="post-sidebar-wechat motion-element">
+            <img
+              class="post-sidebar-wechat-image"
+              src="/images/wechat-mp-qrcode.png"
+              alt="微信扫码关注我的公众号"
+              loading="lazy"
+            >
+            <p class="post-sidebar-wechat-name">中年工程师苟活指南</p>
+            <p class="post-sidebar-wechat-desc">微信扫码关注，获取更多新文章和实战折腾记录。</p>
+          </div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="knktc"
+      src="/images/sonic_avatar.png">
+  <p class="site-author-name" itemprop="name">knktc</p>
+  <div class="site-description" itemprop="description">关注linux,云计算,python，杂乱之地...</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">84</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">256</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/knktc" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;knktc" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/knktc" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;knktc" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+<div class="wechat-mp-widget motion-element">
+  <img
+    class="wechat-mp-widget-image"
+    src="/images/wechat-mp-qrcode.png"
+    alt="微信扫码关注我的公众号"
+    loading="lazy"
+  >
+  <p class="wechat-mp-widget-name">中年工程师苟活指南</p>
+  <p class="wechat-mp-widget-desc">微信扫码关注，第一时间看到新文章和折腾记录。</p>
+</div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">鄂ICP备2021019593号-1 </a>
+      <img src="/images/beian.png" style="display: inline-block;"><a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=42018502005554" rel="noopener" target="_blank">鄂公网安备 42018502005554号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">knktc</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
