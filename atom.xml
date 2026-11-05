@@ -31,13 +31,13 @@
     
     
     
-    <category term="rust" scheme="https://knktc.com/tags/rust/"/>
-    
     <category term="ai" scheme="https://knktc.com/tags/ai/"/>
     
     <category term="开源" scheme="https://knktc.com/tags/%E5%BC%80%E6%BA%90/"/>
     
     <category term="artcraft" scheme="https://knktc.com/tags/artcraft/"/>
+    
+    <category term="rust" scheme="https://knktc.com/tags/rust/"/>
     
   </entry>
   
@@ -83,11 +83,11 @@
     
     <category term="ai" scheme="https://knktc.com/tags/ai/"/>
     
+    <category term="blender" scheme="https://knktc.com/tags/blender/"/>
+    
     <category term="开源" scheme="https://knktc.com/tags/%E5%BC%80%E6%BA%90/"/>
     
     <category term="artcraft" scheme="https://knktc.com/tags/artcraft/"/>
-    
-    <category term="blender" scheme="https://knktc.com/tags/blender/"/>
     
   </entry>
   
@@ -106,9 +106,9 @@
     
     
     
-    <category term="linux" scheme="https://knktc.com/tags/linux/"/>
-    
     <category term="ai" scheme="https://knktc.com/tags/ai/"/>
+    
+    <category term="linux" scheme="https://knktc.com/tags/linux/"/>
     
     <category term="kubernetes" scheme="https://knktc.com/tags/kubernetes/"/>
     
@@ -133,13 +133,13 @@
     
     
     
+    <category term="rust" scheme="https://knktc.com/tags/rust/"/>
+    
     <category term="codex" scheme="https://knktc.com/tags/codex/"/>
     
     <category term="vibe-coding" scheme="https://knktc.com/tags/vibe-coding/"/>
     
     <category term="tauri" scheme="https://knktc.com/tags/tauri/"/>
-    
-    <category term="rust" scheme="https://knktc.com/tags/rust/"/>
     
     <category term="nintendo-3ds" scheme="https://knktc.com/tags/nintendo-3ds/"/>
     
@@ -212,11 +212,11 @@
     
     
     
+    <category term="chrome" scheme="https://knktc.com/tags/chrome/"/>
+    
     <category term="codex" scheme="https://knktc.com/tags/codex/"/>
     
     <category term="vibe-coding" scheme="https://knktc.com/tags/vibe-coding/"/>
-    
-    <category term="chrome" scheme="https://knktc.com/tags/chrome/"/>
     
     <category term="extension" scheme="https://knktc.com/tags/extension/"/>
     
@@ -463,11 +463,11 @@
     
     <category term="git" scheme="https://knktc.com/tags/git/"/>
     
+    <category term="ssh" scheme="https://knktc.com/tags/ssh/"/>
+    
     <category term="macos" scheme="https://knktc.com/tags/macos/"/>
     
     <category term="ventura" scheme="https://knktc.com/tags/ventura/"/>
-    
-    <category term="ssh" scheme="https://knktc.com/tags/ssh/"/>
     
     <category term="permission" scheme="https://knktc.com/tags/permission/"/>
     
