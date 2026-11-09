@@ -6,7 +6,7 @@
   <link href="https://knktc.com/atom.xml" rel="self"/>
   
   <link href="https://knktc.com/"/>
-  <updated>2026-11-04T15:10:25.054Z</updated>
+  <updated>2026-11-09T15:01:58.029Z</updated>
   <id>https://knktc.com/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>用 Codex 给老烧录卡续命：elink2-web 开发记录</title>
+    <link href="https://knktc.com/2026/11/09/elink2-web-development/"/>
+    <id>https://knktc.com/2026/11/09/elink2-web-development/</id>
+    <published>2026-11-08T16:00:00.000Z</published>
+    <updated>2026-11-09T15:01:58.029Z</updated>
+    
+    <content type="html"><![CDATA[<p>最近，我翻出了自己的 Game Boy Micro（GBM），还有当年配着它一起用的 elink2 烧录卡，想重温一下以前的游戏。</p><p>这张卡是我在 2010 年花 100 元买的。十几年过去，机器和卡都还在，但想往里面换几个游戏，却先碰到了电脑上的问题：原来的配套软件是 Windows 程序，我现在主要用 macOS，又找不到可用的驱动。</p><p>于是，我让 Codex 帮忙分析原版程序，尝试重新做一个能在 Mac 上使用的工具。折腾下来，最后做成了一个网页项目：<a href="https://github.com/knktc/elink2-web">elink2-web</a>。</p><p><img src="elink2-cart.webp" alt="当年使用的 elink2 烧录卡"></p><span id="more"></span><h2 id="为什么还要折腾这张老卡"><a href="#为什么还要折腾这张老卡" class="headerlink" title="为什么还要折腾这张老卡"></a>为什么还要折腾这张老卡</h2><p>纯纯是情怀。</p><p>elink2 是一款 GBA 烧录卡，大概是 2009 年左右的产品。用户可以把游戏写进卡带，再插到 GBA 上运行。和后面出现的把文件复制到存储卡里的烧录卡不同，它需要通过 USB 和配套程序完成烧录。</p><p>现在，这款卡早已停产，网上能找到的资料和讨论都不多。现在基本只能在二手市场上见到它。对还留着这张卡的人来说，卡带本身也许还能工作，但配套软件已经成了继续使用它的门槛。</p><p>我想解决的就是眼前这个问题：让手上这张老卡在现在的电脑上继续用起来，能看看里面装了什么，也能换几个游戏。</p><p>这也是一个挺适合试试 AI 能力的题目。普通的网页、接口项目，通常有文档和成熟的库可以参考；这次面对的却是一张老 USB 设备，手上主要是原版 Windows 软件和网上零星的软件截图。Codex 能不能从这些材料里帮我理出一条路，我也很好奇。</p><h2 id="从原版程序到实机验证"><a href="#从原版程序到实机验证" class="headerlink" title="从原版程序到实机验证"></a>从原版程序到实机验证</h2><p>最开始做的是一个 macOS 原型。Codex 一开始也建议我找台 Windows 机器，运行原版软件，抓一下 USB 通信的包，看看它到底往卡带里发了什么。但我一口咬定：手上只有 Mac，也不想装虚拟机。于是 Codex 只好硬啃原版 Windows 程序，从里面研究初始化、USB 通信和游戏菜单的细节，再拿我的卡带逐步验证。</p><p>我在其中的作用，一方面是回忆当年使用原版软件时的操作流程，给 Codex 提供线索；另一方面，就是在它需要实机验证的时候，配合插拔 USB 线、给 GBA 开关机，再把屏幕上看到的状态反馈给它。</p><p>整个过程从连接和读取开始。先让 GBA 屏幕显示出 <code>USB ONLINE</code>，再读取菜单、解析游戏列表，之后才尝试写入和替换游戏。每次写完，除了读回数据进行比对，还要检查相邻区域和存档有没有受到影响，最后拔掉 USB、重新开机，确认菜单显示正常、游戏确实能启动。</p><p>这样一点点下来，原型在我这张卡上跑通了末项游戏的写入、菜单项隐藏与恢复，以及指定空间内的游戏替换。过程中也保留了分析记录和操作日志，方便遇到问题时回头查证。</p><h2 id="为什么做成网页工具"><a href="#为什么做成网页工具" class="headerlink" title="为什么做成网页工具"></a>为什么做成网页工具</h2><p>macOS 原型跑通之后，我又突发奇想：Chrome 不是支持 WebUSB 么，这些功能是不是直接用浏览器就能实现？这样连桌面工具都不用装了。</p><p>于是，我又让 Codex 在原型的基础上，把连接、读取和游戏管理流程搬进浏览器，就有了现在的 elink2-web。</p><p>网页的好处很直接：对于支持 WebUSB 的浏览器，打开页面、授权连接设备，就可以开始操作，不用再为这个小工具安装一个桌面应用。游戏文件的处理和 USB 通信都在浏览器本地完成，烧录过程不需要把 ROM 上传到服务器。</p><p>当然，网页也有浏览器兼容性的限制。目前支持范围是桌面版 Chrome 和 Edge，实际测试用的是 Chrome，已经在 Apple Silicon 和 Intel 的 MacBook Pro 上跑通过。Edge 和其他系统下的表现，还需要继续验证。</p><p><img src="first-page.webp" alt="连接卡带界面"></p><p>界面上，我主要想把卡带里原本不太直观的状态展示出来：有哪些游戏、各自占了多少空间、空隙在哪里、末尾还能追加多少。选择游戏文件后，也可以预览写入范围和卡带菜单名称。</p><p><img src="game-list.webp" alt="卡带存储分布图和游戏列表"></p><p>菜单名称是另一个有意思的小细节。卡带菜单里的文字需要转换成点阵字模，不能直接把网页上的文字样式带过去。现在工具使用固定的像素字体生成字模，可以自定义中文或英文名称，网页预览和实际写入使用同一份位图数据。</p><p><img src="write-game.webp" alt="新增游戏与菜单名称预览"></p><p>这一圈折腾下来，感觉我和 Codex 就是在来回配合：它分析程序、写代码，我拿着 GBA 按它说的试，再告诉它哪里有反应、哪里没动静。毕竟是在和一张老卡打交道，电脑上显示成功了还不算，拔掉线、重新开机，游戏真能跑起来，心里才踏实。</p><h2 id="目前做到了哪一步"><a href="#目前做到了哪一步" class="headerlink" title="目前做到了哪一步"></a>目前做到了哪一步</h2><p>截至 2026 年 11 月 9 日，elink2-web 已经实现了这些功能：</p><ul><li>连接卡带并读取游戏列表。</li><li>展示卡带存储分布、已用空间和可追加空间。</li><li>新增游戏，以及在原有空间内替换游戏。</li><li>删除选中的游戏及其后的全部游戏。</li><li>自定义卡带菜单名称，并预览字模效果。</li><li>中英文界面、操作日志，以及可选的写入后读回校验。</li></ul><p>存档导入导出和金手指还没有接到网页里；更多卡带、固件以及游戏存档兼容性，也需要后续验证。前期原型的实机结果主要来自我手上这一张卡。</p><h2 id="访问地址与源码"><a href="#访问地址与源码" class="headerlink" title="访问地址与源码"></a>访问地址与源码</h2><p>在线体验地址：<a href="https://elink2.knktc.com/">elink2.knktc.com</a>。</p><p>项目源码：<a href="https://github.com/knktc/elink2-web">knktc/elink2-web</a>。</p><p>站点通过 Cloudflare 自动构建和托管，省去了自己维护服务器和部署流程的麻烦。感谢 Cloudflare 大善人。</p><p>如果你也还留着 elink2 烧录卡，可以试试看。遇到问题时，可以在 GitHub 提交 issue，附上系统、浏览器、卡带信息和操作日志，帮助我继续完善兼容性。</p><p>做这个工具最初只是想往自己的 GBM 里换几个游戏。现在，这张 2010 年买的卡，又能在 Mac 上继续用了。也希望它能帮到同样还留着老卡的人。</p>]]></content>
+    
+    
+    <summary type="html">翻出 Game Boy Micro 和 2010 年买的 elink2 烧录卡后，我借助 Codex 分析原版 Windows 工具，从 macOS 上的 USB 通信原型开始，一点点做出了可以在浏览器里管理和烧录 GBA 游戏的 elink2-web。</summary>
+    
+    
+    
+    
+    <category term="codex" scheme="https://knktc.com/tags/codex/"/>
+    
+    <category term="vibe-coding" scheme="https://knktc.com/tags/vibe-coding/"/>
+    
+    <category term="gba" scheme="https://knktc.com/tags/gba/"/>
+    
+    <category term="webusb" scheme="https://knktc.com/tags/webusb/"/>
+    
+    <category term="elink2" scheme="https://knktc.com/tags/elink2/"/>
+    
+  </entry>
   
   <entry>
     <title>用 Rust 复刻一切的 ArtCraft，把厨具和配方也开源了</title>
@@ -133,13 +160,13 @@
     
     
     
-    <category term="rust" scheme="https://knktc.com/tags/rust/"/>
-    
     <category term="codex" scheme="https://knktc.com/tags/codex/"/>
     
     <category term="vibe-coding" scheme="https://knktc.com/tags/vibe-coding/"/>
     
     <category term="tauri" scheme="https://knktc.com/tags/tauri/"/>
+    
+    <category term="rust" scheme="https://knktc.com/tags/rust/"/>
     
     <category term="nintendo-3ds" scheme="https://knktc.com/tags/nintendo-3ds/"/>
     
@@ -463,11 +490,11 @@
     
     <category term="git" scheme="https://knktc.com/tags/git/"/>
     
-    <category term="ssh" scheme="https://knktc.com/tags/ssh/"/>
-    
     <category term="macos" scheme="https://knktc.com/tags/macos/"/>
     
     <category term="ventura" scheme="https://knktc.com/tags/ventura/"/>
+    
+    <category term="ssh" scheme="https://knktc.com/tags/ssh/"/>
     
     <category term="permission" scheme="https://knktc.com/tags/permission/"/>
     
@@ -522,38 +549,6 @@
     <category term="log" scheme="https://knktc.com/tags/log/"/>
     
     <category term="json" scheme="https://knktc.com/tags/json/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>使用Certbot自动化生成https证书(ubuntu系统+cloudflare+nginx)</title>
-    <link href="https://knktc.com/2022/06/16/certbot-on-ubuntu-cheatsheet/"/>
-    <id>https://knktc.com/2022/06/16/certbot-on-ubuntu-cheatsheet/</id>
-    <published>2022-06-16T13:45:36.000Z</published>
-    <updated>2022-06-16T14:21:53.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>用Certbot来自动生成Let’s Encrypt证书这件事儿，虽然官方和网上已经有了很详实的文档了，但是我还是想自己记录下，留作以后备查吧。</p><p>本文用的操作系统是ubuntu 20.04，DNS的话用的是Cloudflare的服务，web服务使用nginx来提供。然后，按照以下步骤进行就可以了。</p><span id="more"></span><h2 id="安装Certbot"><a href="#安装Certbot" class="headerlink" title="安装Certbot"></a>安装Certbot</h2><p>用以下命令安装就可以了，某些时候snap install的时候可能比较慢，有时候还可能需要重试几次：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">apt install snapd</span><br><span class="line">snap install core</span><br><span class="line">snap refresh core</span><br><span class="line">snap install --classic certbot</span><br></pre></td></tr></table></figure><p>安装完成后，运行下<code>certbot --version</code>命令，如果有版本号输出，就表明安装成功了。</p><h2 id="安装Cloudflare插件"><a href="#安装Cloudflare插件" class="headerlink" title="安装Cloudflare插件"></a>安装Cloudflare插件</h2><p>为了实现自动化地续签证书，需要安装下对应DNS服务商的插件才可以。我使用Cloudflare来做DNS解析，所以可以使用以下的命令来安装Cloudflare插件：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">snap set certbot trust-plugin-with-root=ok</span><br><span class="line"></span><br><span class="line">snap install certbot-dns-cloudflare</span><br></pre></td></tr></table></figure><h2 id="设置Cloudflare-API令牌"><a href="#设置Cloudflare-API令牌" class="headerlink" title="设置Cloudflare API令牌"></a>设置Cloudflare API令牌</h2><p>要使用Cloudflare插件，需要先登录到Cloudflare控制台来生成一个仅可操作DNS解析的API 令牌。可在登录Cloudflare后，跳转到这个地址来进行创建：<a href="">https://dash.cloudflare.com/profile/api-tokens</a></p><p>以下是操作过程的简单演示：</p><p><a href="https://imgtu.com/i/XHvupd"><img src="https://s1.ax1x.com/2022/06/16/XHvupd.png" alt="XHvupd.png"></a></p><p><a href="https://imgtu.com/i/XHvmfH"><img src="https://s1.ax1x.com/2022/06/16/XHvmfH.png" alt="XHvmfH.png"></a></p><p><a href="https://imgtu.com/i/XHvete"><img src="https://s1.ax1x.com/2022/06/16/XHvete.png" alt="XHvete.png"></a></p><p>创建完成后记得将出现的令牌复制下来。然后使用以下命令来创建配置文件：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p ~/.secrets/certbot</span><br><span class="line"></span><br><span class="line">vim ~/.secrets/certbot/cloudflare.ini</span><br></pre></td></tr></table></figure><p>填入如下格式的配置就可以了：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dns_cloudflare_api_token &#x3D; 刚才获取到的API令牌</span><br></pre></td></tr></table></figure><p>编辑完成后，可以修改下这个文件的权限，否则执行certbot命令时会报一个警告说文件权限不安全：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chmod 600 ~/.secrets/certbot/cloudflare.ini</span><br></pre></td></tr></table></figure><h2 id="获取证书"><a href="#获取证书" class="headerlink" title="获取证书"></a>获取证书</h2><p>现在通过运行以下的命令就可以生成nginx所需的证书了：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">certbot certonly \</span><br><span class="line">  --dns-cloudflare \</span><br><span class="line">  --dns-cloudflare-credentials ~/.secrets/certbot/cloudflare.ini \</span><br><span class="line">  --dns-cloudflare-propagation-seconds 60 \</span><br><span class="line">  -d knktc.com</span><br></pre></td></tr></table></figure><p>注意，这里用了<code>--dns-cloudflare-propagation-seconds 60</code>把等待时间延长到了60秒，否则默认的10秒有些时候会导致校验失败。</p><p>生成的证书和私钥会放到/etc/letsencrypt/live/YOUR_HOST目录下。</p><p>贴一段nginx相关配置，备查：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">listen 443 ssl http2;</span><br><span class="line">server_name knktc.com;</span><br><span class="line">ssl_certificate /etc/letsencrypt/live/knktc.com/fullchain.pem; # managed by Certbot</span><br><span class="line">ssl_certificate_key /etc/letsencrypt/live/knktc.com/privkey.pem; # managed by Certbot</span><br><span class="line"></span><br><span class="line">ssl_protocols       TLSv1 TLSv1.1 TLSv1.2;</span><br><span class="line">ssl_ciphers         HIGH:!aNULL:!MD5;</span><br><span class="line">keepalive_timeout   70;</span><br><span class="line">ssl_session_timeout  5m;</span><br></pre></td></tr></table></figure><h2 id="定时任务"><a href="#定时任务" class="headerlink" title="定时任务"></a>定时任务</h2><p>通过以下命令可以查看certbot的定时任务是否添加成功了：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl list-timers</span><br></pre></td></tr></table></figure><p>如果要在每次生成新的证书后自动reload下nginx，可以加个hook脚本：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim &#x2F;etc&#x2F;letsencrypt&#x2F;renewal-hooks&#x2F;post&#x2F;reload-nginx</span><br></pre></td></tr></table></figure><p>加入以下的脚本：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#!&#x2F;bin&#x2F;sh</span><br><span class="line"></span><br><span class="line">systemctl reload nginx</span><br></pre></td></tr></table></figure><p>然后给这个脚本文件加上权限：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chmod +x &#x2F;etc&#x2F;letsencrypt&#x2F;renewal-hooks&#x2F;post&#x2F;reload-nginx</span><br></pre></td></tr></table></figure><p>这样的话，每次生成新的证书后，就会自动reload下nginx让新的证书生效了。</p>]]></content>
-    
-    
-    <summary type="html">&lt;p&gt;用Certbot来自动生成Let’s Encrypt证书这件事儿，虽然官方和网上已经有了很详实的文档了，但是我还是想自己记录下，留作以后备查吧。&lt;/p&gt;
-&lt;p&gt;本文用的操作系统是ubuntu 20.04，DNS的话用的是Cloudflare的服务，web服务使用nginx来提供。然后，按照以下步骤进行就可以了。&lt;/p&gt;</summary>
-    
-    
-    
-    
-    <category term="certbot" scheme="https://knktc.com/tags/certbot/"/>
-    
-    <category term="ubuntu" scheme="https://knktc.com/tags/ubuntu/"/>
-    
-    <category term="ssl" scheme="https://knktc.com/tags/ssl/"/>
-    
-    <category term="https" scheme="https://knktc.com/tags/https/"/>
-    
-    <category term="letsencrypt" scheme="https://knktc.com/tags/letsencrypt/"/>
-    
-    <category term="cloudflare" scheme="https://knktc.com/tags/cloudflare/"/>
-    
-    <category term="nginx" scheme="https://knktc.com/tags/nginx/"/>
     
   </entry>
   

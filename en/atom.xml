@@ -6,7 +6,7 @@
   <link href="https://knktc.com/en/atom.xml" rel="self"/>
   
   <link href="https://knktc.com/en/"/>
-  <updated>2026-11-04T15:10:25.057Z</updated>
+  <updated>2026-11-09T15:03:50.728Z</updated>
   <id>https://knktc.com/en/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Bringing an Old Flash Cart Back to Life with Codex — Building elink2-web</title>
+    <link href="https://knktc.com/en/2026/11/09/elink2-web-development/"/>
+    <id>https://knktc.com/en/2026/11/09/elink2-web-development/</id>
+    <published>2026-11-08T16:00:00.000Z</published>
+    <updated>2026-11-09T15:03:50.728Z</updated>
+    
+    <content type="html"><![CDATA[<p>Recently, I dug out my Game Boy Micro (GBM), along with the elink2 flash cart I used with it back in the day. I wanted to revisit some old games.</p><p>I bought this cart in 2010 for 100 yuan. More than a decade later, both the console and the cart were still around. But when I tried to swap in a few games, I ran into a problem on the computer side: the original software was a Windows application, I mostly use macOS now, and I couldn’t find a working driver.</p><p>So I asked Codex to help analyze the original software and try building a tool that would work on my Mac. After some tinkering, that became a web project: <a href="https://github.com/knktc/elink2-web">elink2-web</a>.</p><p><img src="elink2-cart.webp" alt="The elink2 flash cart I&#39;ve had since 2010"></p><span id="more"></span><h2 id="Why-Bother-with-This-Old-Cart"><a href="#Why-Bother-with-This-Old-Cart" class="headerlink" title="Why Bother with This Old Cart?"></a>Why Bother with This Old Cart?</h2><p>Pure nostalgia.</p><p>The elink2 is a GBA flash cart, apparently dating back to around 2009. You write games onto the cart, then put it in a GBA to play them. Unlike later carts where you simply copy files onto a memory card, it needs a USB connection and its companion software to flash games.</p><p>The cart has long been discontinued, and there isn’t much information or discussion about it online. These days, you mostly find it on the second-hand market. For anyone who still has one, the hardware may work just fine, but the old software can get in the way of actually using it.</p><p>That was the problem I wanted to solve: keep using the cart I already owned on a modern computer, see what was on it, and swap in a few games.</p><p>It also seemed like an interesting way to see what AI could do. With a typical web app or API project, there are usually docs and established libraries to work from. Here, I had an old USB device, its original Windows software, and a handful of software screenshots from the internet. I was curious whether Codex could help piece together a way forward from that.</p><h2 id="From-the-Original-Software-to-Hardware-Testing"><a href="#From-the-Original-Software-to-Hardware-Testing" class="headerlink" title="From the Original Software to Hardware Testing"></a>From the Original Software to Hardware Testing</h2><p>I started with a macOS prototype. At first, Codex suggested finding a Windows machine, running the original software, and capturing its USB traffic to see what it sent to the cart. But I dug my heels in: I only had Macs, and I didn’t want to install a virtual machine. So Codex had to dig into the Windows program itself, work out the initialization, USB communication, and game menu details, then test them step by step on my cart.</p><p>My part was to remember how I used the original software back then and give Codex a few clues. Whenever it needed a hardware test, I would plug or unplug the USB cable, turn the GBA off and on, and report what appeared on the screen.</p><p>We started with connecting and reading. First, we got <code>USB ONLINE</code> to appear on the GBA’s screen, then read the menu and parsed the game list. Only after that did we try writing and replacing games. After each write, we read the data back for comparison and checked that neighboring regions and saves hadn’t been affected. Finally, I unplugged the USB cable and restarted the GBA to check that the menu looked right and the game actually booted.</p><p>Bit by bit, the prototype could write a game into the last slot, hide and restore menu entries, and replace a game within its allocated space on my cart. We also kept analysis notes and operation logs so we could look back when something went wrong.</p><h2 id="Why-Turn-It-into-a-Web-Tool"><a href="#Why-Turn-It-into-a-Web-Tool" class="headerlink" title="Why Turn It into a Web Tool?"></a>Why Turn It into a Web Tool?</h2><p>Once the macOS prototype worked, another thought struck me: doesn’t Chrome support WebUSB? Could all of this run directly in a browser? Then there wouldn’t even be a desktop tool to install.</p><p>So I asked Codex to take the connection, reading, and game management code from the prototype and bring it into the browser. That’s how elink2-web came about.</p><p>The appeal is straightforward: with a browser that supports WebUSB, you open the page, grant access to the device, and get started. No separate desktop app to install. Game files are processed locally, and USB communication happens directly in the browser, so flashing a game doesn’t require uploading its ROM to a server.</p><p>There are browser compatibility limits, of course. The current scope is desktop Chrome and Edge. Hardware testing so far has used Chrome on both Apple Silicon and Intel MacBook Pros. Edge and other operating systems still need testing.</p><p><img src="first-page.webp" alt="The cart connection screen"></p><p>For the interface, I mainly wanted to make the cart’s contents easier to understand: which games are on it, how much space each takes up, where the gaps are, and how much room is left at the end. After choosing a game file, you can also preview where it will be written and the name that will appear in the cart’s menu.</p><p><img src="game-list.webp" alt="The cart storage map and game list"></p><p>Menu names turned out to be another interesting detail. Text in the cart’s menu has to be converted into bitmap glyphs; you can’t just carry the webpage’s text styling over. The tool now uses a fixed pixel font to generate those glyphs, with custom names in Chinese or English. The browser preview and the data written to the cart use the same bitmap.</p><p><img src="write-game.webp" alt="Adding a game and previewing its menu name"></p><p>Looking back, it felt like a back-and-forth between Codex and me: it analyzed the program and wrote code, I tried things on the GBA and told it what responded and what didn’t. With an old cart like this, a success message on the computer wasn’t quite enough. I only felt sure once I’d unplugged the cable, restarted the console, and seen the game actually run.</p><h2 id="Where-Things-Stand"><a href="#Where-Things-Stand" class="headerlink" title="Where Things Stand"></a>Where Things Stand</h2><p>As of November 9, 2026, elink2-web can:</p><ul><li>Connect to the cart and read its game list.</li><li>Show the storage layout, used space, and room available for appending games.</li><li>Add games and replace existing games within their allocated space.</li><li>Remove a selected game and every game after it.</li><li>Customize cart menu names and preview their bitmap glyphs.</li><li>Switch between Chinese and English, show operation logs, and optionally read back and verify data after writing.</li></ul><p>Save import/export and cheats aren’t available in the web tool yet. Compatibility with more carts, firmware versions, and game saves also needs further testing. The early prototype’s hardware results mainly came from this one cart of mine.</p><h2 id="Try-It-and-Get-the-Source"><a href="#Try-It-and-Get-the-Source" class="headerlink" title="Try It and Get the Source"></a>Try It and Get the Source</h2><p>Try it online: <a href="https://elink2.knktc.com/">elink2.knktc.com</a>.</p><p>Source code: <a href="https://github.com/knktc/elink2-web">knktc/elink2-web</a>.</p><p>Cloudflare handles the site’s automatic builds and hosting, saving me the trouble of maintaining a server and deployment setup. Thanks, generous folks at Cloudflare.</p><p>If you still have an elink2 cart lying around, give it a try. If something goes wrong, open an issue on GitHub with your operating system, browser, cart details, and operation logs to help me improve compatibility.</p><p>All I wanted at the start was to put a few different games on my GBM. Now the cart I bought in 2010 works with my Mac again. Hopefully, the tool will help someone else who’s held on to theirs, too.</p>]]></content>
+    
+    
+    <summary type="html">After digging out my Game Boy Micro and the elink2 flash cart I bought in 2010, I used Codex to analyze its original Windows software and build a browser-based GBA flashing tool, starting with a USB prototype on macOS.</summary>
+    
+    
+    
+    
+    <category term="codex" scheme="https://knktc.com/en/tags/codex/"/>
+    
+    <category term="vibe-coding" scheme="https://knktc.com/en/tags/vibe-coding/"/>
+    
+    <category term="gba" scheme="https://knktc.com/en/tags/gba/"/>
+    
+    <category term="webusb" scheme="https://knktc.com/en/tags/webusb/"/>
+    
+    <category term="elink2" scheme="https://knktc.com/en/tags/elink2/"/>
+    
+  </entry>
   
   <entry>
     <title>ArtCraft Rebuilds Everything in Rust. Now It&#39;s Open-Sourced the Kitchen.</title>
@@ -210,13 +237,13 @@
     
     
     
-    <category term="chrome" scheme="https://knktc.com/en/tags/chrome/"/>
-    
-    <category term="extension" scheme="https://knktc.com/en/tags/extension/"/>
-    
     <category term="codex" scheme="https://knktc.com/en/tags/codex/"/>
     
     <category term="vibe-coding" scheme="https://knktc.com/en/tags/vibe-coding/"/>
+    
+    <category term="chrome" scheme="https://knktc.com/en/tags/chrome/"/>
+    
+    <category term="extension" scheme="https://knktc.com/en/tags/extension/"/>
     
     <category term="envmate" scheme="https://knktc.com/en/tags/envmate/"/>
     
@@ -512,29 +539,6 @@
     <category term="cloudflare" scheme="https://knktc.com/en/tags/cloudflare/"/>
     
     <category term="nginx" scheme="https://knktc.com/en/tags/nginx/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Using a mirror to speed up Poetry installation</title>
-    <link href="https://knktc.com/en/2022/04/22/set-mirror-when-installing-poerty/"/>
-    <id>https://knktc.com/en/2022/04/22/set-mirror-when-installing-poerty/</id>
-    <published>2022-04-22T05:52:52.000Z</published>
-    <updated>2026-04-22T01:34:32.334Z</updated>
-    
-    <content type="html"><![CDATA[<p>First, configure a global pip mirror:</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip config --user <span class="built_in">set</span> global.index-url https://pypi.tuna.tsinghua.edu.cn/simple</span><br></pre></td></tr></table></figure><p>Then download the Poetry installer script locally, for example as <code>install-poetry.py</code>:</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -sSL https://install.python-poetry.org -o install-poetry.py</span><br></pre></td></tr></table></figure><p>Open the script and find this function:</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">pip</span>(<span class="params">self, *args, **kwargs</span>) -&gt; subprocess.CompletedProcess:</span></span><br><span class="line">        <span class="keyword">return</span> self.python(<span class="string">&quot;-m&quot;</span>, <span class="string">&quot;pip&quot;</span>, <span class="string">&quot;--isolated&quot;</span>, *args, **kwargs)</span><br></pre></td></tr></table></figure><p>Remove <code>&quot;--isolated&quot;</code> from that call. After that, when the installer invokes pip, it will use the mirror you configured earlier.</p><p>Then run the installer:</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 install-poetry.py</span><br></pre></td></tr></table></figure>]]></content>
-    
-    
-    <summary type="html">A simple workaround to make the Poetry installer use a configured pip mirror instead of isolated mode.</summary>
-    
-    
-    
-    
-    <category term="mirror" scheme="https://knktc.com/en/tags/mirror/"/>
-    
-    <category term="poetry" scheme="https://knktc.com/en/tags/poetry/"/>
-    
-    <category term="pip" scheme="https://knktc.com/en/tags/pip/"/>
     
   </entry>
   

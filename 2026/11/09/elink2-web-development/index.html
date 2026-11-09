@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"knktc.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="翻出 Game Boy Micro 和 2010 年买的 elink2 烧录卡后，我借助 Codex 分析原版 Windows 工具，从 macOS 上的 USB 通信原型开始，一点点做出了可以在浏览器里管理和烧录 GBA 游戏的 elink2-web。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="用 Codex 给老烧录卡续命：elink2-web 开发记录">
+<meta property="og:url" content="https://knktc.com/2026/11/09/elink2-web-development/">
+<meta property="og:site_name" content="knktc的杂乱空间">
+<meta property="og:description" content="翻出 Game Boy Micro 和 2010 年买的 elink2 烧录卡后，我借助 Codex 分析原版 Windows 工具，从 macOS 上的 USB 通信原型开始，一点点做出了可以在浏览器里管理和烧录 GBA 游戏的 elink2-web。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://knktc.com/2026/11/09/elink2-web-development/elink2-cart.webp">
+<meta property="og:image" content="https://knktc.com/2026/11/09/elink2-web-development/first-page.webp">
+<meta property="og:image" content="https://knktc.com/2026/11/09/elink2-web-development/game-list.webp">
+<meta property="og:image" content="https://knktc.com/2026/11/09/elink2-web-development/write-game.webp">
+<meta property="article:published_time" content="2026-11-08T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-09T15:01:58.029Z">
+<meta property="article:author" content="knktc">
+<meta property="article:tag" content="codex">
+<meta property="article:tag" content="vibe-coding">
+<meta property="article:tag" content="gba">
+<meta property="article:tag" content="webusb">
+<meta property="article:tag" content="elink2">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://knktc.com/2026/11/09/elink2-web-development/elink2-cart.webp">
+
+<link rel="canonical" href="https://knktc.com/2026/11/09/elink2-web-development/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+<link rel="alternate" hreflang="zh-CN" href="&#x2F;2026&#x2F;11&#x2F;09&#x2F;elink2-web-development&#x2F;">
+<link rel="alternate" hreflang="en" href="&#x2F;en&#x2F;2026&#x2F;11&#x2F;09&#x2F;elink2-web-development&#x2F;">
+<link rel="alternate" hreflang="x-default" href="&#x2F;2026&#x2F;11&#x2F;09&#x2F;elink2-web-development&#x2F;">
+
+  <title>用 Codex 给老烧录卡续命：elink2-web 开发记录 | knktc的杂乱空间</title>
+  
+
+
+
+
+<script>
+!function(p){"use strict";!function(t){var s=window,e=document,i=p,c="".concat("https:"===e.location.protocol?"https://":"http://","sdk.51.la/js-sdk-pro.min.js"),n=e.createElement("script"),r=e.getElementsByTagName("script")[0];n.type="text/javascript",n.setAttribute("charset","UTF-8"),n.async=!0,n.src=c,n.id="LA_COLLECT",i.d=n;var o=function(){s.LA.ids.push(i)};s.LA?s.LA.ids&&o():(s.LA=p,s.LA.ids=[],o()),r.parentNode.insertBefore(n,r)}()}({id:"3RjPWBsCvGU6y84k",ck:"3RjPWBsCvGU6y84k"});
+</script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="knktc的杂乱空间" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">knktc的杂乱空间</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">python,cloud,linux...</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://knktc.com/2026/11/09/elink2-web-development/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/sonic_avatar.png">
+      <meta itemprop="name" content="knktc">
+      <meta itemprop="description" content="关注linux,云计算,python，杂乱之地...">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="knktc的杂乱空间">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          用 Codex 给老烧录卡续命：elink2-web 开发记录
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2026-11-09 00:00:00 / 修改时间：23:01:58" itemprop="dateCreated datePublished" datetime="2026-11-09T00:00:00+08:00">2026-11-09</time>
+            </span>
+
+          
+            <div class="post-description">翻出 Game Boy Micro 和 2010 年买的 elink2 烧录卡后，我借助 Codex 分析原版 Windows 工具，从 macOS 上的 USB 通信原型开始，一点点做出了可以在浏览器里管理和烧录 GBA 游戏的 elink2-web。</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>最近，我翻出了自己的 Game Boy Micro（GBM），还有当年配着它一起用的 elink2 烧录卡，想重温一下以前的游戏。</p>
+<p>这张卡是我在 2010 年花 100 元买的。十几年过去，机器和卡都还在，但想往里面换几个游戏，却先碰到了电脑上的问题：原来的配套软件是 Windows 程序，我现在主要用 macOS，又找不到可用的驱动。</p>
+<p>于是，我让 Codex 帮忙分析原版程序，尝试重新做一个能在 Mac 上使用的工具。折腾下来，最后做成了一个网页项目：<a target="_blank" rel="noopener" href="https://github.com/knktc/elink2-web">elink2-web</a>。</p>
+<p><img src="elink2-cart.webp" alt="当年使用的 elink2 烧录卡"></p>
+<span id="more"></span>
+
+<h2 id="为什么还要折腾这张老卡"><a href="#为什么还要折腾这张老卡" class="headerlink" title="为什么还要折腾这张老卡"></a>为什么还要折腾这张老卡</h2><p>纯纯是情怀。</p>
+<p>elink2 是一款 GBA 烧录卡，大概是 2009 年左右的产品。用户可以把游戏写进卡带，再插到 GBA 上运行。和后面出现的把文件复制到存储卡里的烧录卡不同，它需要通过 USB 和配套程序完成烧录。</p>
+<p>现在，这款卡早已停产，网上能找到的资料和讨论都不多。现在基本只能在二手市场上见到它。对还留着这张卡的人来说，卡带本身也许还能工作，但配套软件已经成了继续使用它的门槛。</p>
+<p>我想解决的就是眼前这个问题：让手上这张老卡在现在的电脑上继续用起来，能看看里面装了什么，也能换几个游戏。</p>
+<p>这也是一个挺适合试试 AI 能力的题目。普通的网页、接口项目，通常有文档和成熟的库可以参考；这次面对的却是一张老 USB 设备，手上主要是原版 Windows 软件和网上零星的软件截图。Codex 能不能从这些材料里帮我理出一条路，我也很好奇。</p>
+<h2 id="从原版程序到实机验证"><a href="#从原版程序到实机验证" class="headerlink" title="从原版程序到实机验证"></a>从原版程序到实机验证</h2><p>最开始做的是一个 macOS 原型。Codex 一开始也建议我找台 Windows 机器，运行原版软件，抓一下 USB 通信的包，看看它到底往卡带里发了什么。但我一口咬定：手上只有 Mac，也不想装虚拟机。于是 Codex 只好硬啃原版 Windows 程序，从里面研究初始化、USB 通信和游戏菜单的细节，再拿我的卡带逐步验证。</p>
+<p>我在其中的作用，一方面是回忆当年使用原版软件时的操作流程，给 Codex 提供线索；另一方面，就是在它需要实机验证的时候，配合插拔 USB 线、给 GBA 开关机，再把屏幕上看到的状态反馈给它。</p>
+<p>整个过程从连接和读取开始。先让 GBA 屏幕显示出 <code>USB ONLINE</code>，再读取菜单、解析游戏列表，之后才尝试写入和替换游戏。每次写完，除了读回数据进行比对，还要检查相邻区域和存档有没有受到影响，最后拔掉 USB、重新开机，确认菜单显示正常、游戏确实能启动。</p>
+<p>这样一点点下来，原型在我这张卡上跑通了末项游戏的写入、菜单项隐藏与恢复，以及指定空间内的游戏替换。过程中也保留了分析记录和操作日志，方便遇到问题时回头查证。</p>
+<h2 id="为什么做成网页工具"><a href="#为什么做成网页工具" class="headerlink" title="为什么做成网页工具"></a>为什么做成网页工具</h2><p>macOS 原型跑通之后，我又突发奇想：Chrome 不是支持 WebUSB 么，这些功能是不是直接用浏览器就能实现？这样连桌面工具都不用装了。</p>
+<p>于是，我又让 Codex 在原型的基础上，把连接、读取和游戏管理流程搬进浏览器，就有了现在的 elink2-web。</p>
+<p>网页的好处很直接：对于支持 WebUSB 的浏览器，打开页面、授权连接设备，就可以开始操作，不用再为这个小工具安装一个桌面应用。游戏文件的处理和 USB 通信都在浏览器本地完成，烧录过程不需要把 ROM 上传到服务器。</p>
+<p>当然，网页也有浏览器兼容性的限制。目前支持范围是桌面版 Chrome 和 Edge，实际测试用的是 Chrome，已经在 Apple Silicon 和 Intel 的 MacBook Pro 上跑通过。Edge 和其他系统下的表现，还需要继续验证。</p>
+<p><img src="first-page.webp" alt="连接卡带界面"></p>
+<p>界面上，我主要想把卡带里原本不太直观的状态展示出来：有哪些游戏、各自占了多少空间、空隙在哪里、末尾还能追加多少。选择游戏文件后，也可以预览写入范围和卡带菜单名称。</p>
+<p><img src="game-list.webp" alt="卡带存储分布图和游戏列表"></p>
+<p>菜单名称是另一个有意思的小细节。卡带菜单里的文字需要转换成点阵字模，不能直接把网页上的文字样式带过去。现在工具使用固定的像素字体生成字模，可以自定义中文或英文名称，网页预览和实际写入使用同一份位图数据。</p>
+<p><img src="write-game.webp" alt="新增游戏与菜单名称预览"></p>
+<p>这一圈折腾下来，感觉我和 Codex 就是在来回配合：它分析程序、写代码，我拿着 GBA 按它说的试，再告诉它哪里有反应、哪里没动静。毕竟是在和一张老卡打交道，电脑上显示成功了还不算，拔掉线、重新开机，游戏真能跑起来，心里才踏实。</p>
+<h2 id="目前做到了哪一步"><a href="#目前做到了哪一步" class="headerlink" title="目前做到了哪一步"></a>目前做到了哪一步</h2><p>截至 2026 年 11 月 9 日，elink2-web 已经实现了这些功能：</p>
+<ul>
+<li>连接卡带并读取游戏列表。</li>
+<li>展示卡带存储分布、已用空间和可追加空间。</li>
+<li>新增游戏，以及在原有空间内替换游戏。</li>
+<li>删除选中的游戏及其后的全部游戏。</li>
+<li>自定义卡带菜单名称，并预览字模效果。</li>
+<li>中英文界面、操作日志，以及可选的写入后读回校验。</li>
+</ul>
+<p>存档导入导出和金手指还没有接到网页里；更多卡带、固件以及游戏存档兼容性，也需要后续验证。前期原型的实机结果主要来自我手上这一张卡。</p>
+<h2 id="访问地址与源码"><a href="#访问地址与源码" class="headerlink" title="访问地址与源码"></a>访问地址与源码</h2><p>在线体验地址：<a target="_blank" rel="noopener" href="https://elink2.knktc.com/">elink2.knktc.com</a>。</p>
+<p>项目源码：<a target="_blank" rel="noopener" href="https://github.com/knktc/elink2-web">knktc/elink2-web</a>。</p>
+<p>站点通过 Cloudflare 自动构建和托管，省去了自己维护服务器和部署流程的麻烦。感谢 Cloudflare 大善人。</p>
+<p>如果你也还留着 elink2 烧录卡，可以试试看。遇到问题时，可以在 GitHub 提交 issue，附上系统、浏览器、卡带信息和操作日志，帮助我继续完善兼容性。</p>
+<p>做这个工具最初只是想往自己的 GBM 里换几个游戏。现在，这张 2010 年买的卡，又能在 Mac 上继续用了。也希望它能帮到同样还留着老卡的人。</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>如果我的文字帮到了您，那么可不可以请我喝罐可乐？</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechat.png" alt="knktc 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="knktc 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-6959365962327411"
+     data-ad-slot="4588493450"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>knktc
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://knktc.com/2026/11/09/elink2-web-development/" title="用 Codex 给老烧录卡续命：elink2-web 开发记录">https://knktc.com/2026/11/09/elink2-web-development/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/codex/" rel="tag"># codex</a>
+              <a href="/tags/vibe-coding/" rel="tag"># vibe-coding</a>
+              <a href="/tags/gba/" rel="tag"># gba</a>
+              <a href="/tags/webusb/" rel="tag"># webusb</a>
+              <a href="/tags/elink2/" rel="tag"># elink2</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2026/11/04/craft-anything/" rel="prev" title="用 Rust 复刻一切的 ArtCraft，把厨具和配方也开源了">
+      <i class="fa fa-chevron-left"></i> 用 Rust 复刻一切的 ArtCraft，把厨具和配方也开源了
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%98%E8%A6%81%E6%8A%98%E8%85%BE%E8%BF%99%E5%BC%A0%E8%80%81%E5%8D%A1"><span class="nav-number">1.</span> <span class="nav-text">为什么还要折腾这张老卡</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%8E%E5%8E%9F%E7%89%88%E7%A8%8B%E5%BA%8F%E5%88%B0%E5%AE%9E%E6%9C%BA%E9%AA%8C%E8%AF%81"><span class="nav-number">2.</span> <span class="nav-text">从原版程序到实机验证</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E5%81%9A%E6%88%90%E7%BD%91%E9%A1%B5%E5%B7%A5%E5%85%B7"><span class="nav-number">3.</span> <span class="nav-text">为什么做成网页工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%AE%E5%89%8D%E5%81%9A%E5%88%B0%E4%BA%86%E5%93%AA%E4%B8%80%E6%AD%A5"><span class="nav-number">4.</span> <span class="nav-text">目前做到了哪一步</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BF%E9%97%AE%E5%9C%B0%E5%9D%80%E4%B8%8E%E6%BA%90%E7%A0%81"><span class="nav-number">5.</span> <span class="nav-text">访问地址与源码</span></a></li></ol></div>
+          <div class="post-sidebar-wechat motion-element">
+            <img
+              class="post-sidebar-wechat-image"
+              src="/images/wechat-mp-qrcode.png"
+              alt="微信扫码关注我的公众号"
+              loading="lazy"
+            >
+            <p class="post-sidebar-wechat-name">中年工程师苟活指南</p>
+            <p class="post-sidebar-wechat-desc">微信扫码关注，获取更多新文章和实战折腾记录。</p>
+          </div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="knktc"
+      src="/images/sonic_avatar.png">
+  <p class="site-author-name" itemprop="name">knktc</p>
+  <div class="site-description" itemprop="description">关注linux,云计算,python，杂乱之地...</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">85</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">259</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/knktc" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;knktc" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/knktc" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;knktc" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+<div class="wechat-mp-widget motion-element">
+  <img
+    class="wechat-mp-widget-image"
+    src="/images/wechat-mp-qrcode.png"
+    alt="微信扫码关注我的公众号"
+    loading="lazy"
+  >
+  <p class="wechat-mp-widget-name">中年工程师苟活指南</p>
+  <p class="wechat-mp-widget-desc">微信扫码关注，第一时间看到新文章和折腾记录。</p>
+</div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">鄂ICP备2021019593号-1 </a>
+      <img src="/images/beian.png" style="display: inline-block;"><a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=42018502005554" rel="noopener" target="_blank">鄂公网安备 42018502005554号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">knktc</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

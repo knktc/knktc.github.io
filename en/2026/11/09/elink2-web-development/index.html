@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/en/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/en/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/en/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/en/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/en/css/main.css">
+
+
+<link rel="stylesheet" href="/en/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"knktc.com","root":"/en/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="After digging out my Game Boy Micro and the elink2 flash cart I bought in 2010, I used Codex to analyze its original Windows software and build a browser-based GBA flashing tool, starting with a USB p">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Bringing an Old Flash Cart Back to Life with Codex — Building elink2-web">
+<meta property="og:url" content="https://knktc.com/en/2026/11/09/elink2-web-development/">
+<meta property="og:site_name" content="knktc&#39;s Notes">
+<meta property="og:description" content="After digging out my Game Boy Micro and the elink2 flash cart I bought in 2010, I used Codex to analyze its original Windows software and build a browser-based GBA flashing tool, starting with a USB p">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://knktc.com/en/2026/11/09/elink2-web-development/elink2-cart.webp">
+<meta property="og:image" content="https://knktc.com/en/2026/11/09/elink2-web-development/first-page.webp">
+<meta property="og:image" content="https://knktc.com/en/2026/11/09/elink2-web-development/game-list.webp">
+<meta property="og:image" content="https://knktc.com/en/2026/11/09/elink2-web-development/write-game.webp">
+<meta property="article:published_time" content="2026-11-08T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-09T15:03:50.728Z">
+<meta property="article:author" content="knktc">
+<meta property="article:tag" content="codex">
+<meta property="article:tag" content="vibe-coding">
+<meta property="article:tag" content="gba">
+<meta property="article:tag" content="webusb">
+<meta property="article:tag" content="elink2">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://knktc.com/en/2026/11/09/elink2-web-development/elink2-cart.webp">
+
+<link rel="canonical" href="https://knktc.com/en/2026/11/09/elink2-web-development/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+<link rel="alternate" hreflang="en" href="&#x2F;en&#x2F;2026&#x2F;11&#x2F;09&#x2F;elink2-web-development&#x2F;">
+<link rel="alternate" hreflang="zh-CN" href="&#x2F;2026&#x2F;11&#x2F;09&#x2F;elink2-web-development&#x2F;">
+<link rel="alternate" hreflang="x-default" href="&#x2F;2026&#x2F;11&#x2F;09&#x2F;elink2-web-development&#x2F;">
+
+  <title>Bringing an Old Flash Cart Back to Life with Codex — Building elink2-web | knktc's Notes</title>
+  
+
+
+
+
+<script>
+!function(p){"use strict";!function(t){var s=window,e=document,i=p,c="".concat("https:"===e.location.protocol?"https://":"http://","sdk.51.la/js-sdk-pro.min.js"),n=e.createElement("script"),r=e.getElementsByTagName("script")[0];n.type="text/javascript",n.setAttribute("charset","UTF-8"),n.async=!0,n.src=c,n.id="LA_COLLECT",i.d=n;var o=function(){s.LA.ids.push(i)};s.LA?s.LA.ids&&o():(s.LA=p,s.LA.ids=[],o()),r.parentNode.insertBefore(n,r)}()}({id:"3RjPWBsCvGU6y84k",ck:"3RjPWBsCvGU6y84k"});
+</script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/en/atom.xml" title="knktc's Notes" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/en/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">knktc's Notes</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">python, cloud, linux...</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/en/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/en/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/en/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://knktc.com/2026/11/09/elink2-web-development/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/en/images/sonic_avatar.png">
+      <meta itemprop="name" content="knktc">
+      <meta itemprop="description" content="Notes on Python, Linux, and cloud infrastructure.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="knktc's Notes">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Bringing an Old Flash Cart Back to Life with Codex — Building elink2-web
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2026-11-09 00:00:00 / Modified: 23:03:50" itemprop="dateCreated datePublished" datetime="2026-11-09T00:00:00+08:00">2026-11-09</time>
+            </span>
+
+          
+            <div class="post-description">After digging out my Game Boy Micro and the elink2 flash cart I bought in 2010, I used Codex to analyze its original Windows software and build a browser-based GBA flashing tool, starting with a USB prototype on macOS.</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>Recently, I dug out my Game Boy Micro (GBM), along with the elink2 flash cart I used with it back in the day. I wanted to revisit some old games.</p>
+<p>I bought this cart in 2010 for 100 yuan. More than a decade later, both the console and the cart were still around. But when I tried to swap in a few games, I ran into a problem on the computer side: the original software was a Windows application, I mostly use macOS now, and I couldn’t find a working driver.</p>
+<p>So I asked Codex to help analyze the original software and try building a tool that would work on my Mac. After some tinkering, that became a web project: <a target="_blank" rel="noopener" href="https://github.com/knktc/elink2-web">elink2-web</a>.</p>
+<p><img src="elink2-cart.webp" alt="The elink2 flash cart I&#39;ve had since 2010"></p>
+<span id="more"></span>
+
+<h2 id="Why-Bother-with-This-Old-Cart"><a href="#Why-Bother-with-This-Old-Cart" class="headerlink" title="Why Bother with This Old Cart?"></a>Why Bother with This Old Cart?</h2><p>Pure nostalgia.</p>
+<p>The elink2 is a GBA flash cart, apparently dating back to around 2009. You write games onto the cart, then put it in a GBA to play them. Unlike later carts where you simply copy files onto a memory card, it needs a USB connection and its companion software to flash games.</p>
+<p>The cart has long been discontinued, and there isn’t much information or discussion about it online. These days, you mostly find it on the second-hand market. For anyone who still has one, the hardware may work just fine, but the old software can get in the way of actually using it.</p>
+<p>That was the problem I wanted to solve: keep using the cart I already owned on a modern computer, see what was on it, and swap in a few games.</p>
+<p>It also seemed like an interesting way to see what AI could do. With a typical web app or API project, there are usually docs and established libraries to work from. Here, I had an old USB device, its original Windows software, and a handful of software screenshots from the internet. I was curious whether Codex could help piece together a way forward from that.</p>
+<h2 id="From-the-Original-Software-to-Hardware-Testing"><a href="#From-the-Original-Software-to-Hardware-Testing" class="headerlink" title="From the Original Software to Hardware Testing"></a>From the Original Software to Hardware Testing</h2><p>I started with a macOS prototype. At first, Codex suggested finding a Windows machine, running the original software, and capturing its USB traffic to see what it sent to the cart. But I dug my heels in: I only had Macs, and I didn’t want to install a virtual machine. So Codex had to dig into the Windows program itself, work out the initialization, USB communication, and game menu details, then test them step by step on my cart.</p>
+<p>My part was to remember how I used the original software back then and give Codex a few clues. Whenever it needed a hardware test, I would plug or unplug the USB cable, turn the GBA off and on, and report what appeared on the screen.</p>
+<p>We started with connecting and reading. First, we got <code>USB ONLINE</code> to appear on the GBA’s screen, then read the menu and parsed the game list. Only after that did we try writing and replacing games. After each write, we read the data back for comparison and checked that neighboring regions and saves hadn’t been affected. Finally, I unplugged the USB cable and restarted the GBA to check that the menu looked right and the game actually booted.</p>
+<p>Bit by bit, the prototype could write a game into the last slot, hide and restore menu entries, and replace a game within its allocated space on my cart. We also kept analysis notes and operation logs so we could look back when something went wrong.</p>
+<h2 id="Why-Turn-It-into-a-Web-Tool"><a href="#Why-Turn-It-into-a-Web-Tool" class="headerlink" title="Why Turn It into a Web Tool?"></a>Why Turn It into a Web Tool?</h2><p>Once the macOS prototype worked, another thought struck me: doesn’t Chrome support WebUSB? Could all of this run directly in a browser? Then there wouldn’t even be a desktop tool to install.</p>
+<p>So I asked Codex to take the connection, reading, and game management code from the prototype and bring it into the browser. That’s how elink2-web came about.</p>
+<p>The appeal is straightforward: with a browser that supports WebUSB, you open the page, grant access to the device, and get started. No separate desktop app to install. Game files are processed locally, and USB communication happens directly in the browser, so flashing a game doesn’t require uploading its ROM to a server.</p>
+<p>There are browser compatibility limits, of course. The current scope is desktop Chrome and Edge. Hardware testing so far has used Chrome on both Apple Silicon and Intel MacBook Pros. Edge and other operating systems still need testing.</p>
+<p><img src="first-page.webp" alt="The cart connection screen"></p>
+<p>For the interface, I mainly wanted to make the cart’s contents easier to understand: which games are on it, how much space each takes up, where the gaps are, and how much room is left at the end. After choosing a game file, you can also preview where it will be written and the name that will appear in the cart’s menu.</p>
+<p><img src="game-list.webp" alt="The cart storage map and game list"></p>
+<p>Menu names turned out to be another interesting detail. Text in the cart’s menu has to be converted into bitmap glyphs; you can’t just carry the webpage’s text styling over. The tool now uses a fixed pixel font to generate those glyphs, with custom names in Chinese or English. The browser preview and the data written to the cart use the same bitmap.</p>
+<p><img src="write-game.webp" alt="Adding a game and previewing its menu name"></p>
+<p>Looking back, it felt like a back-and-forth between Codex and me: it analyzed the program and wrote code, I tried things on the GBA and told it what responded and what didn’t. With an old cart like this, a success message on the computer wasn’t quite enough. I only felt sure once I’d unplugged the cable, restarted the console, and seen the game actually run.</p>
+<h2 id="Where-Things-Stand"><a href="#Where-Things-Stand" class="headerlink" title="Where Things Stand"></a>Where Things Stand</h2><p>As of November 9, 2026, elink2-web can:</p>
+<ul>
+<li>Connect to the cart and read its game list.</li>
+<li>Show the storage layout, used space, and room available for appending games.</li>
+<li>Add games and replace existing games within their allocated space.</li>
+<li>Remove a selected game and every game after it.</li>
+<li>Customize cart menu names and preview their bitmap glyphs.</li>
+<li>Switch between Chinese and English, show operation logs, and optionally read back and verify data after writing.</li>
+</ul>
+<p>Save import/export and cheats aren’t available in the web tool yet. Compatibility with more carts, firmware versions, and game saves also needs further testing. The early prototype’s hardware results mainly came from this one cart of mine.</p>
+<h2 id="Try-It-and-Get-the-Source"><a href="#Try-It-and-Get-the-Source" class="headerlink" title="Try It and Get the Source"></a>Try It and Get the Source</h2><p>Try it online: <a target="_blank" rel="noopener" href="https://elink2.knktc.com/">elink2.knktc.com</a>.</p>
+<p>Source code: <a target="_blank" rel="noopener" href="https://github.com/knktc/elink2-web">knktc/elink2-web</a>.</p>
+<p>Cloudflare handles the site’s automatic builds and hosting, saving me the trouble of maintaining a server and deployment setup. Thanks, generous folks at Cloudflare.</p>
+<p>If you still have an elink2 cart lying around, give it a try. If something goes wrong, open an issue on GitHub with your operating system, browser, cart details, and operation logs to help me improve compatibility.</p>
+<p>All I wanted at the start was to put a few different games on my GBM. Now the cart I bought in 2010 works with my Mac again. Hopefully, the tool will help someone else who’s held on to theirs, too.</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>如果我的文字帮到了您，那么可不可以请我喝罐可乐？</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    Donate
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/en/images/wechat.png" alt="knktc WeChat Pay">
+        <p>WeChat Pay</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/en/images/alipay.jpg" alt="knktc Alipay">
+        <p>Alipay</p>
+      </div>
+
+  </div>
+</div>
+
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-6959365962327411"
+     data-ad-slot="4588493450"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>Post author:  </strong>knktc
+  </li>
+  <li class="post-copyright-link">
+    <strong>Post link: </strong>
+    <a href="https://knktc.com/2026/11/09/elink2-web-development/" title="Bringing an Old Flash Cart Back to Life with Codex — Building elink2-web">https://knktc.com/2026/11/09/elink2-web-development/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/en/tags/codex/" rel="tag"># codex</a>
+              <a href="/en/tags/vibe-coding/" rel="tag"># vibe-coding</a>
+              <a href="/en/tags/gba/" rel="tag"># gba</a>
+              <a href="/en/tags/webusb/" rel="tag"># webusb</a>
+              <a href="/en/tags/elink2/" rel="tag"># elink2</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/en/2026/11/04/craft-anything/" rel="prev" title="ArtCraft Rebuilds Everything in Rust. Now It's Open-Sourced the Kitchen.">
+      <i class="fa fa-chevron-left"></i> ArtCraft Rebuilds Everything in Rust. Now It's Open-Sourced the Kitchen.
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Why-Bother-with-This-Old-Cart"><span class="nav-number">1.</span> <span class="nav-text">Why Bother with This Old Cart?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#From-the-Original-Software-to-Hardware-Testing"><span class="nav-number">2.</span> <span class="nav-text">From the Original Software to Hardware Testing</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Why-Turn-It-into-a-Web-Tool"><span class="nav-number">3.</span> <span class="nav-text">Why Turn It into a Web Tool?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Where-Things-Stand"><span class="nav-number">4.</span> <span class="nav-text">Where Things Stand</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Try-It-and-Get-the-Source"><span class="nav-number">5.</span> <span class="nav-text">Try It and Get the Source</span></a></li></ol></div>
+          <div class="post-sidebar-wechat motion-element">
+            <img
+              class="post-sidebar-wechat-image"
+              src="/images/wechat-mp-qrcode.png"
+              alt="微信扫码关注我的公众号"
+              loading="lazy"
+            >
+            <p class="post-sidebar-wechat-name">中年工程师苟活指南</p>
+            <p class="post-sidebar-wechat-desc">微信扫码关注，获取更多新文章和实战折腾记录。</p>
+          </div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="knktc"
+      src="/en/images/sonic_avatar.png">
+  <p class="site-author-name" itemprop="name">knktc</p>
+  <div class="site-description" itemprop="description">Notes on Python, Linux, and cloud infrastructure.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/en/archives/">
+        
+          <span class="site-state-item-count">84</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">238</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/knktc" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;knktc" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/knktc" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;knktc" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+<div class="wechat-mp-widget motion-element">
+  <img
+    class="wechat-mp-widget-image"
+    src="/images/wechat-mp-qrcode.png"
+    alt="微信扫码关注我的公众号"
+    loading="lazy"
+  >
+  <p class="wechat-mp-widget-name">中年工程师苟活指南</p>
+  <p class="wechat-mp-widget-desc">微信扫码关注，第一时间看到新文章和折腾记录。</p>
+</div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/en/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">鄂ICP备2021019593号-1 </a>
+      <img src="/en/images/beian.png" style="display: inline-block;"><a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=42018502005554" rel="noopener" target="_blank">鄂公网安备 42018502005554号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">knktc</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/en/lib/anime.min.js"></script>
+
+<script src="/en/js/utils.js"></script>
+
+
+<script src="/en/js/schemes/pisces.js"></script>
+
+
+<script src="/en/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
